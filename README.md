@@ -37,23 +37,15 @@ This library of psychrometric functions isfreeware; licensing is subject to the 
 
 * **C or C++:** 
 
-  SI version:
+  * SI version: Download the **psychrometrics_SI.cpp** and **psychrometrics_SI.h** files from this site to the directory of your choice.
   
-    Download the psychrometrics_SI.cpp and psychrometrics_SI.h files from this site to the directory of your choice.
-  
-  IP version:
-  
-    Download the psychrometrics_IP.cpp and psychrometrics_IP.h files from this site to the directory of your choice.
+  * IP version: Download the **psychrometrics_IP.cpp** and **psychrometrics_IP.h** files from this site to the directory of your choice.
 
 * **VBA:**
   
-  SI version:
+  * SI version: Download the **psychrometricsVBA_SI.bas** from this site to the directory of your choice.
   
-    Download the psychrometricsVBA_SI.bas from this site to the directory of your choice.
-  
-  IP version:
-  
-    Download the psychrometricsVBA_IP.bas from this site to the directory of your choice.
+  * IP version: Download the **psychrometricsVBA_IP.bas** from this site to the directory of your choice.
 
 
 
