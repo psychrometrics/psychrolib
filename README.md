@@ -19,7 +19,7 @@ Relationships between these various functions are illustrated in Figure 1. To co
 
 **Figure 1 - Psychrometric relationships.**
 
- A list of functions available in the library can be found in the Psychrometric Library Documentation page.
+ A list of functions available in the library can be found in the [Psychrometric Library Reference page](https://github.com/psychrometrics/libraries/blob/master/PsychrometricsLibraryReference.md).
 
 ###Credits
 
