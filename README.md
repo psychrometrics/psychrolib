@@ -3,7 +3,7 @@
 
 Psychrometrics are the determination of physical and thermodynamic properties of moist air. These properties include, for example, the air's dew point temperature, its wet bulb temperature, relative humidity, humidity ratio, enthalpy, etc.
 
-The library of freeware functions in C provided here enables the calculation of psychrometric properties of moist and dry air. The functions are based of formulae from the ASHRAE Handbook of Fundamentals, 2009 edition. They can be divided into two categories:
+The library of freeware functions in C and VBA provided here enables the calculation of psychrometric properties of moist and dry air. The functions are based of formulae from the ASHRAE Handbook of Fundamentals, 2009 edition. They can be divided into two categories:
 
  1. Functions enabling the calculation of dew point temperature,
     wet-bulb temperature, partial vapour pressure of water, humidity
