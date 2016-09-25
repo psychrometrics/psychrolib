@@ -1,0 +1,811 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head><!-- DW6 --><!-- Copyright 2005 Macromedia, Inc. All rights reserved. -->
+
+
+<title>Psychrometrics Library - Reference manual</title><meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<link rel="stylesheet" href="./psychrometrics.css" type="text/css" />
+<link rel="shortcut icon" href="../favicon.ico" />
+<script language="JavaScript" type="text/javascript">
+//--------------- LOCALIZEABLE GLOBALS ---------------
+var d=new Date();
+var monthname=new Array("January","February","March","April","May","June","July","August","September","October","November","December");
+//Ensure correct for language. English is "January 1, 2004"
+var TODAY = monthname[d.getMonth()] + " " + d.getDate() + ", " + d.getFullYear();
+//---------------   END LOCALIZEABLE   ---------------
+</script>
+<style type="text/css">
+<!--
+.style1 {color: #003366}
+.style2 {font-size: 12px}
+.style4 {font-size: 12px; font-style: italic; font-weight: bold; }
+.style5 {font-family: "Courier New", Courier, monospace}
+.style6 {color: #ff6600}
+-->
+</style>
+<meta name="Keywords" content="psychrometrics, moist air, vba, C, C++, freeware" /></head>
+
+
+<body bgcolor="#c0dffd">
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tbody><tr bgcolor="#3366cc">
+    <td bgcolor="#e6f3ff" height="95"><div align="center">
+      </div></td>
+    <td bgcolor="#c0dffd">&nbsp;</td>
+    <td class="bodyText" id="logo" align="center" bgcolor="#c0dffd" height="63" nowrap="nowrap" valign="middle"><div class="style1" align="left">Library of Psychrometric Functions in C:  Reference </div></td>
+  </tr>
+
+
+  <tr>
+    <td colspan="3" bgcolor="#003366">&nbsp;</td>
+  </tr>
+
+
+ <tr>
+    <td bgcolor="#e6f3ff" valign="top" width="196">
+	<!--Include the menu here-->
+    
+ 	&nbsp;<br />
+  	&nbsp;<a href="javascript:;" class="navText"></a><br />
+  	&nbsp;<br />
+  	&nbsp;<br /> 	</td>
+    <td width="50">&nbsp;</td>
+    <td valign="top"><p><span class="bodyText"></span></p><p><span class="bodyText">This
+reference page provides a short description of all the functions
+available in the Psychrometrics Library. It describes the C version of
+the library. Versions in other languages are very similar to this one,
+only the syntax changes.&nbsp;</span></p>
+      <p><br />
+      <span class="bodyText">This is the list of functions available in the library:</span></p>
+      <p class="style4">Conversions between dew point, wet bulb, and relative humidity</p>
+      <p class="style2"><a href="#GetTWetBulbFromTDewPoint">GetTWetBulbFromTDewPoint</a><br />
+        <a href="#GetTWetBulbFromRelHum">GetTWetBulbFromRelHum</a><br />
+        <a href="#GetRelHumFromTDewPoint">GetRelHumFromTDewPoint</a><br />
+        <a href="#GetRelHumFromTWetBulb">GetRelHumFromTWetBulb</a><br />
+        <a href="#GetTDewPointFromRelHum">GetTDewPointFromRelHum</a><br />
+        <a href="#GetTDewPointFromTWetBulb">GetTDewPointFromTWetBulb</a></p>
+      <p class="style4">Conversions between dew point, or relative humidity and vapor pressure</p>
+      <p class="style2"><a href="#GetVapPresFromRelHum">GetVapPresFromRelHum</a><br />
+        <a href="#GetRelHumFromVapPres">GetRelHumFromVapPres</a><br />
+        <a href="#GetTDewPointFromVapPres">GetTDewPointFromVapPres</a><br />
+        <a href="#GetVapPresFromTDewPoint">GetVapPresFromTDewPoint</a></p>
+      <p class="style4">Conversions between wet bulb temperature, dew point temperature, 
+        or relative humidity and humidity ratio</p>
+      <p class="style2"><a href="#GetTWetBulbFromHumRatio">GetTWetBulbFromHumRatio</a><br />
+        <a href="#GetHumRatioFromTWetBulb">GetHumRatioFromTWetBulb</a><br />
+        <a href="#GetHumRatioFromRelHum">GetHumRatioFromRelHum</a> <br />
+        <a href="#GetRelHumFromHumRatio">GetRelHumFromHumRatio</a> <br />
+        <a href="#GetHumRatioFromTDewPoint">GetHumRatioFromTDewPoint</a><br />
+        <a href="#GetTDewPointFromHumRatio">GetTDewPointFromHumRatio</a></p>
+      <p class="style4">Conversions between humidity ratio and vapor pressure</p>
+      <p class="style2"><a href="#GetHumRatioFromVapPres">GetHumRatioFromVapPres</a> <br />
+        <a href="#GetVapPresFromHumRatio">GetVapPresFromHumRatio</a> </p>
+      <p class="style4">Dry Air Calculations</p>
+      <p class="style2"><a href="#GetDryAirEnthalpy">GetDryAirEnthalpy</a> <br />
+        <a href="#GetDryAirDensity">GetDryAirDensity</a> <br />
+        <a href="#GetDryAirVolume">GetDryAirVolume</a> </p>
+      <p class="style4">Saturated Air Calculations</p>
+      <p class="style2"><a href="#GetSatVapPres">GetSatVapPres</a> <br />
+        <a href="#GetSatHumRatio">GetSatHumRatio</a> <br />
+        <a href="#GetSatAirEnthalpy">GetSatAirEnthalpy</a> </p>
+      <p class="style4">Moist Air Calculations</p>
+      <p class="style2"><a href="#GetVPD">GetVPD</a> <br />
+        <a href="#GetDegreeOfSaturation">GetDegreeOfSaturation</a><br />
+        <a href="#GetMoistAirEnthalpy">GetMoistAirEnthalpy</a> <br />
+        <a href="#GetMoistAirVolume">GetMoistAirVolume</a> <br />
+        <a href="#GetMoistAirDensity">GetMoistAirDensity</a> </p>
+      <p class="style4">Functions to calculate all psychrometric values at once</p>
+      <p class="style2"><a href="#CalcPsychrometricsFromTWetBulb">CalcPsychrometricsFromTWetBulb</a><br />
+        <a href="#CalcPsychrometricsFromTDewPoint">CalcPsychrometricsFromTDewPoint</a><br />
+        <a href="#CalcPsychrometricsFromRelHum">CalcPsychrometricsFromRelHum</a></p>
+      <p class="style4">Standard atmosphere</p>
+      <p><span class="style2"><a href="#GetStandardAtmPressure">GetStandardAtmPressure</a> <br />
+          <a href="#GetStandardAtmTemperature">GetStandardAtmTemperature</a> <br />
+          <a href="#GetSeaLevelPressure">GetSeaLevelPressure</a> <br />
+          <a href="#GetStationPressure">GetStationPressure</a> </span><br />
+      </p>
+      <p><a href="psychrometrics.html" class="style2">Back to the Psychrometrics page </a></p>
+      <p class="bodyText"><em><strong>        Comments or questions?</strong></em></p>
+      <p class="bodyText"> Please send us your comments or questions at:<br />
+        <img src="../email.PNG" alt="numlog email" height="21" width="98" /></p>
+      <hr />
+      <p class="bodyText" align="center"><em><strong>Full description of functions </strong></em>(in alphabetical order) </p>
+      <hr />
+      <h2><a name="CalcPsychrometricsFromRelHum" id="CalcPsychrometricsFromRelHum">CalcPsychrometricsFromRelHum</a></h2>
+      <p class="style5">void CalcPsychrometricsFromRelHum<br />
+&nbsp;&nbsp;&nbsp; ( double
+*TWetBulb&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* (o) Wet bulb temperature [C] */<br />
+&nbsp;&nbsp;&nbsp; , double
+*TDewPoint&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* (o) Dew point temperature [C] */<br />
+&nbsp;&nbsp;&nbsp; , double
+*HumRatio&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* (o) Humidity ratio [kgH2O/kgAIR] */<br />
+&nbsp;&nbsp;&nbsp; , double  *VapPres&nbsp; /* (o) Partial pressure of  water vapor in moist air [Pa] */<br />
+&nbsp;&nbsp;&nbsp; , double  *MoistAirEnthalpy&nbsp;&nbsp;&nbsp;&nbsp; /* (o) Moist Air  Enthalpy [J/kg] */<br />
+&nbsp;&nbsp;&nbsp; , double  *MoistAirVolume&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /* (o) Specific  Volume [m3/kg] */<br />
+&nbsp;&nbsp;&nbsp; , double  *DegSaturation&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;/* (o) Degree of saturation [] */<br />
+&nbsp;&nbsp;&nbsp; , double
+TDryBulb&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* (i) Dry bulb temperature [C] */<br />
+&nbsp;&nbsp;&nbsp; , double
+Pressure&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp; /* (i) Atmospheric pressure [Pa] */<br />
+&nbsp;&nbsp;&nbsp; , double
+RelHum&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* (i) Relative humidity [0-1] */<br />
+&nbsp;&nbsp;&nbsp; );</p>
+      <h3>Description</h3>
+      <p>Calculates
+moist air properties given dry bulb temperature, atmospheric pressure,
+and relative humidity.&nbsp; The function first calculates the humidity
+ratio, then calls various functions to calculate other psychrometric
+quantities from the humidity ratio.</p>
+      <h3>See Also</h3>
+      <p><em>CalcPsychrometricsFromTDewPoint </em>to calculate moist air properties knowing the dew point temperature.<br />
+      <em>CalcPsychrometricsFromTWetBulb</em> to calculate moist air properties knowing the wet bulb temperature.</p>
+      <p>&nbsp;</p>
+      <h2><a name="CalcPsychrometricsFromTDewPoint" id="CalcPsychrometricsFromTDewPoint">CalcPsychrometricsFromTDewPoint</a></h2>
+      <p class="style5">void CalcPsychrometricsFromTDewPoint<br />
+&nbsp;&nbsp;&nbsp; ( double
+*TWetBulb&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* (o) Wet bulb temperature [C] */<br />
+&nbsp;&nbsp;&nbsp; , double
+*RelHum&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* (o) Relative humidity [0-1] */<br />
+&nbsp;&nbsp;&nbsp; , double
+*HumRatio&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* (o) Humidity ratio [kgH2O/kgAIR] */<br />
+&nbsp;&nbsp;&nbsp; , double  *VapPres&nbsp; /* (o) Partial pressure of  water vapor in moist air [Pa] */<br />
+&nbsp;&nbsp;&nbsp; , double  *MoistAirEnthalpy&nbsp;&nbsp;&nbsp;&nbsp; /* (o) Moist Air  Enthalpy [J/kg] */<br />
+&nbsp;&nbsp;&nbsp; , double  *MoistAirVolume&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /* (o) Specific  Volume [m3/kg] */<br />
+&nbsp;&nbsp;&nbsp; , double  *DegSaturation&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /* (o) Degree of  saturation [] */<br />
+&nbsp;&nbsp;&nbsp; , double
+TDryBulb&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* (i) Dry bulb temperature [C] */<br />
+&nbsp;&nbsp;&nbsp; , double
+Pressure&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* (i) Atmospheric pressure [Pa] */<br />
+&nbsp;&nbsp;&nbsp; , double
+TDewPoint&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* (i) Dew point temperature [C] */<br />
+&nbsp;&nbsp;&nbsp; );</p>
+      <h3>Description</h3>
+      <p>Calculates
+moist air properties given dry bulb temperature, atmospheric pressure,
+and dew point temperature.&nbsp; The function first calculates the
+humidity ratio, then calls various functions to calculate other
+psychrometric quantities from the humidity ratio.</p>
+      <h3>See Also</h3>
+      <p><em>CalcPsychrometricsFromRelHum </em>to calculate moist air properties knowing the relative humidity.<br />
+      <em>CalcPsychrometricsFromTWetBulb</em> to calculate moist air properties knowing the wet bulb temperature.</p>
+      <p>&nbsp;</p>
+      <h2><a name="CalcPsychrometricsFromTWetBulb" id="CalcPsychrometricsFromTWetBulb">CalcPsychrometricsFromTWetBulb</a></h2>
+      <p class="style5">void CalcPsychrometricsFromTWetBulb<br />
+&nbsp;&nbsp;&nbsp; ( double
+*TDewPoint&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* (o) Dew point temperature [C] */<br />
+&nbsp;&nbsp;&nbsp; , double
+*RelHum&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* (o) Relative humidity [0-1] */<br />
+&nbsp;&nbsp;&nbsp; , double
+*HumRatio&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* (o) Humidity ratio [kgH2O/kgAIR] */<br />
+&nbsp;&nbsp;&nbsp; , double  *VapPres&nbsp; /* (o) Partial pressure of  water vapor in moist air [Pa] */<br />
+&nbsp;&nbsp;&nbsp; , double  *MoistAirEnthalpy&nbsp;&nbsp;&nbsp;&nbsp; /* (o) Moist Air  Enthalpy [J/kg] */<br />
+&nbsp;&nbsp;&nbsp; , double  *MoistAirVolume&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /* (o) Specific  Volume [m3/kg] */<br />
+&nbsp;&nbsp;&nbsp; , double  *DegSaturation&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /* (o) Degree of  saturation [] */<br />
+&nbsp;&nbsp;&nbsp; , double
+TDryBulb&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* (i) Dry bulb temperature [C] */<br />
+&nbsp;&nbsp;&nbsp; , double
+Pressure&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* (i) Atmospheric pressure [Pa] */<br />
+&nbsp;&nbsp;&nbsp; , double
+TWetBulb&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* (i) Wet bulb temperature [C] */<br />
+&nbsp;&nbsp;&nbsp; );</p>
+      <h3>Description</h3>
+      <p>Calculates
+moist air properties given dry bulb temperature, atmospheric pressure,
+and wet bulb temperature.&nbsp; The function first calculates the
+humidity ratio, then calls various functions to calculate other
+psychrometric quantities from the humidity ratio.</p>
+      <h3>See Also</h3>
+      <p><em>CalcPsychrometricsFromTDewPoint </em>to calculate moist air properties knowing the dew point temperature.<br />
+      <em>CalcPsychrometricsFromRelHum </em>to calculate moist air properties knowing the relative humidity.</p>
+      <p>&nbsp;</p>
+      <h2><a name="GetDegreeOfSaturation" id="GetDegreeOfSaturation">GetDegreeOfSaturation</a></h2>
+      <p class="style5">double GetDegreeOfSaturation&nbsp;&nbsp;&nbsp;  /* (o) Degree of saturation [] */<br />
+&nbsp;&nbsp;&nbsp; ( double  TDryBulb&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /* (i) Dry bulb temperature  [C] */<br />
+&nbsp;&nbsp;&nbsp; , double  HumRatio&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /* (i) Humidity ratio  kgH2O/kgAIR] */<br />
+&nbsp;&nbsp;&nbsp; , double  Pressure&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /* (i) Atmospheric  pressure [Pa] */<br />
+&nbsp;&nbsp;&nbsp; );</p>
+      <h3>Description</h3>
+      <p>Compute
+the degree of saturation given the dry bulb temperature, humidity
+ratio, and atmospheric pressure.&nbsp; The degree of saturation is
+calculated from the quotient of the humidity ratio to the saturated
+humidity ratio and is dimensionless.</p>
+      <h3>See Also</h3>
+      <p><em>GetHumRatioFrom&#8230;</em> to compute the humidity ratio from other psychrometric variables.</p>
+      <p>&nbsp;</p>
+      <h2><a name="GetDryAirDensity" id="GetDryAirDensity">GetDryAirDensity</a></h2>
+      <p class="style5">double GetDryAirDensity&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /* (o) Dry air density [kg/m3] */<br />
+&nbsp;&nbsp;&nbsp; ( double
+TDryBulb&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* (i) Dry bulb temperature [C] */<br />
+&nbsp;&nbsp;&nbsp; , double
+Pressure&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* (i) Atmospheric pressure [Pa] */<br />
+&nbsp;&nbsp;&nbsp; );</p>
+      <h3>Description</h3>
+      <p>Computes the dry air density in kilograms per cubic meter  given the dry bulb temperature and atmospheric pressure.</p>
+      <h3>See Also</h3>
+      <p><em>GetMoistAirDensity</em> to compute the density of moist air.<br />
+      <em>GetDryAirVolume</em> to  compute the specific volume of dry air.</p>
+      <p>&nbsp;</p>
+      <h2><a name="GetDryAirEnthalpy" id="GetDryAirEnthalpy">GetDryAirEnthalpy</a></h2>
+      <p class="style5">double GetDryAirEnthalpy&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /* (o) Dry air enthalpy [J/kg] */<br />
+&nbsp;&nbsp;&nbsp; ( double
+TDryBulb&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* (i) Dry bulb temperature [C] */<br />
+&nbsp;&nbsp;&nbsp; );</p>
+      <h3>Description</h3>
+      <p>Computes the specific enthalpy of dry air, given the dry  bulb temperature.</p>
+      <h3>See Also</h3>
+      <p><em>GetMoistAirEnthalpy</em> to compute the enthalpy of moist air.<br />
+      <em>GetSatAirEnthalpy</em> to compute the enthalpy of saturated air.</p>
+      <p>&nbsp;</p>
+      <h2><a name="GetDryAirVolume" id="GetDryAirVolume">GetDryAirVolume</a></h2>
+      <p class="style5">double GetDryAirVolume&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /* (o) Dry air volume [m3/kg] */<br />
+&nbsp;&nbsp;&nbsp; ( double
+TDryBulb&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* (i) Dry bulb temperature [C] */<br />
+&nbsp;&nbsp;&nbsp; , double
+Pressure&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* (i) Atmospheric pressure [Pa] */<br />
+&nbsp;&nbsp;&nbsp; );</p>
+      <h3>Description</h3>
+      <p>Computes the dry air volume in cubic meter per kilogram,  given the dry bulb temperature and atmospheric pressure.</p>
+      <h3>See Also</h3>
+      <p><em>GetMoistAirVolume</em> to compute the volume of moist air.<br />
+      <em>GetDryAirDensity</em> to compute the density of dry air.</p>
+      <p>&nbsp;</p>
+      <h2><a name="GetHumRatioFromRelHum" id="GetHumRatioFromRelHum">GetHumRatioFromRelHum</a></h2>
+      <p>double GetHumRatioFromRelHum&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /* (o) Humidity Ratio [kgH2O/kgAIR] */<br />
+&nbsp;&nbsp;&nbsp; ( double
+TDryBulb&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* (i) Dry bulb temperature [C] */<br />
+&nbsp;&nbsp;&nbsp; , double
+RelHum&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* (i) Relative humidity [0-1] */<br />
+&nbsp;&nbsp;&nbsp; , double
+Pressure&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* (i) Atmospheric pressure [Pa] */<br />
+&nbsp;&nbsp;&nbsp; );</p>
+      <h3>Description</h3>
+      <p>Computes
+the humidity ratio in kilograms of water per kilograms of dry air. This
+function first calculates the vapor pressure from the relative
+humidity, then calculates the humidity ratio from the vapor pressure.</p>
+      <h3>See Also</h3>
+      <p><em>GetVapPresFromRelHum </em>for  vapor pressure calculation.<br />
+        <em>GetHumRatioFrom&#8230; </em>to  compute humidity ratio from other psychrometric variables.<br />
+      <em>GetRelHumFromHumRatio</em> to compute relative humidity from humidity ratio.</p>
+      <p>&nbsp;</p>
+      <h2><a name="GetHumRatioFromTDewPoint" id="GetHumRatioFromTDewPoint">GetHumRatioFromTDewPoint</a></h2>
+      <p>double GetHumRatioFromTDewPoint&nbsp;&nbsp;&nbsp; /* (o) Humidity Ratio [kgH2O/kgAIR] */<br />
+&nbsp;&nbsp;&nbsp; ( double
+TDewPoint&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* (i) Dew point temperature [C] */<br />
+&nbsp;&nbsp;&nbsp; , double
+Pressure&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* (i) Atmospheric pressure [Pa] */<br />
+&nbsp;&nbsp;&nbsp; );</p>
+      <h3>Description</h3>
+      <p>Computes
+the humidity ratio in kilograms of water per kilograms of dry air. This
+function first calculates the vapor pressure from the dew point
+temperature, then calculates the humidity ratio from the vapor pressure.</p>
+      <h3>See Also</h3>
+      <p><em>GetVapPresFromTDewPoint </em>for vapor pressure calculation.<br />
+        <em>GetHumRatioFrom&#8230; </em>to  compute humidity ratio from other psychrometric variables.<br />
+      <em>GetTDewPointFromHumRatio</em> to compute dew point temperature from humidity ratio.</p>
+      <p>&nbsp;</p>
+      <h2><a name="GetHumRatioFromTWetBulb" id="GetHumRatioFromTWetBulb">GetHumRatioFromTWetBulb</a></h2>
+      <p class="style5">double GetHumRatioFromTWetBulb&nbsp;&nbsp;&nbsp;&nbsp; /* (o) Humidity Ratio [kgH2O/kgAIR] */<br />
+&nbsp;&nbsp;&nbsp; ( double
+TDryBulb&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* (i) Dry bulb temperature [C] */<br />
+&nbsp;&nbsp;&nbsp; , double
+TWetBulb&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* (i) Wet bulb temperature [C] */<br />
+&nbsp;&nbsp;&nbsp; , double Pressure<br />
+&nbsp;&nbsp;&nbsp; );</p>
+      <h3>Description</h3>
+      <p>Computes
+the humidity ratio in kilograms of water per kilograms of dry air. This
+function first calculates the vapor pressure from the wet bulb
+temperature, then calculates the humidity ratio from the vapor pressure.</p>
+      <h3>See Also</h3>
+      <p><em>GetVapPresFromTWetBulb</em> for vapor pressure calculation.<br />
+        <em>GetHumRatioFrom&#8230; </em>to  compute humidity ratio from other psychrometric variables.<br />
+      <em>GetTWetBulbFromHumRatio</em> to compute wet bulb temperature from humidity ratio.</p>
+      <p>&nbsp;</p>
+      <h2><a name="GetHumRatioFromVapPres" id="GetHumRatioFromVapPres">GetHumRatioFromVapPres</a></h2>
+      <p class="style5">double GetHumRatioFromVapPres&nbsp;&nbsp;  /* (o) Humidity Ratio [kgH2O/kgAIR] */<br />
+&nbsp;&nbsp;&nbsp; ( double
+VapPres&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* (i) Partial pressure of water vapor in moist air [Pa] */<br />
+&nbsp;&nbsp;&nbsp; , double
+Pressure&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /*
+(i) Atmospheric pressure [Pa] */<br />
+&nbsp;&nbsp;&nbsp; );</p>
+      <h3>Description</h3>
+      <p>Computes
+the humidity ratio in kilograms of water per kilograms of dry air from
+the vapor pressure and the atmospheric pressure.</p>
+      <h3>See Also</h3>
+      <p><em>GetHumRatioFrom&#8230; </em>to  compute humidity ratio from other psychrometric variables.<br />
+      <em>GetVapPresFromHumRatio</em> to compute vapor pressure from humidity ratio.</p>
+      <p>&nbsp;</p>
+      <h2><a name="GetMoistAirDensity" id="GetMoistAirDensity">GetMoistAirDensity</a></h2>
+      <p>double GetMoistAirDensity&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /* (o) Moist air density [kg/m3] */<br />
+&nbsp;&nbsp;&nbsp; ( double
+TDryBulb&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* (i) Dry bulb temperature [C] */<br />
+&nbsp;&nbsp;&nbsp; , double
+HumRatio&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* (i) Humidity ratio [kgH2O/kgAIR] */<br />
+&nbsp;&nbsp;&nbsp; , double
+Pressure&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* (i) Atmospheric pressure [Pa] */<br />
+&nbsp;&nbsp;&nbsp; );</p>
+      <h3>Description</h3>
+      <p>Computes
+the moist air density in kilograms per cubic meter from the dry bulb
+temperature, humidity ratio, and atmospheric pressure. </p>
+      <h3>See Also</h3>
+      <p><em>GetHumRatioFrom&#8230;</em> to calculate the humidity ratio from other psychrometric variables.<br />
+        <em>GetMoistAirVolume</em> for&nbsp; moist air volume calculation.<br />
+      <em>GetDryAirDensity</em> for dry air density calculation.</p>
+      <p>&nbsp;</p>
+      <h2><a name="GetMoistAirEnthalpy" id="GetMoistAirEnthalpy">GetMoistAirEnthalpy</a></h2>
+      <p class="style5">double GetMoistAirEnthalpy&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /* (o) Moist Air Enthalpy [J/kg] */<br />
+&nbsp;&nbsp;&nbsp; ( double
+TDryBulb&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* (i) Dry bulb temperature [C] */<br />
+&nbsp;&nbsp;&nbsp; , double
+HumRatio&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* (i) Humidity ratio [kgH2O/kgAIR] */<br />
+&nbsp;&nbsp;&nbsp; );</p>
+      <h3>Description</h3>
+      <p>Computes the specific enthalpy of moist air in Joules per  kilogram given the dry bulb temperature and humidity ratio.</p>
+      <h3>See Also</h3>
+      <p><em>GetHumRatioFrom&#8230;</em> to calculate the humidity ratio from other psychrometric variables.<br />
+        <em>GetDryAirEnthalpy</em> for dry air enthalpy calculation.<br />
+      <em>GetSatAirEnthalpy</em> for saturated air enthalpy calculation.</p>
+      <p>&nbsp;</p>
+      <h2><a name="GetMoistAirVolume" id="GetMoistAirVolume">GetMoistAirVolume</a></h2>
+      <p class="style5">double GetMoistAirVolume&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /* (o) Specific Volume [m3/kg] */<br />
+&nbsp;&nbsp;&nbsp; ( double TDryBulb&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/* (i) Dry bulb
+temperature [C] */<br />
+&nbsp;&nbsp;&nbsp; , double
+HumRatio&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* (i) Humidity ratio [kgH2O/kgAIR] */<br />
+&nbsp;&nbsp;&nbsp; , double
+Pressure&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* (i) Atmospheric pressure [Pa] */<br />
+&nbsp;&nbsp;&nbsp; );</p>
+      <h3>Description</h3>
+      <p>Computes
+the moist air volume in cubic meters per kilogram of dry air given the
+dry bulb temperature, humidity ratio, and pressure.</p>
+      <h3>See Also</h3>
+      <p><em>GetHumRatioFrom&#8230;</em> to calculate the humidity ratio from other psychrometric variables.<br />
+      <em>GetMoistAirDensity</em> for moist air density calculation.</p>
+      <p>&nbsp;</p>
+      <h2><a name="GetRelHumFromHumRatio" id="GetRelHumFromHumRatio">GetRelHumFromHumRatio</a></h2>
+      <p>double GetRelHumFromHumRatio&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /* (o) Relative humidity [0-1] */<br />
+&nbsp;&nbsp;&nbsp; ( double
+TDryBulb&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* (i) Dry bulb temperature [C] */<br />
+&nbsp;&nbsp;&nbsp; , double
+HumRatio&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* (i) Humidity ratio [kgH2O/kgAIR] */<br />
+&nbsp;&nbsp;&nbsp; , double
+Pressure&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* (i) Atmospheric pressure [Pa] */<br />
+&nbsp;&nbsp;&nbsp; );</p>
+      <h3>Description</h3>
+      <p>Computes
+the relative humidity in decimal form given the humidity ratio, dry
+bulb temperature, and atmospheric pressure.&nbsp; The function first
+computes the vapor pressure from the humidity ratio, then computes the
+relative humidity from the vapor pressure.</p>
+      <h3>See Also</h3>
+      <p><em>GetHumRatioFrom</em>&#8230;  to calculate the humidity ratio from other psychrometric variables<br />
+      <em>GetVapPresFromHumRatio </em>for calculation of vapor pressure.</p>
+      <p>&nbsp;</p>
+      <h2><a name="GetRelHumFromTDewPoint" id="GetRelHumFromTDewPoint">GetRelHumFromTDewPoint</a></h2>
+      <p class="style5">double GetRelHumFromTDewPoint&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /* (o) Relative humidity [0-1] */<br />
+&nbsp;&nbsp;&nbsp; ( double
+TDryBulb&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* (i) Dry bulb temperature [C] */<br />
+&nbsp;&nbsp;&nbsp; , double
+TDewPoint&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* (i) Dew point temperature [C] */<br />
+&nbsp;&nbsp;&nbsp; );</p>
+      <h3>Description</h3>
+      <p>Computes
+the relative humidity in decimal form given the dew point temperature
+and dry bulb temperature. This function first calculates the vapour
+pressure from the dew point temperature, then calculates the relative
+humidity from the vapour pressure.</p>
+      <h3>See Also</h3>
+      <p><em>GetRelHumFrom</em>&#8230; to  compute relative humidity from other psychrometric variables.<br />
+      <em>GetTDewPointFromRelHum </em>to compute dew point temperature from relative humidity.</p>
+      <p>&nbsp;</p>
+      <h2><a name="GetRelHumFromTWetBulb" id="GetRelHumFromTWetBulb">GetRelHumFromTWetBulb</a></h2>
+      <p class="style5">double GetRelHumFromTWetBulb&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /* (o) Relative humidity [0-1] */<br />
+&nbsp;&nbsp;&nbsp; ( double
+TDryBulb&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* (i) Dry bulb temperature [C] */<br />
+&nbsp;&nbsp;&nbsp; , double
+TWetBulb&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* (i) Wet bulb temperature [C] */<br />
+&nbsp;&nbsp;&nbsp; , double
+Pressure&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* (i) Atmospheric pressure [Pa] */<br />
+&nbsp;&nbsp;&nbsp; );</p>
+      <h3>Description</h3>
+      <p>Computes
+the relative humidity in decimal form given the wet bulb temperature,
+dry bulb temperature, and atmospheric pressure.&nbsp; This function
+first calculates the humidity ratio from the wet bulb temperature, then
+calculates the relative humidity from the humidity ratio.</p>
+      <h3>See Also</h3>
+      <p><em>GetHumRatioFromTWetBulb </em>for calculation of humidity ratio.<br />
+        <em>GetRelHumFrom</em>&#8230; to  compute relative humidity from other psychrometric variables.<br />
+      <em>GetTWetBulbFromRelHum </em>to  compute wet bulb temperature from relative humidity.</p>
+      <p>&nbsp;</p>
+      <h2><a name="GetRelHumFromVapPres" id="GetRelHumFromVapPres">GetRelHumFromVapPres</a></h2>
+      <p class="style5">double GetRelHumFromVapPres&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /* (o) Relative humidity [0-1] */<br />
+&nbsp;&nbsp;&nbsp; ( double
+TDryBulb&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* (i) Dry bulb temperature [C] */<br />
+&nbsp;&nbsp;&nbsp; , double
+VapPres&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* (i) Partial pressure of water vapor in moist air [Pa] */<br />
+&nbsp;&nbsp;&nbsp; );</p>
+      <h3>Description</h3>
+      <p>Computes the relative humidity in decimal form from the dry  bulb temperature and vapor pressure.</p>
+      <h3>See Also</h3>
+      <p><em>GetRelHumFrom</em>&#8230; to  compute relative humidity from other psychrometric variables.<br />
+      <em>GetVapPresFromRelHum </em>to  compute vapor pressure from relative humidity.</p>
+      <p>&nbsp;</p>
+      <h2><a name="GetSatAirEnthalpy" id="GetSatAirEnthalpy">GetSatAirEnthalpy</a></h2>
+      <p>double GetSatAirEnthalpy&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /* (o) Saturated air enthalpy [J/kg]  */<br />
+&nbsp;&nbsp;&nbsp; ( double
+TDryBulb&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* (i) Dry bulb temperature [C] */<br />
+&nbsp;&nbsp;&nbsp; );</p>
+      <h3>Description</h3>
+      <p>Computes the enthalpy of saturated air in Joules per  kilogram, given the dry bulb temperature.</p>
+      <h3>See Also</h3>
+      <p><em>GetMoistAirEnthalpy</em> for most air enthalpy calculation.<br />
+      <em>GetDryAirEnthalpy</em> for dry air enthalpy calculation.</p>
+      <p>&nbsp;</p>
+      <h2><a name="GetSatHumRatio" id="GetSatHumRatio">GetSatHumRatio</a></h2>
+      <p class="style5">double
+GetSatHumRatio&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* (o) Humidity ratio of saturated air [kgH2O/kgAIR] */<br />
+&nbsp;&nbsp;&nbsp; ( double
+TDryBulb&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /*
+(i) Dry bulb temperature [C] */<br />
+&nbsp;&nbsp;&nbsp; , double
+Pressure&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /*
+(i) Atmospheric pressure [Pa] */<br />
+&nbsp;&nbsp;&nbsp; );</p>
+      <h3>Description</h3>
+      <p>Computes
+the humidity ratio of saturated air in kilograms of water per kilograms
+of dry air, given the dry bulb temperature and pressure.&nbsp; The
+function first calculates the saturated vapor pressure, then the
+saturated humidity ratio.</p>
+      <h3>See Also</h3>
+      <p><em>GetSatVapPres </em>for  calculation of the saturated vapor pressure.</p>
+      <p>&nbsp;</p>
+      <h2><a name="GetSatVapPres" id="GetSatVapPres">GetSatVapPres</a></h2>
+      <p class="style5">double
+GetSatVapPres&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/*
+(o) Vapor Pressure of saturated air [Pa] */<br />
+&nbsp;&nbsp;&nbsp; ( double
+TDryBulb&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* (i) Dry bulb temperature [C] */<br />
+&nbsp;&nbsp;&nbsp; );</p>
+      <h3>Description</h3>
+      <p>Computes the partial pressure of water vapor in saturated  air in Pascals given the dry bulb temperature.</p>
+      <p>&nbsp;</p>
+      <h2 class="style6"><a name="GetSeaLevelPressure" id="GetSeaLevelPressure"></a>GetSeaLevelPressure</h2>
+      <p class="style5">double GetSeaLevelPressure&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/* (o) sea level barometric pressure [Pa] */ <br />
+&nbsp;&nbsp;&nbsp; ( double StnPressure&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/* (i) observed
+station pressure [Pa] */ <br />
+&nbsp;&nbsp;&nbsp; , double Altitude&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/*
+(i) altitude above sea level [m] */ <br />
+&nbsp;&nbsp;&nbsp; , double TDryBulb&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/*
+(i) dry bulb temperature [°C] */ <br />
+&nbsp;&nbsp;&nbsp; );<br />
+      </p>
+      <h3>Description</h3>
+      <p>Calculate the sea level pressure, given the atmospheric pressure at station elevation.<br />
+  &nbsp;</p>
+      <h3>See also</h3>
+      <p><em>GetStationPressure </em>to compute station pressure from sea level pressure.</p>
+      <p>&nbsp;</p>
+      <h2 class="style6"><a name="GetStandardAtmPressure" id="GetStandardAtmPressure"></a>GetStandardAtmPressure</h2>
+      <p class="style5">double GetStandardAtmPressure&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /* (o) standard atmosphere barometric  pressure [Pa] */<br />
+&nbsp;&nbsp;&nbsp; ( double
+Altitude&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* (i) altitude [m]
+*/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<br />
+&nbsp;&nbsp;&nbsp; );</p>
+      <h3>Description</h3>
+      <p>Compute the barometric pressure of the US standard  atmosphere, in Pascals, given the elevation (altitude) in meters.<br />
+  &nbsp;</p>
+      <h3>See also</h3>
+      <p><em>GetStandardAtmTemperature </em>to compute the temperature of the standard atmosphere.</p>
+      <p>&nbsp;</p>
+      <h2 class="style6"><a name="GetStationPressure" id="GetStationPressure"></a>GetStationPressure</h2>
+      <p class="style5">double GetStationPressure  &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/* (o) station pressure [Pa] */ <br />
+&nbsp;&nbsp;&nbsp; ( double SeaLevelPressure&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;/* (i) sea level barometric pressure [Pa] */ <br />&nbsp;&nbsp;&nbsp;
+, double Altitude&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/*
+(i) altitude above sea level [m] */ <br />
+&nbsp;&nbsp;&nbsp; , double TDryBulb&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/*
+(i) dry bulb temperature [°C] */ <br />
+  &nbsp;&nbsp;&nbsp; );<br />
+      </p>
+      <h3>Description</h3>
+      <p>Calculate the stationl pressure, given the sea level pressure.<br />
+  &nbsp;</p>
+      <h3>See also</h3>
+      <p><em>GetSeaLevelPressure </em>to compute station pressure from sea level pressure.</p>
+      <p>&nbsp;</p>
+      <h2 class="style6"><a name="GetStandardAtmTemperature" id="GetStandardAtmTemperature"></a>GetStandardAtmTemperature</h2>
+      <p>double GetStandardAtmTemperature&nbsp;&nbsp;  /* (o) standard atmosphere dry bulb temperature [C] */<br />
+&nbsp;&nbsp;&nbsp; ( double
+Altitude&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* (i) altitude [m]
+*/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<br />
+&nbsp;&nbsp;&nbsp; );</p>
+      <h3>Description</h3>
+      <p>Compute the dry-bulb temperature of the US standard  atmosphere, in C, given the elevation (altitude) in meters.<br />
+      </p>
+      <h3>See also</h3>
+      <p><em>GetStandardAtmPressure&nbsp; </em>to compute the barometric pressure of the  standard atmosphere.</p>
+      <p>&nbsp;</p>
+      <h2><a name="GetTDewPointFromHumRatio" id="GetTDewPointFromHumRatio">GetTDewPointFromHumRatio</a></h2>
+      <p>double GetTDewPointFromHumRatio&nbsp;&nbsp;&nbsp; /* (o) Dew Point temperature [C] */<br />&nbsp;&nbsp;&nbsp;
+( double
+TDryBulb&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* (i) Dry bulb temperature [C] */<br />
+&nbsp;&nbsp;&nbsp; , double
+HumRatio&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* (i) Humidity ratio [kgH2O/kgAIR] */<br />
+&nbsp;&nbsp;&nbsp; , double
+Pressure&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* (i) Atmospheric pressure [Pa] */<br />
+&nbsp;&nbsp;&nbsp; );</p>
+      <h3>Description</h3>
+      <p>Computes
+the dew point temperature in degrees Celsius given the humidity ratio,
+dry bulb temperature, and atmospheric pressure.&nbsp; The function
+first computes the vapor pressure from the humidity ratio, then
+computes the dew point temperature from the vapor pressure.</p>
+      <h3>See Also</h3>
+      <p><em>GetVapPresFromHumRatio </em>for calculation of vapor pressure<br />
+        <em>GetTDewPointFrom</em>&#8230;  to compute dew point temperature from other psychrometric variables.<br />
+      <em>GetHumRatioFromTDewPoint</em> to compute humidity ratio from dew point temperature.</p>
+      <p>&nbsp;</p>
+      <h2><a name="GetTDewPointFromRelHum" id="GetTDewPointFromRelHum">GetTDewPointFromRelHum</a></h2>
+      <p class="style5">double GetTDewPointFromRelHum&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /* (o) Dew Point temperature [C] */<br />
+&nbsp;&nbsp;&nbsp; ( double
+TDryBulb&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* (i) Dry bulb temperature [C] */<br />
+&nbsp;&nbsp;&nbsp; , double
+RelHum&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* (i) Relative humidity [0-1] */<br />
+&nbsp;&nbsp;&nbsp; );</p>
+      <h3>Description</h3>
+      <p>Computes
+the dew point temperature in degrees Celsius given the relative
+humidity, and dry bulb temperature.&nbsp; The function first calculates
+the saturated vapor pressure, then calculates the vapor pressure and
+uses the vapor pressure to calculate the dew point temperature.</p>
+      <h3>See Also</h3>
+      <p><em>GetSatVapPres </em>for  calculation of saturated vapor pressure.<br />
+        <em>GetTDewPointFrom</em>&#8230;  to compute dew point temperature from other psychrometric variables.<br />
+      <em>GetRelHumFromTDewPoint</em> to compute relative humidity from dew point temperature.</p>
+      <p>&nbsp;</p>
+      <h2><a name="GetTDewPointFromTWetBulb" id="GetTDewPointFromTWetBulb">GetTDewPointFromTWetBulb</a></h2>
+      <p class="style5">double GetTDewPointFromTWetBulb&nbsp;&nbsp;&nbsp; /* (o) Dew Point temperature [C] */<br />
+&nbsp;&nbsp;&nbsp; ( double
+TDryBulb&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* (i) Dry bulb temperature [C] */<br />
+&nbsp;&nbsp;&nbsp; , double
+TWetBulb&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* (i) Wet bulb temperature [C] */<br />
+&nbsp;&nbsp;&nbsp; , double
+Pressure&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* (i) Atmospheric pressure [Pa] */<br />
+&nbsp;&nbsp;&nbsp; );</p>
+      <h3>Description</h3>
+      <p>Computes
+the dew point temperature in degrees Celsius given the wet bulb
+temperature, dry bulb temperature, and atmospheric pressure.&nbsp; The
+humidity ratio is first calculated from the wet bulb temperature, then
+the dew point temperature is calculated from the humidity ratio.</p>
+      <h3>See Also</h3>
+      <p><em>GetHumRatioFromTWetBulb </em>for calculation of humidity ratio.<br />
+        <em>GetTDewPointFrom</em>&#8230;  to compute dew point temperature from other psychrometric variables.<br />
+      <em>GetTWetBulbFromTDewPoint</em> to compute wet bulb temperature from dew point temperature.</p>
+      <p>&nbsp;</p>
+      <h2><a name="GetTDewPointFromVapPres" id="GetTDewPointFromVapPres">GetTDewPointFromVapPres</a></h2>
+      <p class="style5">double GetTDewPointFromVapPres&nbsp;&nbsp;&nbsp;&nbsp; /* (o) Dew Point temperature [C] */<br />
+&nbsp;&nbsp;&nbsp; ( double
+TDryBulb&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* (i) Dry bulb temperature [C] */<br />
+&nbsp;&nbsp;&nbsp; , double
+VapPres&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* (i) Partial pressure of water vapor in moist air [Pa] */<br />
+&nbsp;&nbsp;&nbsp; );</p>
+      <h3>Description</h3>
+      <p>Computes the dew point temperature in degrees Celsius from  the dry bulb temperature and vapor pressure.</p>
+      <h3>See Also</h3>
+      <p><em>GetTDewPointFrom</em>&#8230;  to compute dew point temperature from other psychrometric variables.<br />
+      <em>GetVapPresFromTDewPoint</em> to compute vapor pressure from dew point temperature.</p>
+      <p>&nbsp;</p>
+      <h2><a name="GetTWetBulbFromHumRatio" id="GetTWetBulbFromHumRatio">GetTWetBulbFromHumRatio</a></h2>
+      <p class="style5">double GetTWetBulbFromHumRatio&nbsp;&nbsp;&nbsp;&nbsp; /* (o) Wet bulb temperature [C] */<br />
+&nbsp;&nbsp;&nbsp; ( double
+TDryBulb&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* (i) Dry bulb temperature [C] */<br />
+&nbsp;&nbsp;&nbsp; , double
+HumRatio&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* (i) Humidity ratio [kgH2O/kgAIR] */<br />
+&nbsp;&nbsp;&nbsp; , double
+Pressure&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* (i) Atmospheric pressure [Pa] */<br />
+&nbsp;&nbsp;&nbsp; );</p>
+      <h3>Description</h3>
+      <p>Computes
+the wet bulb temperature in degrees Celsius given the humidity ratio,
+dry bulb temperature, and atmospheric pressure.&nbsp; The calculation
+is made using an iterative procedure.</p>
+      <h3>See Also</h3>
+      <p><em>GetTWetBulbFrom</em>&#8230;  to compute wet bulb temperature from other psychrometric variables.<br />
+      <em>GetHumRatioFromTWetBulb</em> to compute humidity ratio from wet bulb temperature.</p>
+      <p>&nbsp;</p>
+      <h2><a name="GetTWetBulbFromRelHum" id="GetTWetBulbFromRelHum">GetTWetBulbFromRelHum</a></h2>
+      <p>double GetTWetBulbFromRelHum&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /* (o) Wet bulb temperature [C] */<br />
+&nbsp;&nbsp;&nbsp; ( double
+TDryBulb&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* (i) Dry bulb temperature [C] */<br />
+&nbsp;&nbsp;&nbsp; , double
+RelHum&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* (i) Relative humidity [0-1] */<br />
+&nbsp;&nbsp;&nbsp; , double
+Pressure&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* (i) Atmospheric pressure [Pa] */<br />
+&nbsp;&nbsp;&nbsp; );</p>
+      <h3>Description</h3>
+      <p>Computes
+the wet bulb temperature in degrees Celsius given the relative
+humidity, dry bulb temperature, and pressure.&nbsp; The function
+calculates the humidity ratio from the relative humidity, then
+calculates the wet bulb temperature from the humidity ratio.</p>
+      <h3>See Also</h3>
+      <p><em>GetHumRatioFromRelHum </em>to  compute the humidity ratio.<br />
+        <em>GetTWetBulbFrom</em>&#8230;  to compute wet bulb temperature from other psychrometric variables.<br />
+      <em>GetRelHumFromTWetBulb</em> to compute relative humidity from wet bulb temperature.</p>
+      <p>&nbsp;</p>
+      <h2><a name="GetTWetBulbFromTDewPoint" id="GetTWetBulbFromTDewPoint">GetTWetBulbFromTDewPoint</a></h2>
+      <p class="style5">double GetTWetBulbFromTDewPoint&nbsp;&nbsp;&nbsp; /* (o) Wet bulb temperature [C] */<br />
+&nbsp;&nbsp;&nbsp; ( double
+TDryBulb&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* (i) Dry bulb temperature [C] */<br />
+&nbsp;&nbsp;&nbsp; , double
+TDewPoint&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* (i) Dew point temperature [C] */<br />
+&nbsp;&nbsp;&nbsp; , double
+Pressure&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* (i) Atmospheric pressure [Pa] */<br />
+&nbsp;&nbsp;&nbsp; );</p>
+      <h3>Description</h3>
+      <p>Computes
+the wet bulb temperature in degrees Celsius given the dew point
+temperature, dry bulb temperature, and atmospheric pressure.&nbsp; The
+function calculates the humidity ratio from the dew point temperature,
+then calculates the wet bulb temperature from the humidity ratio.</p>
+      <h3>See Also</h3>
+      <p><em>GetHumRatioFromTDewPoint </em>to compute the humidity ratio.<br />
+        <em>GetTWetBulbFrom</em>&#8230;  to compute wet bulb temperature from other psychrometric variables.<br />
+      <em>GetTDewPointFromTWetBulb</em> to compute dew point temperature from wet bulb temperature.</p>
+      <p>&nbsp;</p>
+      <h2><a name="GetVapPresFromHumRatio" id="GetVapPresFromHumRatio">GetVapPresFromHumRatio</a></h2>
+      <p class="style5">double GetVapPresFromHumRatio&nbsp;&nbsp;  /* (o) Partial pressure of water vapor in moist air [Pa] */<br />
+&nbsp;&nbsp;&nbsp; ( double
+HumRatio&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /*
+(i) Humidity ratio [kgH2O/kgAIR] */<br />
+&nbsp;&nbsp;&nbsp; , double
+Pressure&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /*
+(i) Atmospheric pressure [Pa] */<br />
+&nbsp;&nbsp;&nbsp; );</p>
+      <h3>Description</h3>
+      <p>Computes the partial pressure of water vapor in moist air in  Pascals, given the humidity ratio and atmospheric pressure.</p>
+      <h3>See Also</h3>
+      <p><em>GetVapPresFrom</em>&#8230; to  compute vapor pressure from other psychrometric variables.<br />
+      <em>GetHumRatioFromVapPres </em>to compute humidity ratio from vapor pressure.</p>
+      <p>&nbsp;</p>
+      <h2><a name="GetVapPresFromRelHum" id="GetVapPresFromRelHum">GetVapPresFromRelHum</a></h2>
+      <p class="style5">double GetVapPresFromRelHum&nbsp;&nbsp;&nbsp;&nbsp;  /* (o) Partial pressure of water vapor in moist air [Pa] */<br />
+&nbsp;&nbsp;&nbsp; ( double
+TDryBulb&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /*
+(i) Dry bulb temperature [C] */<br />
+&nbsp;&nbsp;&nbsp; , double
+RelHum&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* (i) Relative humidity [0-1] */<br />
+&nbsp;&nbsp;&nbsp; );</p>
+      <h3>Description</h3>
+      <p>Computes the vapor pressure in Pascals given the relative  humidity and dry bulb temperature.</p>
+      <h3>See Also</h3>
+      <p><em>GetVapPresFrom</em>&#8230; to  compute vapor pressure from other psychrometric variables.<br />
+      <em>GetRelHumFromVapPres </em>to  compute relative humidity from vapor pressure.</p>
+      <p>&nbsp;</p>
+      <h2><a name="GetVapPresFromTDewPoint" id="GetVapPresFromTDewPoint">GetVapPresFromTDewPoint</a></h2>
+      <p class="style5">double GetVapPresFromTDewPoint&nbsp;  /* (o) Partial pressure of water vapor in moist air[Pa] */<br />
+&nbsp;&nbsp;&nbsp; ( double
+TDewPoint&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /* (i)
+Dew point temperature [C] */<br />
+&nbsp;&nbsp;&nbsp; );</p>
+      <h3>Description</h3>
+      <p>Computes the vapor pressure in Pascals given the dew point  temperature.</p>
+      <h3>See Also</h3>
+      <p><em>GetVapPresFrom</em>&#8230; to  compute vapor pressure from other psychrometric variables.<br />
+      <em>GetTDewPointFromVapPres </em>to compute dew point temperature from vapor pressure.</p>
+      <p>&nbsp;</p>
+      <h2><a name="GetVPD" id="GetVPD">GetVPD</a></h2>
+      <p class="style5">double
+GetVPD&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* (o) Vapor pressure deficit [Pa] */<br />
+  ( double TDryBulb&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /* (i) Dry bulb temperature [C] */<br />
+&nbsp;&nbsp;&nbsp; , double
+HumRatio&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* (i) Humidity ratio [kgH2O/kgAIR] */<br />
+&nbsp;&nbsp;&nbsp; , double
+Pressure&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* (i) Atmospheric pressure [Pa] */<br />
+&nbsp;&nbsp;&nbsp; );</p>
+      <h3>Description</h3>
+      <p>Computes the vapor pressure deficit in Pascals given the  humidity ratio, dry bulb temperature, and atmospheric pressure.</p>
+      <h3>See Also</h3>
+      <p><em>GetHumRatioFrom</em>&#8230;  to compute humidity ratio from other psychrometric variables.</p>
+      <p>&nbsp;</p>      <p class="bodyText">&nbsp;</p></td>
+  </tr>
+  <tr>
+    <td bgcolor="#e6f3ff" height="500" width="196">&nbsp;</td>
+    <td width="50">&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+</tbody></table>
+</body></html>
