@@ -1,6 +1,6 @@
 Attribute VB_Name = "Psychrometrics"
 ' This psychrometrics package is used to demonstrate psychrometric calculations.
-' It contains C functions to calculate dew point temperature, wet bulb temperature,
+' It contains functions to calculate dew point temperature, wet bulb temperature,
 ' relative humidity, humidity ratio, partial pressure of water vapor, moist air
 ' enthalpy, moist air volume, specific volume, and degree of saturation, given
 ' dry bulb temperature and another psychrometric variable. The code also includes
@@ -46,7 +46,7 @@ Option Explicit
 Const RGAS = 8.314472        ' Universal gas constant in J/mol/K
 Const MOLMASSAIR = 0.028966  ' mean molar mass of dry air in kg/mol
 Const KILO = 1000            ' exact
-Const ZEROC = 273.15         ' Zero ºC expressed in K
+Const ZEROC = 273.15         ' Zero ÂºC expressed in K
 Const ERRVAL = -999999       ' Error value
 
 ' Conversions from Celsius to Kelvin
@@ -862,10 +862,10 @@ Function GetSeaLevelPressure(ByVal StnPressure As Variant, ByVal Altitude As Var
  ' GetSeaLevelPressure: (o) sea level barometric pressure [Pa]
  ' StnPressure: (i) observed station pressure [Pa]
  ' Altitude: (i) altitude above sea level [m]
- ' TDryBulb: (i) dry bulb temperature [°C]
+ ' TDryBulb: (i) dry bulb temperature [Â°C]
  
   ' Calculate average temperature in column of air, assuming a lapse rate
-  ' of 6.5 °C/km
+  ' of 6.5 Â°C/km
   Dim TColumn As Variant
   Dim H As Variant
   
@@ -889,7 +889,7 @@ Function GetStationPressure(ByVal SeaLevelPressure As Variant, ByVal Altitude As
   ' GetStationPressure: (o) station pressure [Pa]
   ' SeaLevelPressure: (i) sea level barometric pressure [Pa]
   ' Altitude: (i) altitude above sea level [m]
-  ' TDryBulb: (i) dry bulb temperature [°C]
+  ' TDryBulb: (i) dry bulb temperature [Â°C]
   
   GetStationPressure = SeaLevelPressure / GetSeaLevelPressure(1, Altitude, TDryBulb)
   
