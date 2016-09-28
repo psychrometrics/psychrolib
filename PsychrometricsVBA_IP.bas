@@ -1,6 +1,6 @@
 Attribute VB_Name = "PsychrometricsIP"
 ' This psychrometrics package is used to demonstrate psychrometric calculations.
-' It contains C functions to calculate dew point temperature, wet bulb temperature,
+' It contains functions to calculate dew point temperature, wet bulb temperature,
 ' relative humidity, humidity ratio, partial pressure of water vapor, moist air
 ' enthalpy, moist air volume, specific volume, and degree of saturation, given
 ' dry bulb temperature and another psychrometric variable. The code also includes
@@ -45,10 +45,10 @@ Attribute VB_Name = "PsychrometricsIP"
 
 Option Explicit
 
-Const RGAS = 1545.349        ' Universal gas constant in ft·lbf /lb mol·R
+Const RGAS = 1545.349        ' Universal gas constant in ftÂ·lbf /lb molÂ·R
 Const MOLMASSAIR = 28.966    ' mean molecular mass of dry air based on C-12 scale
 Const KILO = 1000            ' exact
-Const ZEROF = 459.67         ' Zero ºF expressed in R
+Const ZEROF = 459.67         ' Zero ÂºF expressed in R
 Const ERRVAL = -999999       ' Error value
 
 ' Conversions from Celsius to Rankin
@@ -864,10 +864,10 @@ Function GetSeaLevelPressure(ByVal StnPressure As Variant, ByVal Altitude As Var
  ' GetSeaLevelPressure: (o) sea level barometric pressure [psi]
  ' StnPressure: (i) observed station pressure [psi]
  ' Altitude: (i) altitude above sea level [ft]
- ' TDryBulb: (i) dry bulb temperature [°F]
+ ' TDryBulb: (i) dry bulb temperature [Â°F]
  
   ' Calculate average temperature in column of air, assuming a lapse rate
-  ' of 3.6 °F/1000ft
+  ' of 3.6 Â°F/1000ft
   Dim TColumn As Variant
   Dim H As Variant
   
@@ -891,7 +891,7 @@ Function GetStationPressure(ByVal SeaLevelPressure As Variant, ByVal Altitude As
   ' GetStationPressure: (o) station pressure [psi]
   ' SeaLevelPressure: (i) sea level barometric pressure [psi]
   ' Altitude: (i) altitude above sea level [ft]
-  ' TDryBulb: (i) dry bulb temperature [°F]
+  ' TDryBulb: (i) dry bulb temperature [Â°F]
   
   GetStationPressure = SeaLevelPressure / GetSeaLevelPressure(1, Altitude, TDryBulb)
   
