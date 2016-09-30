@@ -1,4 +1,4 @@
-#Libraries of Psychrometric Functions in C and VBA##
+#Libraries of Psychrometric Functions in C, VBA (Excel) and JavaScript##
 
 
 Psychrometrics are the determination of physical and thermodynamic properties of moist air. These properties include, for example, the air's dew point temperature, its wet bulb temperature, relative humidity, humidity ratio, enthalpy, etc.
@@ -24,6 +24,8 @@ Relationships between these various functions are illustrated in Figure 1. To co
 ###Credits
 
 The formulae used in the psychrometric library and in PsychroCalc are those published in the 2009 ASHRAE Handbook of Fundamentals. This publication is available from ASHRAE ([www.ashrae.org](www.ashrae.org)).
+
+Thanks to Tom Worster (https://github.com/tom--) for explaining how to quickly translate C to JavaScript.
 
 ###System requirements
 
