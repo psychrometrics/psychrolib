@@ -51,9 +51,9 @@ This library of psychrometric functions isfreeware; licensing is subject to the 
 
 * **JavaScript:**
   
-  * SI version: Download the **psychrometrics_SI.js** from this site to the directory of your choice. In the <head> section of your html page, include `<script src="psychrometrics_SI.js" type="text/javascript"></script>`.
+  * SI version: Download the **psychrometrics_SI.js** from this site to the directory of your choice. In the `<head>` section of your html page, include `<script src="psychrometrics_SI.js" type="text/javascript"></script>`.
   
-  * IP version: Download the **psychrometrics_IP.js** from this site to the directory of your choice. In the <head> section of your html page, include `<script src="psychrometrics_IP.js" type="text/javascript"></script>`.
+  * IP version: Download the **psychrometrics_IP.js** from this site to the directory of your choice. In the `<head>` section of your html page, include `<script src="psychrometrics_IP.js" type="text/javascript"></script>`.
 
 
 
