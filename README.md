@@ -45,9 +45,16 @@ This library of psychrometric functions isfreeware; licensing is subject to the 
 
 * **VBA:**
   
-  * SI version: Download the **psychrometricsVBA_SI.bas** from this site to the directory of your choice.
+  * SI version: Download the **psychrometricsVBA_SI.bas** from this site and copy its contents to a new module in your Excel workbook.
   
-  * IP version: Download the **psychrometricsVBA_IP.bas** from this site to the directory of your choice.
+  * IP version: Download the **psychrometricsVBA_IP.bas** from this site and copy its contents to a new module in your Excel workbook.
+
+* **JavaScript:**
+  
+  * SI version: Download the **psychrometrics_SI.js** from this site to the directory of your choice. In the <head> section of your html page, include `<script src="psychrometrics_SI.js" type="text/javascript"></script>`.
+  
+  * IP version: Download the **psychrometrics_IP.js** from this site to the directory of your choice. In the <head> section of your html page, include `<script src="psychrometrics_IP.js" type="text/javascript"></script>`.
+
 
 
 
