@@ -15,11 +15,11 @@ The library of freeware functions in C, Fortran, VBA and JavaScript provided her
 
 Relationships between these various functions are illustrated in Figure 1. To compute a moist air property such as enthalpy, knowing a humidity parameter such as dew point temperature, one first has to compute the humidity ratio from the dew point temperature, then compute the enthalpy from the humidity ratio. The functions in point (1) above include primary relationships corresponding to formulae from the ASHRAE Handbook, and secondary relationships which use a combination of primary relationships to calculate the result. For example, to compute dew point temperature knowing the partial pressure of water vapor in moist air, the library uses a formula from the ASHRAE Handbook (primary relationship). On the other hand to compute dew point temperature from relative humidity, the library first computes the partial pressure of water vapor, then computes the dew point temperature (secondary relationship). Primary relationships are shown with bold double arrows in Figure 1.
 
-![Psychrometric relationships](psychrometrics.gif)
+![Psychrometric relationships](images/psychrometrics.gif)
 
 **Figure 1 - Psychrometric relationships.**
 
- A list of functions available in the library can be found in the [Psychrometrics Library Reference](PsychrometricsLibraryReference.md) page.
+ A list of functions available in the library can be found in the [Psychrometrics Library Reference](docs/PsychrometricsLibraryReference.md) page.
 
 ### Credits
 
