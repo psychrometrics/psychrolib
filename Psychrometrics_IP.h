@@ -421,7 +421,7 @@ double GetStandardAtmTemperature // (o) standard atmosphere dry bulb temperature
 double GetSeaLevelPressure   // (o) sea level barometric pressure [psi]
   ( double StnPressure       // (i) observed station pressure [psi]
   , double Altitude          // (i) altitude above sea level [m]
-  , double TDryBulb          // (i) dry bulb temperature [°F]
+  , double TDryBulb          // (i) dry bulb temperature [Â°F]
   );
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -431,7 +431,7 @@ double GetSeaLevelPressure   // (o) sea level barometric pressure [psi]
 double GetStationPressure    // (o) station pressure [psi]
   ( double SeaLevelPressure  // (i) sea level barometric pressure [psi]
   , double Altitude          // (i) altitude above sea level [m]
-  , double TDryBulb          // (i) dry bulb temperature [°F]
+  , double TDryBulb          // (i) dry bulb temperature [Â°F]
   );
 
 

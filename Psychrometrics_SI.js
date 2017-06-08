@@ -64,7 +64,7 @@ var min = Math.min;
 var RGAS = 8.31441;            // Universal gas constant in J/mol/K
 var MOLMASSAIR = 0.028964;     // mean molar mass of dry air in kg/mol
 var KILO = 1.e+03;             // exact
-var ZEROC = 273.15;            // Zero ºC expressed in K
+var ZEROC = 273.15;            // Zero ÂºC expressed in K
 var INVALID = -99999;          // Invalid value
 
 
@@ -770,11 +770,11 @@ this.GetStandardAtmTemperature = function // (o) standard atmosphere dry bulb te
 this.GetSeaLevelPressure = function   // (o) sea level barometric pressure [Pa]
   ( StnPressure       // (i) observed station pressure [Pa]
   , Altitude          // (i) altitude above sea level [m]
-  , TDryBulb          // (i) dry bulb temperature [°C]
+  , TDryBulb          // (i) dry bulb temperature [Â°C]
   )
 {
   // Calculate average temperature in column of air, assuming a lapse rate
-  // of 6.5 °C/km
+  // of 6.5 Â°C/km
   var TColumn = TDryBulb + 0.0065*Altitude/2.;
 
   // Determine the scale height
@@ -792,7 +792,7 @@ this.GetSeaLevelPressure = function   // (o) sea level barometric pressure [Pa]
 this.GetStationPressure = function    // (o) station pressure [Pa]
   ( SeaLevelPressure  // (i) sea level barometric pressure [Pa]
   , Altitude          // (i) altitude above sea level [m]
-  , TDryBulb          // (i) dry bulb temperature [°C]
+  , TDryBulb          // (i) dry bulb temperature [Â°C]
   )
 {
   return SeaLevelPressure/this.GetSeaLevelPressure(1., Altitude, TDryBulb);

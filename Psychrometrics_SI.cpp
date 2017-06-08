@@ -66,7 +66,7 @@
 #define RGAS  8.314472          // Universal gas constant in J/mol/K
 #define MOLMASSAIR 0.028966     // mean molar mass of dry air in kg/mol
 #define KILO 1.e+03             // exact
-#define ZEROC 273.15            // Zero ºC expressed in K
+#define ZEROC 273.15            // Zero ÂºC expressed in K
 #define INVALID -99999          // Invalid value
 
 
@@ -772,11 +772,11 @@ double GetStandardAtmTemperature // (o) standard atmosphere dry bulb temperature
 double GetSeaLevelPressure   // (o) sea level barometric pressure [Pa]
   ( double StnPressure       // (i) observed station pressure [Pa]
   , double Altitude          // (i) altitude above sea level [m]
-  , double TDryBulb          // (i) dry bulb temperature [°C]
+  , double TDryBulb          // (i) dry bulb temperature [Â°C]
   )
 {
   // Calculate average temperature in column of air, assuming a lapse rate
-  // of 6.5 °C/km
+  // of 6.5 Â°C/km
   double TColumn = TDryBulb + 0.0065*Altitude/2.;
 
   // Determine the scale height
@@ -794,7 +794,7 @@ double GetSeaLevelPressure   // (o) sea level barometric pressure [Pa]
 double GetStationPressure    // (o) station pressure [Pa]
   ( double SeaLevelPressure  // (i) sea level barometric pressure [Pa]
   , double Altitude          // (i) altitude above sea level [m]
-  , double TDryBulb          // (i) dry bulb temperature [°C]
+  , double TDryBulb          // (i) dry bulb temperature [Â°C]
   )
 {
   return SeaLevelPressure/GetSeaLevelPressure(1., Altitude, TDryBulb);
