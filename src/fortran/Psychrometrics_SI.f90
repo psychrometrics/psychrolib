@@ -1,22 +1,22 @@
-!+ Contains a number of functions and subroutines for calculating thermodynamic properties 
-!+ of gas-vapor mixtures for most engineering, physical and meteorological applications 
+!+ Contains a number of functions and subroutines for calculating thermodynamic properties
+!+ of gas-vapor mixtures for most engineering, physical and meteorological applications
 !+ in SI units.
 module Psychrometrics_SI
   !+#####Module overview
-  !+ Library module for determining common physical and thermodynamic properties 
+  !+ Library module for determining common physical and thermodynamic properties
   !+ of gas-vapor mixtures for most engineering, physical and meteorological applications.
-  !+ Most of the functions contained in `Psychrometrics_SI` were implemented from the formulae 
-  !+ taken from the 2005 and 2009 Ashrae Handbook: Fundamentals, SI Edition (ASHRAE (American Society of Heating 
+  !+ Most of the functions contained in `Psychrometrics_SI` were implemented from the formulae
+  !+ taken from the 2005 and 2009 Ashrae Handbook: Fundamentals, SI Edition (ASHRAE (American Society of Heating
   !+ Refrigerating and Air-Conditioning Engineers) 2005, 2009). For details about other function, please
   !+ follow the corresponding reference inside each function.
   !+---
   !+#####References
-  !+ - ASHRAE (American Society of Heating Refrigerating and Air-Conditioning Engineers), 
+  !+ - ASHRAE (American Society of Heating Refrigerating and Air-Conditioning Engineers),
   !+2009: 2009 Ashrae Handbook: Fundamentals, SI Edition. 30329, 926.
-  !+ - ASHRAE (American Society of Heating Refrigerating and Air-Conditioning Engineers), 
+  !+ - ASHRAE (American Society of Heating Refrigerating and Air-Conditioning Engineers),
   !+2005: 2005 Ashrae Handbook: Fundamentals, SI Edition. 1000.
   !+---
-  !+#####Note from the author 
+  !+#####Note from the author
   !+ I have made every effort to ensure that the code is adequate,
   !+ however I make no representation with respect to its accuracy. Use at your
   !+ own risk. Should you notice any error, or if you have suggestions on how to
@@ -46,14 +46,14 @@ module Psychrometrics_SI
   !+- dmey - 22-05-2017: fork from C++ version and rewrite following Fortran 2008 standards.
   !+- dmey - 22-05-2017: add `GetSatAirTemperatureFromEnthalpy` to compute the saturation temperature from enthalpy and pressure.
   !+- dmey - 22-05-2017: add `GetHumRatioFromEnthalpy` to compute humidity ratio given dry bulb temperature and enthalpy.
-  !+- dmey - 22-05-2017: add `GetAirHeatCapacity` to compute heat capacity of air from dry bulb temperature and humidity ratio. 
+  !+- dmey - 22-05-2017: add `GetAirHeatCapacity` to compute heat capacity of air from dry bulb temperature and humidity ratio.
   !+- dmey - 30-05-2017: add `GetTDryBulbFromEnthalpy` to compute dry bulb temperature from enthalpy and humidity ratio.
   !+---
 
   ! Import fortran 2008 standard to represent double-precision floating-point format
   use, intrinsic :: iso_fortran_env
   implicit none
-  
+
   private
   public :: GetTWetBulbFromTDewPoint
   public :: GetTWetBulbFromRelHum
@@ -98,19 +98,19 @@ module Psychrometrics_SI
 
   integer, parameter :: dp = REAL64
     !+ Fortran 2008 standard to represent double-precision floating-point format (use `iso_fortran_env`)
-  
+
   ! Global Constants
   real(dp), parameter ::  RGAS        = 8.314472_dp
-    !+ Universal gas constant in J/mol/K
-  real(dp), parameter ::  MOLMASSAIR  = 28.966_dp
-    !+ Mean molar mass of dry air in g/mol
+    !+ Universal gas constant in J mol⁻¹ K⁻¹
+  real(dp), parameter ::  MOLMASSAIR  = 28.966d-3
+    !+ Mean molar mass of dry air in kg mol⁻¹
   real(dp), parameter ::  KILO        = 1000.0_dp
     !+ Exact
   real(dp), parameter ::  ZEROC       = 273.15_dp
     !+ Zero degree C expressed in K
 
   contains
-  
+
   pure function CTOK(T_C) result(T_K)
   !+ Converts degree Celsius to Kelvin
     real(dp), intent(in)  :: T_C
@@ -157,7 +157,7 @@ module Psychrometrics_SI
     !+ ASHRAE Fundamentals (2009) ch. 1.
 
     real(dp), intent(in)  ::  TDryBulb
-      !+ Wet bulb temperature in °C
+      !+ Dry bulb temperature in °C
     real(dp), intent(in)  ::  RelHum
       !+ Relative humidity in range between 0 and 1
     real(dp), intent(in)  ::  Pressure
@@ -182,7 +182,7 @@ module Psychrometrics_SI
     !+ ASHRAE Fundamentals (2009) ch. 1.
 
     real(dp), intent(in)  ::  TDryBulb
-      !+ Wet bulb temperature in °C
+      !+ Dry bulb temperature in °C
     real(dp), intent(in)  ::  TDewPoint
       !+ Dew point temperature in °C
     real(dp)              ::  RelHum
@@ -360,7 +360,7 @@ module Psychrometrics_SI
     real(dp)              ::  VP
       !+ Partial pressure of water vapor in moist air in kPa
     real(dp)              ::  alpha
-      !+ log of VP (dimensionless) 
+      !+ log of VP (dimensionless)
 
     if (VapPres < 0.0_dp) then
       error stop "Error: partial pressure of water vapor in moist air is negative"
@@ -368,10 +368,10 @@ module Psychrometrics_SI
 
     VP = VapPres/1000.0_dp
     alpha = log(VP)
-    
+
     if (TDryBulb >= 0.0_dp .and. TDryBulb <= 93.0_dp) then
       TDewPoint = 6.54_dp + 14.526_dp * alpha + 0.7389_dp * alpha * alpha + 0.09486_dp * alpha**3.0_dp &      ! (39)
-                  + 0.4569_dp * VP**0.1984_dp                            
+                  + 0.4569_dp * VP**0.1984_dp
     else if (TDryBulb < 0.0_dp) then
       TDewPoint = 6.09_dp + 12.608_dp * alpha + 0.4959_dp * alpha * alpha                                     ! (40)
     else
@@ -388,9 +388,9 @@ module Psychrometrics_SI
     !+ ASHRAE Fundamentals (2009) ch. 1 eqn. 38.
 
     real(dp), intent(in)  ::  TDewPoint
-      !+ Partial pressure of water vapor in moist air in Pa
-    real(dp)              ::  VapPres
       !+ Dew point temperature in °C
+    real(dp)              ::  VapPres
+      !+ Partial pressure of water vapor in moist air in Pa
 
     VapPres = GetSatVapPres(TDewPoint)
   end function GetVapPresFromTDewPoint
@@ -417,9 +417,9 @@ module Psychrometrics_SI
     real(dp)              ::  TDewPoint
       !+ Dew point temperature in °C
     real(dp)              ::  TWetBulbSup
-      !+ Wet bulb temperature (initial guess from dry bulb temperature) in °C
+      !+ Upper value of wet bulb temperature in bissection method (initial guess is from dry bulb temperature) in °C
     real(dp)              ::  TWetBulbInf
-      !+ Wet bulb temperature (initial guess from dew point temperature) in °C
+      !+ Lower value of wet bulb temperature in bissection method (initial guess is from dew point temperature) in °C
     real(dp)              ::  Wstar
       !+ Humidity ratio at temperature Tstar in kgH₂O kgAIR⁻¹
 
@@ -432,11 +432,11 @@ module Psychrometrics_SI
     ! Initial guesses
     TWetBulbSup = TDryBulb
     TWetBulbInf = TDewPoint
-    TWetBulb = (TWetBulbInf + TWetBulbSup) / 2.
+    TWetBulb = (TWetBulbInf + TWetBulbSup) / 2.0_dp
 
     ! Bisection loop
     do while(TWetBulbSup - TWetBulbInf > 0.001_dp)
-    
+
     ! Compute humidity ratio at temperature Tstar
     Wstar = GetHumRatioFromTWetBulb(TDryBulb, TWetBulb, Pressure)
 
@@ -465,16 +465,16 @@ module Psychrometrics_SI
     real(dp), intent(in)  ::  Pressure
       !+ Atmospheric pressure in Pa
     real(dp)              ::  HumRatio
-      !+ Humidity ratio in kgH₂O kgAIR⁻¹      
+      !+ Humidity ratio in kgH₂O kgAIR⁻¹
     real(dp)              ::  Wsstar
-      !+ Humidity ratio at temperature Tstar in kgH₂O kgAIR⁻¹       
+      !+ Humidity ratio at temperature Tstar in kgH₂O kgAIR⁻¹
 
     if (TWetBulb > TDryBulb) then
       error stop "Error: wet bulb temperature is above dry bulb temperature"
     end if
 
     Wsstar = GetSatHumRatio(TWetBulb, Pressure)
-    
+
     HumRatio  =  ( (2501.0_dp - 2.326_dp * TWetBulb) * Wsstar - 1.006_dp * (TDryBulb - TWetBulb) ) &
                   / (2501.0_dp + 1.86_dp * TDryBulb - 4.186_dp * TWetBulb)
   end function GetHumRatioFromTWetBulb
@@ -583,12 +583,12 @@ module Psychrometrics_SI
       !+ Dry bulb temperature in °C
     real(dp), intent(in)  ::  HumRatio
       !+ Humidity ratio in kgH₂O kgAIR⁻¹
-    real(dp), intent(in)  ::  Pressure  
+    real(dp), intent(in)  ::  Pressure
       !+ Atmospheric pressure in Pa
     real(dp)              ::  TDewPoint
       !+ Dew point temperature in °C
     real(dp)              ::  VapPres
-      !+ Partial pressure of water vapor of moist air in Pa
+      !+ Partial pressure of water vapor in moist air in Pa
 
     if (HumRatio < 0.0_dp) then
       error stop "Error: humidity ratio is negative"
@@ -614,7 +614,7 @@ module Psychrometrics_SI
       !+ Atmospheric pressure in Pa
     real(dp)              ::  HumRatio
       !+ Humidity ratio in kgH₂O kgAIR⁻¹
-    
+
     if (VapPres < 0.0_dp) then
       error stop "Error: partial pressure of water vapor in moist air is negative"
     end if
@@ -657,7 +657,7 @@ module Psychrometrics_SI
     real(dp)              ::  DryAirEnthalpy
       !+ Dry air enthalpy in J kg⁻¹
 
-    DryAirEnthalpy = 1.006_dp * TDryBulb
+    DryAirEnthalpy = 1.006d3 * TDryBulb
   end function GetDryAirEnthalpy
 
   function GetDryAirDensity(TDryBulb, Pressure) result(DryAirDensity)
@@ -673,7 +673,7 @@ module Psychrometrics_SI
     real(dp)              ::  DryAirDensity
       !+ Dry air density in kg m⁻³
 
-    DryAirDensity = (Pressure / KILO) * MOLMASSAIR / (RGAS * CTOK(TDryBulb))
+    DryAirDensity = Pressure * MOLMASSAIR / (RGAS * CTOK(TDryBulb))
   end function GetDryAirDensity
 
   function GetDryAirVolume(TDryBulb, Pressure) result(DryAirVolume)
@@ -681,7 +681,7 @@ module Psychrometrics_SI
     !+ Reference:
     !+ ASHRAE Fundamentals (2005) ch. 6 eqn. 28;
     !+ ASHRAE Fundamentals (2009) ch. 1 eqn. 28.
-  
+
     real(dp), intent(in)  ::  TDryBulb
       !+ Dry bulb temperature in °C
     real(dp), intent(in)  ::  Pressure
@@ -689,7 +689,7 @@ module Psychrometrics_SI
     real(dp)              ::  DryAirVolume
       !+ Dry air volume in m³ kg⁻¹
 
-    DryAirVolume = (RGAS * CTOK(TDryBulb)) / ((Pressure / KILO) * MOLMASSAIR)
+    DryAirVolume = (RGAS * CTOK(TDryBulb)) / (Pressure * MOLMASSAIR)
   end function GetDryAirVolume
 
   !----------------------------------------------------------------------------------
@@ -710,7 +710,7 @@ module Psychrometrics_SI
       !+ Log of Vapor Pressure of saturated air (dimensionless)
     real(dp)              ::  T
       !+ Dry bulb temperature in K
-    
+
     if (TDryBulb < -100.0_dp .or. TDryBulb > 200.0_dp) then
       error stop "Error: dry bulb temperature is outside range [-100, 200]"
     end if
@@ -720,11 +720,11 @@ module Psychrometrics_SI
     if (TDryBulb >= -100.0_dp .and. TDryBulb <= 0.0_dp) then
       LnPws = -5.6745359d3/T + 6.3925247_dp - 9.677843d-3*T + 6.2215701d-7*T*T &
               + 2.0747825d-9*T**3.0_dp - 9.484024d-13*T**4.0_dp + 4.1635019_dp*log(T)
-    
+
     else if (TDryBulb > 0.0_dp .and. TDryBulb <= 200.0_dp) then
       LnPws = -5.8002206d3/T + 1.3914993_dp - 4.8640239d-2*T + 4.1764768d-5*T*T &
               - 1.4452093d-8*T**3.0_dp + 6.5459673_dp*log(T)
-    
+
     else
       error stop "Error: dry bulb temperature is out of range [-100, 200]"
     end if
@@ -732,12 +732,12 @@ module Psychrometrics_SI
     SatVapPres = exp(LnPws)
   end function GetSatVapPres
 
-  function GetSatHumRatio(TDryBulb, Pressure) result(HumRatio)
+  function GetSatHumRatio(TDryBulb, Pressure) result(SatHumRatio)
     !+ Humidity ratio of saturated air given dry bulb temperature and pressure.
     !+ Reference:
     !+ ASHRAE Fundamentals (2005) ch. 6 eqn. 23;
     !+ ASHRAE Fundamentals (2009) ch. 1 eqn. 23.
-  
+
     real(dp), intent(in)  ::  TDryBulb
       !+ Dry bulb temperature in °C
     real(dp), intent(in)  ::  Pressure
@@ -748,14 +748,14 @@ module Psychrometrics_SI
       !+ Vapor pressure of saturated air in Pa
 
     SatVaporPres  = GetSatVapPres(TDryBulb)
-    HumRatio      = 0.621945_dp * SatVaporPres / (Pressure-SatVaporPres)
+    SatHumRatio      = 0.621945_dp * SatVaporPres / (Pressure-SatVaporPres)
   end function GetSatHumRatio
 
   function GetSatAirEnthalpy(TDryBulb, Pressure) result(SatAirEnthalpy)
     !+ Saturated air enthalpy given dry bulb temperature and pressure.
     !+ Reference:
     !+ ASHRAE Fundamentals (2005) ch. 6 eqn. 32.
-  
+
     real(dp), intent(in)  ::  TDryBulb
       !+ Dry bulb temperature in °C
     real(dp), intent(in)  ::  Pressure
@@ -775,7 +775,7 @@ module Psychrometrics_SI
     !+ pressure.
     !+ Reference:
     !+ See Oke (1987) eqn. 2.13a.
-            
+
     real(dp), intent(in)  ::  TDryBulb
       !+ Dry bulb temperature in °C
     real(dp), intent(in)  ::  HumRatio
@@ -829,7 +829,7 @@ module Psychrometrics_SI
       !+ Humidity ratio in kgH₂O kgAIR⁻¹
     real(dp)              ::  MoistAirEnthalpy
       !+ Moist Air Enthalpy in J kg⁻¹
-    
+
     if (HumRatio < 0.0_dp) then
       error stop "Error: humidity ratio is negative"
     end if
@@ -1083,8 +1083,8 @@ module Psychrometrics_SI
 
   subroutine CalcPsychrometricsFromTWetBulb(TDryBulb,           &
                                             Pressure,           &
-                                            TWetBulb,           &      
-                                            TDewPoint,          & 
+                                            TWetBulb,           &
+                                            TDewPoint,          &
                                             RelHum,             &
                                             HumRatio,           &
                                             VapPres,            &
@@ -1092,7 +1092,7 @@ module Psychrometrics_SI
                                             MoistAirVolume,     &
                                             DegSaturation)
 
-  !+ Given dry bulb pressure, atmospheric pressure, and wet bulb temperature, 
+  !+ Given dry bulb pressure, atmospheric pressure, and wet bulb temperature,
   !+ `CalcPsychrometricsFromTWetBulb` returns the dew point temperature,
   !+ the relative humidity, the humidity ratio, the partial pressure of water vapour in moist air,
   !+ the moist air enthalpy, the specific volume and the degree of saturation.
@@ -1117,7 +1117,7 @@ module Psychrometrics_SI
       !+ Specific volume in m³ kg⁻¹
     real(dp), intent(out)   ::  DegSaturation
       !+ Degree of saturation (dimensionless)
-  
+
     HumRatio          = GetHumRatioFromTWetBulb(TDryBulb, TWetBulb, Pressure)
     TDewPoint         = GetTDewPointFromHumRatio(TDryBulb, HumRatio, Pressure)
     RelHum            = GetRelHumFromHumRatio(TDryBulb, HumRatio, Pressure)
@@ -1175,7 +1175,7 @@ module Psychrometrics_SI
 
   subroutine CalcPsychrometricsFromRelHum(TDryBulb,           &
                                           Pressure,           &
-                                          RelHum,             &  
+                                          RelHum,             &
                                           TWetBulb,           &
                                           TDewPoint,          &
                                           HumRatio,           &
@@ -1184,11 +1184,11 @@ module Psychrometrics_SI
                                           MoistAirVolume,     &
                                           DegSaturation)
 
-  !+ Given dry bulb pressure, atmospheric pressure, and relative humidity, 
+  !+ Given dry bulb pressure, atmospheric pressure, and relative humidity,
   !+ `CalcPsychrometricsFromRelHum` returns the wet bulb temperature, the dew point temperature, 
   !+ the humidity ratio, the partial pressure of water vapour in moist air, the moist air enthalpy,
   !+ the specific volume and the degree of saturation.
-      
+
     real(dp), intent(in)    ::  TDryBulb
       !+ Dry bulb temperature in °C
     real(dp), intent(in)    ::  Pressure
@@ -1234,7 +1234,7 @@ module Psychrometrics_SI
     real(dp)              ::  StandardAtmPressure
       !+ Standard-atmosphere barometric pressure in Pa
 
-    StandardAtmPressure = 101325.*(1.-2.25577e-05*Altitude)**5.2559
+    StandardAtmPressure = 101325.*(1.-2.25577d-5*Altitude)**5.2559
   end function GetStandardAtmPressure
 
   pure function GetStandardAtmTemperature(Altitude) result(StandardAtmTemperature)
