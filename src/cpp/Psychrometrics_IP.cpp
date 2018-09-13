@@ -4,10 +4,10 @@
 // enthalpy, moist air volume, specific volume, and degree of saturation, given
 // dry bulb temperature and another psychrometric variable. The code also includes
 // functions for standard atmosphere calculation.
-// The functions implement formulae found in the 2017 ASHRAE Handbook - Fundamentals.
+// The functions implement formulae found in the 2005 ASHRAE Handbook of Fundamentals.
 // This version of the library works in IP units.
 //
-// This library was originally developed by Didier Thevenard, PhD, P.Eng., while
+// This library was originally developed by Didier Thevenard, PhD, P.Eng., while 
 // working of simulation software for solar energy systems and climatic data processing.
 // It has since been moved to GitHub at https://github.com/psychrometrics/libraries
 // along with its documentation.
@@ -37,7 +37,6 @@
 //
 //-----------------------------------------------------------------------------
 //    March 31, 2011 - IP version of SI library created
-//    August 15, 2018 - Update to 2017 edition of ASHRAE Handbook - Fundamentals
 //
 
 // Standard C header files
@@ -60,10 +59,6 @@
 
 #define ZEROF 459.67            // Zero ºF expressed in R
 #define INVALID -99999          // Invalid value
-
-// Universal gas constant for dry air in ft∙lb_f/lb_da/R
-// ASHRAE Handbook - Fundamentals (2017) - ch. 1, eqn 1
-#define Rda 53.350
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -110,7 +105,8 @@ double FTOR(double T_F) { return T_F+ZEROF; }              /* exact */
 
 ///////////////////////////////////////////////////////////////////////////////
 // Wet-bulb temperature given dry-bulb temperature and dew-point temperature
-// ASHRAE Handbook - Fundamentals (2017) ch. 1
+// ASHRAE Fundamentals (2005) ch. 6
+// ASHRAE Fundamentals (2009) ch. 1
 //
 double GetTWetBulbFromTDewPoint // (o) Wet bulb temperature [F]
   ( double TDryBulb             // (i) Dry bulb temperature [F]
@@ -128,7 +124,8 @@ double GetTWetBulbFromTDewPoint // (o) Wet bulb temperature [F]
 
 ///////////////////////////////////////////////////////////////////////////////
 // Wet-bulb temperature given dry-bulb temperature and relative humidity
-// ASHRAE Handbook - Fundamentals (2017) ch. 1
+// ASHRAE Fundamentals (2005) ch. 6
+// ASHRAE Fundamentals (2009) ch. 1
 //
 double GetTWetBulbFromRelHum    // (o) Wet bulb temperature [F]
   ( double TDryBulb             // (i) Dry bulb temperature [F] //
@@ -145,8 +142,9 @@ double GetTWetBulbFromRelHum    // (o) Wet bulb temperature [F]
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// Relative humidity given dry-bulb temperature and dew-point temperature
-// ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 22
+// Relative Humidity given dry-bulb temperature and dew-point temperature
+// ASHRAE Fundamentals (2005) ch. 6
+// ASHRAE Fundamentals (2009) ch. 1
 //
 double GetRelHumFromTDewPoint   // (o) Relative humidity [0-1]
   ( double TDryBulb             // (i) Dry bulb temperature [F]
@@ -157,14 +155,15 @@ double GetRelHumFromTDewPoint   // (o) Relative humidity [0-1]
 
   ASSERT (TDewPoint <= TDryBulb, "Dew point temperature is above dry bulb temperature")
 
-  VapPres = GetSatVapPres(TDewPoint);
+  VapPres = GetSatVapPres(TDewPoint);     // Eqn. 36
   SatVapPres = GetSatVapPres(TDryBulb);
-  return VapPres/SatVapPres;
+  return VapPres/SatVapPres;              // Eqn. 24
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// Relative humidity given dry-bulb temperature and wet bulb temperature
-// ASHRAE Handbook - Fundamentals (2017) ch. 1
+// Relative Humidity given dry-bulb temperature and wet bulb temperature
+// ASHRAE Fundamentals (2005) ch. 6
+// ASHRAE Fundamentals (2009) ch. 1
 //
 double GetRelHumFromTWetBulb    // (o) Relative humidity [0-1]
   ( double TDryBulb             // (i) Dry bulb temperature [F]
@@ -181,8 +180,9 @@ double GetRelHumFromTWetBulb    // (o) Relative humidity [0-1]
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// Dew point temperature given dry bulb temperature and relative humidity
-// ASHRAE Handbook - Fundamentals (2017) ch. 1
+// Dew Point Temperature given dry bulb temperature and relative humidity
+// ASHRAE Fundamentals (2005) ch. 6 eqn 24
+// ASHRAE Fundamentals (2009) ch. 1 eqn 24
 //
 double GetTDewPointFromRelHum   // (o) Dew Point temperature [F]
   ( double TDryBulb             // (i) Dry bulb temperature [F]
@@ -199,7 +199,8 @@ double GetTDewPointFromRelHum   // (o) Dew Point temperature [F]
 
 ///////////////////////////////////////////////////////////////////////////////
 // Dew Point Temperature given dry bulb temperature and wet bulb temperature
-// ASHRAE Handbook - Fundamentals (2017) ch. 1
+// ASHRAE Fundamentals (2005) ch. 6
+// ASHRAE Fundamentals (2009) ch. 1
 //
 double GetTDewPointFromTWetBulb // (o) Dew Point temperature [F]
   ( double TDryBulb             // (i) Dry bulb temperature [F]
@@ -222,7 +223,8 @@ double GetTDewPointFromTWetBulb // (o) Dew Point temperature [F]
 ///////////////////////////////////////////////////////////////////////////////
 // Partial pressure of water vapor as a function of relative humidity and
 // temperature in C
-// ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 12, 22
+// ASHRAE Fundamentals (2005) ch. 6, eqn. 24
+// ASHRAE Fundamentals (2009) ch. 1, eqn. 24
 //
 double GetVapPresFromRelHum     // (o) Partial pressure of water vapor in moist air [Psi]
   ( double TDryBulb             // (i) Dry bulb temperature [F]
@@ -236,7 +238,8 @@ double GetVapPresFromRelHum     // (o) Partial pressure of water vapor in moist 
 
 ///////////////////////////////////////////////////////////////////////////////
 // Relative Humidity given dry bulb temperature and vapor pressure
-// ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 12, 22
+// ASHRAE Fundamentals (2005) ch. 6, eqn. 24
+// ASHRAE Fundamentals (2009) ch. 1, eqn. 24
 //
 double GetRelHumFromVapPres     // (o) Relative humidity [0-1]
   ( double TDryBulb             // (i) Dry bulb temperature [F]
@@ -250,7 +253,8 @@ double GetRelHumFromVapPres     // (o) Relative humidity [0-1]
 
 ///////////////////////////////////////////////////////////////////////////////
 // Dew point temperature given vapor pressure and dry bulb temperature
-// ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 37 & 38
+// ASHRAE Fundamentals (2005) ch. 6, eqn. 39 and 40
+// ASHRAE Fundamentals (2009) ch. 1, eqn. 39 and 40
 //
 double GetTDewPointFromVapPres  // (o) Dew Point temperature [F]
   ( double TDryBulb             // (i) Dry bulb temperature [F]
@@ -264,10 +268,10 @@ double GetTDewPointFromVapPres  // (o) Dew Point temperature [F]
   VP = VapPres;
   alpha = log(VP);
   if (TDryBulb >= 32 && TDryBulb <= 200)
-    TDewPoint = 100.45+33.193*alpha+2.319*alpha*alpha+0.17074*pow(alpha,3)
-     +1.2063*pow(VP, 0.1984);                           // (37)
+  TDewPoint = 100.45+33.193*alpha+2.319*alpha*alpha+0.17074*pow(alpha,3)
+    +1.2063*pow(VP, 0.1984);                            // (39)
   else if (TDryBulb < 32)
-    TDewPoint = 90.12+26.142*alpha+0.8927*alpha*alpha;  // (38)
+  TDewPoint = 90.12+26.142*alpha+0.8927*alpha*alpha;     // (40)
   else
     TDewPoint = INVALID;                                // Invalid value
   return min(TDewPoint, TDryBulb);
@@ -275,7 +279,8 @@ double GetTDewPointFromVapPres  // (o) Dew Point temperature [F]
 
 ///////////////////////////////////////////////////////////////////////////////
 // Vapor pressure given dew point temperature
-// ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 36
+// ASHRAE Fundamentals (2005) ch. 6 eqn. 38
+// ASHRAE Fundamentals (2009) ch. 1 eqn. 38
 //
 double GetVapPresFromTDewPoint  // (o) Partial pressure of water vapor in moist air [Psi]
   ( double TDewPoint            // (i) Dew point temperature [F]
@@ -292,7 +297,8 @@ double GetVapPresFromTDewPoint  // (o) Partial pressure of water vapor in moist 
 
 ///////////////////////////////////////////////////////////////////////////////
 // Wet bulb temperature given humidity ratio
-// ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 33 and 35 solved for Tstar
+// ASHRAE Fundamentals (2005) ch. 6 eqn. 35
+// ASHRAE Fundamentals (2009) ch. 1 eqn. 35
 //
 double GetTWetBulbFromHumRatio  // (o) Wet bulb temperature [F]
   ( double TDryBulb             // (i) Dry bulb temperature [F]
@@ -334,7 +340,8 @@ double GetTWetBulbFromHumRatio  // (o) Wet bulb temperature [F]
 
 ///////////////////////////////////////////////////////////////////////////////
 // Humidity ratio given wet bulb temperature and dry bulb temperature
-// ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 33 and 35
+// ASHRAE Fundamentals (2005) ch. 6 eqn. 35
+// ASHRAE Fundamentals (2009) ch. 1 eqn. 35
 //
 double GetHumRatioFromTWetBulb  // (o) Humidity Ratio [H2O/AIR]
   ( double TDryBulb             // (i) Dry bulb temperature [F]
@@ -347,18 +354,14 @@ double GetHumRatioFromTWetBulb  // (o) Humidity Ratio [H2O/AIR]
   ASSERT (TWetBulb <= TDryBulb, "Wet bulb temperature is above dry bulb temperature")
 
   Wsstar = GetSatHumRatio(TWetBulb, Pressure);
-
-  if (TWetBulb > 32)
-    return ((1093 - 0.556*TWetBulb)*Wsstar - 0.240*(TDryBulb - TWetBulb))
-          / (1093 + 0.444*TDryBulb - TWetBulb);
-  else
-    return ((1220 - 0.04*TWetBulb)*Wsstar - 0.240*(TDryBulb - TWetBulb))
-          / (1220 + 0.444*TDryBulb - 0.48*TWetBulb);
+  return ((1093 - 0.556*TWetBulb)*Wsstar - 0.240*(TDryBulb - TWetBulb))
+       / (1093 + 0.444*TDryBulb - TWetBulb);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // Humidity ratio given relative humidity
-// ASHRAE Handbook - Fundamentals (2017) ch. 1
+// ASHRAE Fundamentals (2005) ch. 6 eqn. 38
+// ASHRAE Fundamentals (2009) ch. 1 eqn. 38
 //
 double GetHumRatioFromRelHum    // (o) Humidity Ratio [H2O/AIR]
   ( double TDryBulb             // (i) Dry bulb temperature [F]
@@ -376,7 +379,8 @@ double GetHumRatioFromRelHum    // (o) Humidity Ratio [H2O/AIR]
 
 ///////////////////////////////////////////////////////////////////////////////
 // Relative humidity given humidity ratio
-// ASHRAE Handbook - Fundamentals (2017) ch. 1
+// ASHRAE Fundamentals (2005) ch. 6
+// ASHRAE Fundamentals (2009) ch. 1
 //
 double GetRelHumFromHumRatio    // (o) Relative humidity [0-1]
   ( double TDryBulb             // (i) Dry bulb temperature [F]
@@ -393,7 +397,8 @@ double GetRelHumFromHumRatio    // (o) Relative humidity [0-1]
 }
 ///////////////////////////////////////////////////////////////////////////////
 // Humidity ratio given dew point temperature and pressure.
-// ASHRAE Handbook - Fundamentals (2017) ch. 1
+// ASHRAE Fundamentals (2005) ch. 6 eqn. 22
+// ASHRAE Fundamentals (2009) ch. 1 eqn. 22
 //
 double GetHumRatioFromTDewPoint // (o) Humidity Ratio [H2O/AIR]
   ( double TDewPoint            // (i) Dew point temperature [F]
@@ -408,7 +413,8 @@ double GetHumRatioFromTDewPoint // (o) Humidity Ratio [H2O/AIR]
 
 ///////////////////////////////////////////////////////////////////////////////
 // Dew point temperature given dry bulb temperature, humidity ratio, and pressure
-// ASHRAE Handbook - Fundamentals (2017) ch. 1
+// ASHRAE Fundamentals (2005) ch. 6
+// ASHRAE Fundamentals (2009) ch. 1
 //
 double GetTDewPointFromHumRatio // (o) Dew Point temperature [F]
   ( double TDryBulb             // (i) Dry bulb temperature [F]
@@ -430,7 +436,8 @@ double GetTDewPointFromHumRatio // (o) Dew Point temperature [F]
 
 ///////////////////////////////////////////////////////////////////////////////
 // Humidity ratio given water vapor pressure and atmospheric pressure
-// ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 20
+// ASHRAE Fundamentals (2005) ch. 6 eqn. 22
+// ASHRAE Fundamentals (2009) ch. 1 eqn. 22
 //
 double GetHumRatioFromVapPres   // (o) Humidity Ratio [H2O/AIR]
   ( double VapPres              // (i) Partial pressure of water vapor in moist air [Psi]
@@ -444,7 +451,8 @@ double GetHumRatioFromVapPres   // (o) Humidity Ratio [H2O/AIR]
 
 ///////////////////////////////////////////////////////////////////////////////
 // Vapor pressure given humidity ratio and pressure
-// ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 20 solved for pw
+// ASHRAE Fundamentals (2005) ch. 6 eqn. 22
+// ASHRAE Fundamentals (2009) ch. 1 eqn. 22
 //
 
 double GetVapPresFromHumRatio   // (o) Partial pressure of water vapor in moist air [Psi]
@@ -466,7 +474,8 @@ double GetVapPresFromHumRatio   // (o) Partial pressure of water vapor in moist 
 
 ///////////////////////////////////////////////////////////////////////////////
 // Dry air enthalpy given dry bulb temperature.
-// ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 28
+// ASHRAE Fundamentals (2005) ch. 6 eqn. 30
+// ASHRAE Fundamentals (2009) ch. 1 eqn. 30
 //
 double GetDryAirEnthalpy        // (o) Dry air enthalpy [Btu/lb]
   ( double TDryBulb             // (i) Dry bulb temperature [F]
@@ -477,32 +486,30 @@ double GetDryAirEnthalpy        // (o) Dry air enthalpy [Btu/lb]
 
 ///////////////////////////////////////////////////////////////////////////////
 // Dry air density given dry bulb temperature and pressure.
-// ASHRAE Handbook - Fundamentals (2017) ch. 1
-// eqn 14 for the perfect gas relationship for dry air
-// and eqn 1 for the universal gas constant
-// The factor 144 is for the conversion of Psi=lb/in2 to lb/ft2
+// ASHRAE Fundamentals (2005) ch. 6 eqn. 28
+// ASHRAE Fundamentals (2009) ch. 1 eqn. 28
+// **NOTE** pressure is in inHg, not psi
 //
 double GetDryAirDensity         // (o) Dry air density [lb/ft3]
   ( double TDryBulb             // (i) Dry bulb temperature [F]
-  , double Pressure             // (i) Atmospheric pressure [Psi]
+  , double Pressure             // (i) Atmospheric pressure [in Hg]
   )
 {
-  return (144.*Pressure)/R_da/FTOR(TDryBulb);
+  return (Pressure)*28.966/(1545.349*FTOR(TDryBulb));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // Dry air volume given dry bulb temperature and pressure.
-// ASHRAE Handbook - Fundamentals (2017) ch. 1
-// eqn 14 for the perfect gas relationship for dry air
-// and eqn 1 for the universal gas constant
-// The factor 144 is for the conversion of Psi=lb/in2 to lb/ft2
+// ASHRAE Fundamentals (2005) ch. 6 eqn. 28
+// ASHRAE Fundamentals (2009) ch. 1 eqn. 28
+// **NOTE** pressure is in inHg, not psi
 //
 double GetDryAirVolume          // (o) Dry air volume [ft3/lb]
   ( double TDryBulb             // (i) Dry bulb temperature [F]
-  , double Pressure             // (i) Atmospheric pressure [Psi]
+  , double Pressure             // (i) Atmospheric pressure [in Hg]
   )
 {
-  return FTOR(TDryBulb)*R_da/(144.*Pressure);
+  return (1545.349*FTOR(TDryBulb))/((Pressure)*28.966);
 }
 
 //*****************************************************************************
@@ -511,7 +518,8 @@ double GetDryAirVolume          // (o) Dry air volume [ft3/lb]
 
 ///////////////////////////////////////////////////////////////////////////////
 // Saturation vapor pressure as a function of temperature
-// ASHRAE Handbook - Fundamentals (2017) ch. 1  eqn 5
+// ASHRAE Fundamentals (2005) ch. 6 eqn. 5, 6
+// ASHRAE Fundamentals (2009) ch. 1 eqn. 5, 6
 //
 double GetSatVapPres            // (o) Vapor Pressure of saturated air [Psi]
   ( double TDryBulb             // (i) Dry bulb temperature [F]
@@ -519,7 +527,7 @@ double GetSatVapPres            // (o) Vapor Pressure of saturated air [Psi]
 {
   double LnPws, T;
 
-  ASSERT(TDryBulb >= -148 && TDryBulb <= 392, "Dry bulb temperature is outside range [-148, 392]")
+  ASSERT(TDryBulb >= -148 && TDryBulb <= 392, "Dry bulb temperature is outside range [-100, 200]")
 
   T = FTOR(TDryBulb);
   if (TDryBulb >= -148. && TDryBulb <= 32.)
@@ -529,13 +537,14 @@ double GetSatVapPres            // (o) Vapor Pressure of saturated air [Psi]
     LnPws = -1.0440397E+04/T - 1.1294650E+01 - 2.7022355E-02*T + 1.2890360E-05*T*T
       - 2.4780681E-09*pow(T, 3) + 6.5459673*log(T);
   else
-    return INVALID;             // TDryBulb is out of range [-148, 392]
+    return INVALID;             // TDryBulb is out of range [-100, 200]
   return exp(LnPws);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // Humidity ratio of saturated air given dry bulb temperature and pressure.
-// ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 36, solved for W
+// ASHRAE Fundamentals (2005) ch. 6 eqn. 23
+// ASHRAE Fundamentals (2009) ch. 1 eqn. 23
 //
 double GetSatHumRatio           // (o) Humidity ratio of saturated air [H2O/AIR]
   ( double TDryBulb             // (i) Dry bulb temperature [F]
@@ -550,7 +559,7 @@ double GetSatHumRatio           // (o) Humidity ratio of saturated air [H2O/AIR]
 
 ///////////////////////////////////////////////////////////////////////////////
 // Saturated air enthalpy given dry bulb temperature and pressure
-// ASHRAE Handbook - Fundamentals (2017) ch. 1
+// ASHRAE Fundamentals (2005) ch. 6 eqn. 32
 //
 double GetSatAirEnthalpy        // (o) Saturated air enthalpy [Btu/lb]
   ( double TDryBulb             // (i) Dry bulb temperature [F]
@@ -566,7 +575,7 @@ double GetSatAirEnthalpy        // (o) Saturated air enthalpy [Btu/lb]
 ///////////////////////////////////////////////////////////////////////////////
 // Vapor pressure deficit in Pa given humidity ratio, dry bulb temperature, and
 // pressure.
-// See Oke (1987) eqn 2.13a
+// See Oke (1987) eqn. 2.13a
 //
 double GetVPD                   // (o) Vapor pressure deficit [Psi]
   ( double TDryBulb             // (i) Dry bulb temperature [F]
@@ -583,8 +592,8 @@ double GetVPD                   // (o) Vapor pressure deficit [Psi]
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// ASHRAE Handbook - Fundamentals (2009) ch. 1 eqn 12
-// (Note: the definition is absent from the 2017 Handbook)
+// ASHRAE Fundamentals (2005) ch. 6 eqn. 12
+// ASHRAE Fundamentals (2009) ch. 1 eqn. 12
 //
 double GetDegreeOfSaturation    // (o) Degree of saturation []
   ( double TDryBulb             // (i) Dry bulb temperature [F]
@@ -599,7 +608,8 @@ double GetDegreeOfSaturation    // (o) Degree of saturation []
 
 ///////////////////////////////////////////////////////////////////////////////
 // Moist air enthalpy given dry bulb temperature and humidity ratio
-// ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 30
+// ASHRAE Fundamentals (2005) ch. 6 eqn. 32
+// ASHRAE Fundamentals (2009) ch. 1 eqn. 32
 //
 double GetMoistAirEnthalpy      // (o) Moist Air Enthalpy [Btu/lb]
   ( double TDryBulb             // (i) Dry bulb temperature [F]
@@ -608,15 +618,15 @@ double GetMoistAirEnthalpy      // (o) Moist Air Enthalpy [Btu/lb]
 {
   ASSERT (HumRatio >= 0, "Humidity ratio is negative")
 
-  return 0.240*TDryBulb + HumRatio*(1061 + 0.444*TDryBulb);
+  return (0.240*TDryBulb + HumRatio*(1061 + 0.444*TDryBulb));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// Moist air specific volume given dry bulb temperature, humidity ratio, and pressure.
-// ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 26
-// Rda / 144 is equal to 0.370486. The 144 factor is for the conversion of Psi = lb/in2 to lb/ft2
+// Moist air volume given dry bulb temperature, humidity ratio, and pressure.
+// ASHRAE Fundamentals (2005) ch. 6 eqn. 28
+// ASHRAE Fundamentals (2009) ch. 1 eqn. 28
 //
-double GetMoistAirVolume        // (o) Specific volume [ft3/lb of dry air]
+double GetMoistAirVolume        // (o) Specific Volume [ft3/lb]
   ( double TDryBulb             // (i) Dry bulb temperature [F]
   , double HumRatio             // (i) Humidity ratio [H2O/AIR]
   , double Pressure             // (i) Atmospheric pressure [Psi]
@@ -624,12 +634,13 @@ double GetMoistAirVolume        // (o) Specific volume [ft3/lb of dry air]
 {
   ASSERT (HumRatio >= 0, "Humidity ratio is negative")
 
-  return Rda*FTOR(TDryBulb)*(1.+1.607858*HumRatio)/(144.*Pressure);
+  return 0.370486 *(FTOR(TDryBulb))*(1.+1.607858*HumRatio)/(Pressure);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // Moist air density given humidity ratio, dry bulb temperature, and pressure
-// ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 11
+// ASHRAE Fundamentals (2005) ch. 6 6.8 eqn. 11
+// ASHRAE Fundamentals (2009) ch. 1 1.8 eqn 11
 //
 double GetMoistAirDensity       // (o) Moist air density [lb/ft3]
   ( double TDryBulb             // (i) Dry bulb temperature [F]
@@ -718,10 +729,11 @@ void CalcPsychrometricsFromRelHum
 
 ///////////////////////////////////////////////////////////////////////////////
 // Standard atmosphere barometric pressure, given the elevation (altitude)
-// ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 3
+// ASHRAE Fundamentals (2005) ch. 6 eqn. 3
+// ASHRAE Fundamentals (2009) ch. 1 eqn. 3
 //
-double GetStandardAtmPressure   // (o) Standard atmosphere barometric pressure [Psi]
-  ( double Altitude             // (i) Altitude [ft]
+double GetStandardAtmPressure   // (o) standard atmosphere barometric pressure [Psi]
+  ( double Altitude             // (i) altitude [ft]
   )
 {
   double Pressure = 14.696*pow(1.-6.8754e-06*Altitude, 5.2559);
@@ -730,10 +742,11 @@ double GetStandardAtmPressure   // (o) Standard atmosphere barometric pressure [
 
 ///////////////////////////////////////////////////////////////////////////////
 // Standard atmosphere temperature, given the elevation (altitude)
-// ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 4
+// ASHRAE Fundamentals (2005) ch. 6 eqn. 4
+// ASHRAE Fundamentals (2009) ch. 1 eqn. 4
 //
-double GetStandardAtmTemperature // (o) Standard atmosphere dry bulb temperature [F]
-  ( double Altitude              // (i) Altitude [ft]
+double GetStandardAtmTemperature // (o) standard atmosphere dry bulb temperature [F]
+  ( double Altitude              // (i) altitude [ft]
   )
 {
   double Temperature = 59-0.00356620*Altitude;
@@ -748,10 +761,10 @@ double GetStandardAtmTemperature // (o) Standard atmosphere dry bulb temperature
 // ch. 6.5; Stull RB, Meteorology for scientists and engineers, 2nd edition,
 // Brooks/Cole 2000, ch. 1.
 //
-double GetSeaLevelPressure      // (o) Sea level barometric pressure [Psi]
-  ( double StnPressure          // (i) Observed station pressure [Psi]
-  , double Altitude             // (i) Altitude above sea level [ft]
-  , double TDryBulb             // (i) Dry bulb temperature [°F]
+double GetSeaLevelPressure   // (o) sea level barometric pressure [Psi]
+  ( double StnPressure       // (i) observed station pressure [Psi]
+  , double Altitude          // (i) altitude above sea level [ft]
+  , double TDryBulb          // (i) dry bulb temperature [°F]
   )
 {
   // Calculate average temperature in column of air, assuming a lapse rate
@@ -770,10 +783,10 @@ double GetSeaLevelPressure      // (o) Sea level barometric pressure [Psi]
 // Station pressure from sea level pressure
 // This is just the previous function, reversed
 //
-double GetStationPressure       // (o) Station pressure [Psi]
-  ( double SeaLevelPressure     // (i) Sea level barometric pressure [Psi]
-  , double Altitude             // (i) Altitude above sea level [ft]
-  , double TDryBulb             // (i) Dry bulb temperature [°F]
+double GetStationPressure    // (o) station pressure [Psi]
+  ( double SeaLevelPressure  // (i) sea level barometric pressure [Psi]
+  , double Altitude          // (i) altitude above sea level [ft]
+  , double TDryBulb          // (i) dry bulb temperature [°F]
   )
 {
   return SeaLevelPressure/GetSeaLevelPressure(1., Altitude, TDryBulb);
