@@ -44,10 +44,6 @@ module Psychrometrics_SI
   !+ along with its documentation.
   !+
   !+- dmey - 22-05-2017: fork from C++ version and rewrite following Fortran 2008 standards.
-  !+- dmey - 22-05-2017: add `GetSatAirTemperatureFromEnthalpy` to compute the saturation temperature from enthalpy and pressure.
-  !+- dmey - 22-05-2017: add `GetHumRatioFromEnthalpy` to compute humidity ratio given dry bulb temperature and enthalpy.
-  !+- dmey - 22-05-2017: add `GetAirHeatCapacity` to compute heat capacity of air from dry bulb temperature and humidity ratio.
-  !+- dmey - 30-05-2017: add `GetTDryBulbFromEnthalpy` to compute dry bulb temperature from enthalpy and humidity ratio.
   !+---
 
   ! Import fortran 2008 standard to represent double-precision floating-point format
@@ -61,14 +57,12 @@ module Psychrometrics_SI
   public :: GetRelHumFromTWetBulb
   public :: GetTDewPointFromRelHum
   public :: GetTDewPointFromTWetBulb
-  public :: GetTDryBulbFromEnthalpy
   public :: GetVapPresFromRelHum
   public :: GetRelHumFromVapPres
   public :: GetTDewPointFromVapPres
   public :: GetVapPresFromTDewPoint
   public :: GetTWetBulbFromHumRatio
   public :: GetHumRatioFromTWetBulb
-  public :: GetHumRatioFromEnthalpy
   public :: GetHumRatioFromRelHum
   public :: GetRelHumFromHumRatio
   public :: GetHumRatioFromTDewPoint
@@ -86,8 +80,6 @@ module Psychrometrics_SI
   public :: GetMoistAirEnthalpy
   public :: GetMoistAirVolume
   public :: GetMoistAirDensity
-  public :: GetAirHeatCapacity
-  public :: GetSatAirTemperatureFromEnthalpy
   public :: CalcPsychrometricsFromTWetBulb
   public :: CalcPsychrometricsFromTDewPoint
   public :: CalcPsychrometricsFromRelHum
@@ -274,32 +266,6 @@ module Psychrometrics_SI
     TDewPoint = GetTDewPointFromHumRatio(TDryBulb, HumRatio, Pressure)
   end function GetTDewPointFromTWetBulb
 
-  function GetTDryBulbFromEnthalpy(Enthalpy, HumRatio) result(TDryBulb)
-    !+ Dry bulb temperature from Enthalpy and humidity ratio
-    !+ Based on the `GetMoistAirEnthalpy` function, rearranged for humidity ratio
-    !+ Reference:
-    !+ ASHRAE Fundamentals (2005) ch. 6 eqn. 32;
-    !+ ASHRAE Fundamentals (2009) ch. 1 eqn. 32.
-
-    real(dp), intent(in)  ::  Enthalpy
-      !+ Enthalpy in J kg⁻¹
-    real(dp), intent(in)  ::  HumRatio
-      !+ Humidity ratio in kgH₂O kgAIR⁻¹
-    real(dp)              ::  TDryBulb
-      !+ Dry bulb temperature in °C
-    real(dp)              ::  BoundedHumRatio
-      !+ Local function humidity ratio bounded to no less than 1.0d-5 kgH₂O kgAIR⁻¹
-
-    if (HumRatio < 0.0_dp) then
-      error stop "Error: humidity ratio is negative"
-    end if
-
-    ! Bound humidity ratio to no less than 1.0d-5 kgH₂O kgAIR⁻¹
-    BoundedHumRatio = max(HumRatio, 1.0d-5)
-
-    TDryBulb  = (Enthalpy - 2.501d6 * BoundedHumRatio) / (1.006d3 + 1.86d3 * BoundedHumRatio)
-  end function GetTDryBulbFromEnthalpy
-
   !----------------------------------------------------------------------------------
   ! Functions to convert between dew point, or relative humidity and vapor pressure
   !----------------------------------------------------------------------------------
@@ -478,31 +444,6 @@ module Psychrometrics_SI
     HumRatio  =  ( (2501.0_dp - 2.326_dp * TWetBulb) * Wsstar - 1.006_dp * (TDryBulb - TWetBulb) ) &
                   / (2501.0_dp + 1.86_dp * TDryBulb - 4.186_dp * TWetBulb)
   end function GetHumRatioFromTWetBulb
-
-  function GetHumRatioFromEnthalpy(TDryBulb, Enthalpy) result(HumRatio)
-    !+ Humidity ratio given dry bulb temperature and enthalpy.
-    !+ Based on the `GetMoistAirEnthalpy` function, rearranged for humidity ratio
-    !+ Reference:
-    !+ ASHRAE Fundamentals (2005) ch. 6 eqn. 32;
-    !+ ASHRAE Fundamentals (2009) ch. 1 eqn. 32.
-
-    real(dp), intent(in)  ::  TDryBulb
-      !+ Dry bulb temperature in °C
-    real(dp), intent(in)  ::  Enthalpy
-      !+ Air enthalpy in J kg⁻¹
-    real(dp)              ::  HumRatio
-      !+ Humidity ratio in kgH₂O kgAIR⁻¹
-    real(dp)              ::  MixingRatio
-      !+ Mixing ratio in kgH₂O kgAIR⁻¹ (dry air)
-
-    HumRatio = ( Enthalpy - 1.006d3 * TDryBulb ) / (2.501d6 + 1.86d3 * TDryBulb)
-
-    ! Check that MixingRatio is not less than 0
-    if (HumRatio < 0.0_dp) then
-        HumRatio = 1.d-5
-    end if
-
-  end function GetHumRatioFromEnthalpy
 
   function GetHumRatioFromRelHum(TDryBulb, RelHum, Pressure) result(HumRatio)
     !+ Humidity ratio given relative humidity.
@@ -880,202 +821,6 @@ module Psychrometrics_SI
 
     MoistAirDensity = (1. + HumRatio)/GetMoistAirVolume(TDryBulb, HumRatio, Pressure)
   end function GetMoistAirDensity
-
-  function GetAirHeatCapacity(TDryBulb, HumRatio) result(AirHeatCapacity)
-    !+ Heat capacity of air given dry bulb temperature and humidity ratio.
-    !+ Adapted from the `PsyCpAirFnWTdb` function from Energy Plus.
-    !+ Source:
-    !+ [Energy Plus `PsyCpAirFnWTdb` function](https://github.com/NREL/EnergyPlusRelease/
-    !+blob/1ba8474958dbac5a371362731b23310d40e0635d/SourceCode/PsychRoutines.f90#L377-L445).
-
-    real(dp), intent(in)  ::  TDryBulb
-      !+ Dry bulb temperature in °C
-    real(dp), intent(in)  ::  HumRatio
-      !+ Humidity ratio in kgH₂O kgAIR⁻¹
-    real(dp)              ::  AirHeatCapacity
-      !+ Heat capacity of air in J kg⁻¹ °C⁻¹ == J kg⁻¹ K⁻¹
-
-    ! Local variables
-    real(dp) :: AirEnthalpyMin
-      !+ GetMoistAirEnthalpy result of input parameters in J kg⁻¹ °C⁻¹
-    real(dp) :: AirEnthalpyMax
-      !+ GetMoistAirEnthalpy result of input humidity ratio at TDryBulb + deltaT in J kg⁻¹ °C⁻¹
-    real(dp) :: BoundedHumRatio
-      !+ Bounded humidity ratio in kgH₂O kgAIR⁻¹
-    real(dp) :: DeltaT = 0.1_dp
-      !+ temperature step size in °C
-
-    if (HumRatio < 0.0_dp) then
-      error stop "Error: humidity ratio is negative"
-    end if
-
-    BoundedHumRatio = max(HumRatio, 1.0d-5)
-    AirEnthalpyMin  = GetMoistAirEnthalpy(TDryBulb, BoundedHumRatio)
-    AirEnthalpyMax = GetMoistAirEnthalpy(TDryBulb + deltaT, BoundedHumRatio)
-    AirHeatCapacity = (AirEnthalpyMax - AirEnthalpyMin) / deltaT
-  end function GetAirHeatCapacity
-
-  function GetSatAirTemperatureFromEnthalpy(Enthalpy, Pressure) result(SatAirTemperature)
-    !+ This function provides the saturation temperature from the enthalpy
-    !+ and barometric pressure.
-    !+ This implementation was adapted from Energy Plus. Function originally written by George Shih
-    !+ and modified in July 2003 by LKL -- peg min/max values (outside range of functions).
-    !+ Source:
-    !+ [Energy Plus `PsyTsatFnHPb` function](https://github.com/NREL/EnergyPlusRelease/
-    !+blob/1ba8474958dbac5a371362731b23310d40e0635d/SourceCode/PsychRoutines.f90#L2331-L2542).
-    !+ Original reference:
-    !+ ASHRAE Handbook of Fundamentals, 1972, p99, eqn. 22
-
-    real(dp), intent(in)  :: Enthalpy
-      !+ Enthalpy in J kg⁻¹
-    real(dp), intent(in)  :: Pressure
-      !+ Atmospheric pressure in Pa
-    real(dp)              :: SatAirTemperature
-      !+ Saturation temperature in °C
-
-    ! Local variables:
-    real(dp) :: T1
-      !+ Approximate saturation temperature in °C
-    real(dp) :: T2
-      !+ Approximate saturation temperature in °C
-    real(dp) :: TN
-      !+ New assumed saturation temperature in °C
-    real(dp) :: H1
-      !+ Approximate enthalpy in J kg⁻¹
-    real(dp) :: H2
-      !+ Approximate enthalpy in J kg⁻¹
-    real(dp) :: Y1
-      !+ Error in enthalpy in  J kg⁻¹
-    real(dp) :: Y2
-      !+ Error in enthalpy in  J kg⁻¹
-    real(dp) :: HH
-      !+ Temporary Enthalpy (calculation) value in  J kg⁻¹
-    real(dp) :: Hloc
-      !+ Local enthalpy value in  J kg⁻¹
-    integer  :: IterCount
-      !+ Iteration counter (dimensionless)
-
-
-    ! Check that enthalpy is in range
-    HH = Enthalpy + 1.78637d4
-
-    if (Enthalpy >= 0.0_dp) then
-      Hloc = max(0.00001_dp,Enthalpy)
-    else if (Enthalpy  < 0.0_dp) then
-      Hloc = min(-.00001_dp,Enthalpy)
-    end if
-
-    if (HH > 7.5222d4) go to  20
-    if (HH > 2.7297d4) go to  60
-    if (HH > -6.7012d2) go to 50
-    if (HH > -2.2138d4) go to 40
-    if (HH < -4.24d4) HH=-4.24d4    ! Peg to minimum
-    go to 30
-  20 continue
-    if (HH < 1.8379d5) go to 70
-    if (HH < 4.7577d5) go to 80
-    if (HH < 1.5445d6) go to 90
-    if (HH < 3.8353d6) go to 100
-    if (HH > 4.5866d7) HH=4.5866d7  ! Peg to maximum
-    go to 110
-
-  ! If the barometric pressure is equal to 101330 Pa, the saturation temperature is calculated by the
-  ! following equations.
-
-  !  Temperature is between -60 and -40 °C
-    30 continue
-        Satairtemperature=F6(HH,-19.44_dp,8.53675d-4,-5.12637d-9,-9.85546d-14,-1.00102d-18,-4.2705d-24)
-        go to 120
-  !  Temperature is between -40 and -20 °C
-    40 continue
-        Satairtemperature=F6(HH,-1.94224d1,8.5892d-4,-4.50709d-9,-6.19492d-14,8.71734d-20,8.73051d-24)
-        go to 120
-  !  Temperature is between -20 and 0 °C
-    50 continue
-        Satairtemperature=F6(HH,-1.94224d1,8.59061d-4,-4.4875d-9,-5.76696d-14,7.72217d-19,3.97894d-24)
-        go to 120
-  !  Temperature is between 0 and 20 °C
-    60 continue
-        Satairtemperature=F6(HH,-2.01147d1,9.04936d-4,-6.83305d-9,2.3261d-14,7.27237d-20,-6.31939d-25)
-        go to 120
-  !  Temperature is between 20 and 40 °C
-    70 continue
-        Satairtemperature=F6(HH,-1.82124d1,8.31683d-4,-6.16461d-9,3.06411d-14,-8.60964d-20,1.03003d-25)
-        go to 120
-  !  Temperature is between 40 and 60 °C
-    80 continue
-        Satairtemperature=F6(HH,-1.29419_dp,3.88538d-4,-1.30237d-9,2.78254d-15,-3.27225d-21,1.60969d-27)
-        go to 120
-  !  Temperature is between 60 and 80 °C
-    90 continue
-        Satairtemperature=F6(HH,2.39214d1,1.27519d-4,-1.52089d-10,1.1043d-16,-4.33919d-23,7.05296d-30)
-        go to 120
-  !  Temperature is between 80 and 90 °C
-    100 continue
-        Satairtemperature=F6(HH,4.88446d1,3.85534d-5,-1.78805d-11,4.87224d-18,-7.15283d-25,4.36246d-32)
-        go to 120
-  !  Temperature is between 90 and 100 °C
-    110 continue
-        Satairtemperature=F7(HH,7.60565d11,5.80534d4,-7.36433d-3,5.11531d-10,-1.93619d-17,3.70511d-25, -2.77313d-33)
-
-  ! If the barometric pressure is not equal to equal to 101330 Pa, the saturation temperature is calculated by the
-  ! following equations instead of the above ones.
-
-  120 continue
-
-      if (abs(Pressure-1.0133d5)/1.0133d5 <= 0.01_dp) go to 170
-      IterCount=0
-      T1=Satairtemperature
-      H1=GetMoistAirEnthalpy(T1, GetHumRatioFromTWetBulb(T1, T1, Pressure))
-      Y1=H1-Hloc
-      if (abs(Y1/Hloc) <= 0.1d-4) go to 140
-      T2=T1*0.9_dp
-  130 IterCount=IterCount+1
-      H2=GetMoistAirEnthalpy(T2, GetHumRatioFromTWetBulb(T2, T2, Pressure))
-      Y2=H2-Hloc
-      if (abs(Y2/Hloc) <= 0.1d-4) go to 150
-      if (Y2 == Y1) go to 150
-      TN=T2-Y2/(Y2-Y1)*(T2-T1)
-      if (IterCount > 30) go to 160
-      T1=T2
-      T2=TN
-      Y1=Y2
-      go to 130
-  140 continue
-      Satairtemperature=T1
-      go to 170
-  150 continue
-      Satairtemperature=T2
-      go to 170
-  160 continue
-
-  170 continue
-
-  ! The result is the saturation temperature
-
-  return
-
-  contains
-
-      real(dp) function F6(X,A0,A1,A2,A3,A4,A5)
-        implicit none
-        real(dp) X
-        real(dp) A0,A1,A2,A3,A4,A5
-
-        F6=A0+X*(A1+X*(A2+X*(A3+X*(A4+X*A5))))
-        return
-      end function F6
-
-      real(dp) function F7(X,A0,A1,A2,A3,A4,A5,A6)
-        implicit none
-        real(dp) X,A6
-        real(dp) A0,A1,A2,A3,A4,A5
-
-        F7=(A0+X*(A1+X*(A2+X*(A3+X*(A4+X*(A5+X*A6))))))/1.0D10
-        return
-      end function F7
-
-  end function GetSatAirTemperatureFromEnthalpy
 
   !----------------------------------------------------------------------------------
   ! Subroutines for setting all psychrometric values
