@@ -1,0 +1,181 @@
+# Copyright (c) 2018 D. Thevenard and D. Meyer. Licensed under the MIT License.
+# Test of PsychroLib in IP units
+
+import pytest
+from psychrolib import *
+
+pytestmark = pytest.mark.usefixtures('SetUnitSystem_IP')
+
+# Test of helper functions
+def test_GetTRankineFromTFahrenheit():
+    assert GetTRankineFromTFahrenheit(70) == pytest.approx(529.67, rel = 0.000001)
+
+
+###############################################################################
+# Tests at saturation
+###############################################################################
+
+# Test saturation vapour pressure calculation
+# The values are tested against the values published in Table 3 of ch. 1 of the 2017 ASHRAE Handbook - Fundamentals
+# over the range [-148, +392] F
+# ASHRAE's assertion is that the formula is within 300 ppm of the true values, which is true except for the value at -76 F
+def test_GetSatVapPres():
+    assert GetSatVapPres(-76) == pytest.approx(0.000157, abs = 0.00001)
+    assert GetSatVapPres( -4) == pytest.approx(0.014974, rel = 0.0003)
+    assert GetSatVapPres( 23) == pytest.approx(0.058268, rel = 0.0003)
+    assert GetSatVapPres( 41) == pytest.approx(0.12656, rel = 0.0003)
+    assert GetSatVapPres( 77) == pytest.approx(0.45973, rel = 0.0003)
+    assert GetSatVapPres(122) == pytest.approx(1.79140, rel = 0.0003)
+    assert GetSatVapPres(212) == pytest.approx(14.7094, rel = 0.0003)
+    assert GetSatVapPres(300) == pytest.approx(67.0206, rel = 0.0003)
+
+# Test saturation humidity ratio
+# The values are tested against those published in Table 2 of ch. 1 of the 2017 ASHRAE Handbook - Fundamentals
+# Agreement is not terrific - up to 2% difference with the values published in the table
+def test_GetSatHumRatio():
+    assert GetSatHumRatio(-58, 14.696) == pytest.approx(0.0000243, rel = 0.01)
+    assert GetSatHumRatio( -4, 14.696) == pytest.approx(0.0006373, rel = 0.01)
+    assert GetSatHumRatio( 23, 14.696) == pytest.approx(0.0024863, rel = 0.005)
+    assert GetSatHumRatio( 41, 14.696) == pytest.approx(0.005425, rel = 0.005)
+    assert GetSatHumRatio( 77, 14.696) == pytest.approx(0.020173, rel = 0.005)
+    assert GetSatHumRatio(122, 14.696) == pytest.approx(0.086863, rel = 0.01)
+    assert GetSatHumRatio(185, 14.696) == pytest.approx(0.838105, rel = 0.02)
+
+# Test enthalpy at saturation
+# The values are tested against those published in Table 2 of ch. 1 of the 2017 ASHRAE Handbook - Fundamentals
+# Agreement is rarely better than 1%, and close to 3% at -5 C
+def test_GetSatAirEnthalpy():
+    assert GetSatAirEnthalpy(-58, 14.696) == pytest.approx(-13.906, rel = 0.01)
+    assert GetSatAirEnthalpy( -4, 14.696) == pytest.approx( -0.286, rel = 0.01)
+    assert GetSatAirEnthalpy( 23, 14.696) == pytest.approx(  8.186, rel = 0.03)
+    assert GetSatAirEnthalpy( 41, 14.696) == pytest.approx( 15.699, rel = 0.01)
+    assert GetSatAirEnthalpy( 77, 14.696) == pytest.approx( 40.576, rel = 0.01)
+    assert GetSatAirEnthalpy(122, 14.696) == pytest.approx(126.066, rel = 0.01)
+    assert GetSatAirEnthalpy(185, 14.696) == pytest.approx(999.749, rel = 0.01)
+
+
+###############################################################################
+# Test of primary relationships between wet bulb temperature, humidity ratio, vapour pressure, relative humidity, and dew point temperatures
+# These relationships are identified with bold arrows in the doc's diagram
+###############################################################################
+
+# Test of relationships between vapour pressure and dew point temperature
+# No need to test vapour pressure calculation as it is just the saturation vapour pressure tested above
+def test_VapPres_TDewPoint():
+    VapPres = GetVapPresFromTDewPoint(-4.0)
+    assert GetTDewPointFromVapPres(59.0, VapPres) == pytest.approx(-4.0, abs = 0.001)
+    VapPres = GetVapPresFromTDewPoint(41.0)
+    assert GetTDewPointFromVapPres(59.0, VapPres) == pytest.approx(41.0, abs = 0.001)
+    VapPres = GetVapPresFromTDewPoint(122.0)
+    assert GetTDewPointFromVapPres(140.0, VapPres) == pytest.approx(122.0, abs = 0.001)
+
+## Test of relationships between humidity ratio and vapour pressure
+## Humidity ratio values to test against are calculated with Excel
+def test_HumRatio_VapPres():
+    HumRatio = GetHumRatioFromVapPres(0.45973, 14.175)          # conditions at 77 F, std atm pressure at 1000 ft
+    assert HumRatio == pytest.approx(0.0208473311024865, rel = 0.000001)
+    VapPres = GetVapPresFromHumRatio(HumRatio, 14.175)
+    assert VapPres == pytest.approx(0.45973, abs = 0.00001)
+
+## Test of relationships between vapour pressure and relative humidity
+def test_VapPres_RelHum():
+    VapPres = GetVapPresFromRelHum(77, 0.8)
+    assert VapPres == pytest.approx(0.45973*0.8, rel = 0.0003)
+    RelHum = GetRelHumFromVapPres(77, VapPres)
+    assert RelHum == pytest.approx(0.8, rel = 0.0003)
+
+## Test of relationships between humidity ratio and wet bulb temperature
+## The formulae are tested for two conditions, one above freezing and the other below
+## Humidity ratio values to test against are calculated with Excel
+def test_HumRatio_TWetBulb():
+    # Above freezing
+    HumRatio = GetHumRatioFromTWetBulb(86, 77, 14.175)
+    assert HumRatio == pytest.approx(0.0187193288418892, rel = 0.0003)
+    TWetBulb = GetTWetBulbFromHumRatio(86, HumRatio, 14.175)
+    assert TWetBulb == pytest.approx(77, abs = 0.001)
+    # Below freezing
+    HumRatio = GetHumRatioFromTWetBulb(30.2, 23.0, 14.175)
+    assert HumRatio == pytest.approx(0.00114657481090184, rel = 0.0003)
+    TWetBulb = GetTWetBulbFromHumRatio(30.2, HumRatio, 14.1751)
+    assert TWetBulb == pytest.approx(23.0, abs = 0.001)
+
+
+###############################################################################
+# Dry air calculations
+###############################################################################
+
+# Values are compared against values found in Table 2 of ch. 1 of the ASHRAE Handbook - Fundamentals
+# Note: the accuracy of the formula is not better than 0.1%, apparently
+def test_DryAir():
+    assert GetDryAirEnthalpy(77) == pytest.approx(18.498, rel = 0.001)
+    assert GetDryAirVolume(77, 14.696) == pytest.approx(13.5251, rel = 0.001)
+    assert GetDryAirDensity(77, 14.696) == pytest.approx(1/13.5251, rel = 0.001)
+
+
+###############################################################################
+# Moist air calculations
+###############################################################################
+
+# Values are compared against values calculated with Excel
+def test_MoistAir():
+    assert GetMoistAirEnthalpy(86, 0.02) == pytest.approx(42.6168, rel = 0.0003)
+    assert GetMoistAirVolume(86, 0.02, 14.175) == pytest.approx(14.7205749002918, rel = 0.0003)
+    assert GetMoistAirDensity(86, 0.02, 14.175) == pytest.approx(0.0692907720594378, rel = 0.0003)
+
+###############################################################################
+# Test standard atmosphere
+###############################################################################
+
+# The functions are tested against Table 1 of ch. 1 of the 2017 ASHRAE Handbook - Fundamentals
+def test_GetStandardAtmPressure():
+    assert GetStandardAtmPressure(-1000) == pytest.approx(15.236, abs = 1)
+    assert GetStandardAtmPressure(    0) == pytest.approx(14.696, abs = 1)
+    assert GetStandardAtmPressure( 1000) == pytest.approx(14.175, abs = 1)
+    assert GetStandardAtmPressure( 3000) == pytest.approx(13.173, abs = 1)
+    assert GetStandardAtmPressure(10000) == pytest.approx(10.108, abs = 1)
+    assert GetStandardAtmPressure(30000) == pytest.approx( 4.371, abs = 1)
+
+def test_GetStandardAtmTemperature():
+    assert GetStandardAtmTemperature(-1000) == pytest.approx( 62.6, abs = 0.1)
+    assert GetStandardAtmTemperature(    0) == pytest.approx( 59.0, abs = 0.1)
+    assert GetStandardAtmTemperature( 1000) == pytest.approx( 55.4, abs = 0.1)
+    assert GetStandardAtmTemperature( 3000) == pytest.approx( 48.3, abs = 0.1)
+    assert GetStandardAtmTemperature(10000) == pytest.approx( 23.4, abs = 0.1)
+    assert GetStandardAtmTemperature(30000) == pytest.approx(-47.8, abs = 0.2)          # Doesn't work with abs = 0.1
+
+
+###############################################################################
+# Test sea level pressure conversions
+###############################################################################
+
+# Test sea level pressure calculation against https://keisan.casio.com/exec/system/1224575267,
+# converted to IP
+def test_SeaLevel_Station_Pressure():
+    SeaLevelPressure = GetSeaLevelPressure(14.681662559, 344.488, 62.942)
+    assert SeaLevelPressure == pytest.approx(14.8640475, abs = 0.0001)
+    assert GetStationPressure(SeaLevelPressure, 344.488, 62.942) == pytest.approx(14.681662559, abs = 0.0001)
+
+
+###############################################################################
+# Test against Example 1 of ch. 1 of the 2017 ASHRAE Handbook - Fundamentals
+###############################################################################
+
+def test_AllPsychrometrics():
+    # This is example 1. The values are provided in the text of the Handbook
+    TDryBulb, TWetBulb, TDewPoint, RelHum, HumRatio, VapPres, MoistAirEnthalpy, MoistAirVolume, DegreeOfSaturation = \
+        CalcPsychrometricsFromTWetBulb(100, 65, 14.696)
+    assert HumRatio == pytest.approx(0.00523, abs = 0.001)
+    assert MoistAirEnthalpy == pytest.approx(29.80, abs = 0.1)
+    assert TDewPoint == pytest.approx(40, abs = 1.0)             # not great agreement
+    assert RelHum == pytest.approx(0.13, abs = 0.01)
+    assert MoistAirVolume == pytest.approx(14.22, rel = 0.01)
+
+    # Reverse calculation: recalculate wet bulb temperature from dew point temperature
+    TDryBulb, TWetBulb, TDewPoint, RelHum, HumRatio, VapPres, MoistAirEnthalpy, MoistAirVolume, DegreeOfSaturation = \
+        CalcPsychrometricsFromTDewPoint(100, TDewPoint, 14.696)
+    assert TWetBulb == pytest.approx(65, abs = 0.1)
+
+   # Reverse calculation: recalculate wet bulb temperature from relative humidity
+    TDryBulb, TWetBulb, TDewPoint, RelHum, HumRatio, VapPres, MoistAirEnthalpy, MoistAirVolume, DegreeOfSaturation = \
+        CalcPsychrometricsFromRelHum(100, RelHum, 14.696)
+    assert TWetBulb == pytest.approx(65, abs = 0.1)
