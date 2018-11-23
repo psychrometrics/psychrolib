@@ -162,7 +162,7 @@ def test_SeaLevel_Station_Pressure():
 
 def test_AllPsychrometrics():
     # This is example 1. The values are provided in the text of the Handbook
-    TDryBulb, TWetBulb, TDewPoint, RelHum, HumRatio, VapPres, MoistAirEnthalpy, MoistAirVolume, DegreeOfSaturation = \
+    HumRatio, TDewPoint, RelHum, VapPres, MoistAirEnthalpy, MoistAirVolume, DegreeOfSaturation = \
         CalcPsychrometricsFromTWetBulb(100, 65, 14.696)
     assert HumRatio == pytest.approx(0.00523, abs = 0.001)
     assert MoistAirEnthalpy == pytest.approx(29.80, abs = 0.1)
@@ -171,11 +171,11 @@ def test_AllPsychrometrics():
     assert MoistAirVolume == pytest.approx(14.22, rel = 0.01)
 
     # Reverse calculation: recalculate wet bulb temperature from dew point temperature
-    TDryBulb, TWetBulb, TDewPoint, RelHum, HumRatio, VapPres, MoistAirEnthalpy, MoistAirVolume, DegreeOfSaturation = \
+    HumRatio, TWetBulb, RelHum, VapPres, MoistAirEnthalpy, MoistAirVolume, DegreeOfSaturation = \
         CalcPsychrometricsFromTDewPoint(100, TDewPoint, 14.696)
     assert TWetBulb == pytest.approx(65, abs = 0.1)
 
    # Reverse calculation: recalculate wet bulb temperature from relative humidity
-    TDryBulb, TWetBulb, TDewPoint, RelHum, HumRatio, VapPres, MoistAirEnthalpy, MoistAirVolume, DegreeOfSaturation = \
+    HumRatio, TWetBulb, TDewPoint, VapPres, MoistAirEnthalpy, MoistAirVolume, DegreeOfSaturation = \
         CalcPsychrometricsFromRelHum(100, RelHum, 14.696)
     assert TWetBulb == pytest.approx(65, abs = 0.1)

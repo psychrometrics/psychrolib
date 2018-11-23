@@ -144,7 +144,7 @@ def GetTRankineFromTFahrenheit(TFahrenheit: float) -> float:
 
 def GetTKelvinFromTCelsius(TCelsius: float) -> float:
     """
-    Utility function to convert temperature to Kelvin (°K)
+    Utility function to convert temperature to Kelvin (K)
     given temperature in degree Celsius (°C).
 
     Args:
@@ -999,7 +999,7 @@ def GetStandardAtmTemperature(Altitude: float) -> float:
     Return standard atmosphere temperature, given the elevation (altitude).
 
     Args:
-        Altitude: Altitude in ft
+        Altitude: Altitude in ft [IP] or m [SI]
 
     Returns:
         Standard atmosphere dry-bulb temperature in °F [IP] or °C [SI]
@@ -1060,6 +1060,8 @@ def GetSeaLevelPressure(StationPressure: float, Altitude: float, TDryBulb: float
 
 def GetStationPressure(SeaLevelPressure: float, Altitude: float, TDryBulb: float) -> float:
     """
+    Return station pressure from sea level pressure.
+
     Args:
         SeaLevelPressure : Sea level barometric pressure in Psi [IP] or Pa [SI]
         Altitude: Altitude in ft [IP] or m [SI]
@@ -1111,7 +1113,7 @@ def CalcPsychrometricsFromTWetBulb(TDryBulb: float, TWetBulb: float, Pressure: f
     MoistAirEnthalpy = GetMoistAirEnthalpy(TDryBulb, HumRatio)
     MoistAirVolume = GetMoistAirVolume(TDryBulb, HumRatio, Pressure)
     DegreeOfSaturation = GetDegreeOfSaturation(TDryBulb, HumRatio, Pressure)
-    return TDryBulb, TWetBulb, TDewPoint, RelHum, HumRatio, VapPres, MoistAirEnthalpy, MoistAirVolume, DegreeOfSaturation
+    return HumRatio, TDewPoint, RelHum, VapPres, MoistAirEnthalpy, MoistAirVolume, DegreeOfSaturation
 
 def CalcPsychrometricsFromTDewPoint(TDryBulb: float, TDewPoint: float, Pressure: float) -> tuple:
     """
@@ -1141,7 +1143,7 @@ def CalcPsychrometricsFromTDewPoint(TDryBulb: float, TDewPoint: float, Pressure:
     MoistAirEnthalpy = GetMoistAirEnthalpy(TDryBulb, HumRatio)
     MoistAirVolume = GetMoistAirVolume(TDryBulb, HumRatio, Pressure)
     DegreeOfSaturation = GetDegreeOfSaturation(TDryBulb, HumRatio, Pressure)
-    return TDryBulb, TWetBulb, TDewPoint, RelHum, HumRatio, VapPres, MoistAirEnthalpy, MoistAirVolume, DegreeOfSaturation
+    return HumRatio, TWetBulb, RelHum, VapPres, MoistAirEnthalpy, MoistAirVolume, DegreeOfSaturation
 
 def CalcPsychrometricsFromRelHum(TDryBulb: float, RelHum: float, Pressure: float) -> tuple:
     """
@@ -1171,4 +1173,4 @@ def CalcPsychrometricsFromRelHum(TDryBulb: float, RelHum: float, Pressure: float
     MoistAirEnthalpy = GetMoistAirEnthalpy(TDryBulb, HumRatio)
     MoistAirVolume = GetMoistAirVolume(TDryBulb, HumRatio, Pressure)
     DegreeOfSaturation = GetDegreeOfSaturation(TDryBulb, HumRatio, Pressure)
-    return TDryBulb, TWetBulb, TDewPoint, RelHum, HumRatio, VapPres, MoistAirEnthalpy, MoistAirVolume, DegreeOfSaturation
+    return HumRatio, TWetBulb, TDewPoint, VapPres, MoistAirEnthalpy, MoistAirVolume, DegreeOfSaturation
