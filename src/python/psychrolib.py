@@ -41,7 +41,9 @@ Note from the Authors
 
 """
 
+
 import math
+
 
 #######################################################################################################
 # Global constants
@@ -57,6 +59,7 @@ R_DA_IP =  53.350
         ASHRAE Handbook - Fundamentals (2017) ch. 1
 
 """
+
 R_DA_SI = 287.042
 """float: Universal gas constant for dry air (SI version)
 
@@ -68,6 +71,7 @@ R_DA_SI = 287.042
 
 """
 
+
 #######################################################################################################
 # Helper functions
 #######################################################################################################
@@ -76,7 +80,6 @@ __UNITS = ''
 # Unit system to use.
 __TOL = 1.0
 # Tolerance.
-
 
 def SetUnitSystem(UnitSystem: str) -> None:
     """
@@ -106,10 +109,8 @@ def SetUnitSystem(UnitSystem: str) -> None:
     else:
         __TOL = 0.001
 
-
 def GetUnitSystem() -> str:
     return __UNITS
-
 
 def isIP() -> bool:
     if __UNITS == 'IP':
@@ -119,6 +120,10 @@ def isIP() -> bool:
     else:
         raise ValueError('The system of units has not been defined.')
 
+
+#######################################################################################################
+# Conversions between dew point, wet bulb, and relative humidity
+#######################################################################################################
 
 def GetTRankineFromTFahrenheit(TFahrenheit: float) -> float:
     """
@@ -141,7 +146,6 @@ def GetTRankineFromTFahrenheit(TFahrenheit: float) -> float:
     TRankine = TFahrenheit + ZERO_FAHRENHEIT_AS_RANKINE
     return TRankine
 
-
 def GetTKelvinFromTCelsius(TCelsius: float) -> float:
     """
     Utility function to convert temperature to Kelvin (K)
@@ -162,6 +166,7 @@ def GetTKelvinFromTCelsius(TCelsius: float) -> float:
 
     TKelvin = TCelsius + ZERO_CELSIUS_AS_KELVIN
     return TKelvin
+
 
 #######################################################################################################
 # Conversions between dew point, wet bulb, and relative humidity
@@ -190,7 +195,6 @@ def GetTWetBulbFromTDewPoint(TDryBulb: float, TDewPoint: float, Pressure: float)
     TWetBulb = GetTWetBulbFromHumRatio(TDryBulb, HumRatio, Pressure)
     return TWetBulb
 
-
 def GetTWetBulbFromRelHum(TDryBulb: float, RelHum: float, Pressure: float) -> float:
     """
     Return wet-bulb temperature given dry-bulb temperature, relative humidity, and pressure.
@@ -213,7 +217,6 @@ def GetTWetBulbFromRelHum(TDryBulb: float, RelHum: float, Pressure: float) -> fl
     HumRatio = GetHumRatioFromRelHum(TDryBulb, RelHum, Pressure)
     TWetBulb = GetTWetBulbFromHumRatio(TDryBulb, HumRatio, Pressure)
     return TWetBulb
-
 
 def GetRelHumFromTDewPoint(TDryBulb: float, TDewPoint: float) -> float:
     """
@@ -238,7 +241,6 @@ def GetRelHumFromTDewPoint(TDryBulb: float, TDewPoint: float) -> float:
     RelHum = VapPres / SatVapPres
     return RelHum
 
-
 def GetRelHumFromTWetBulb(TDryBulb: float, TWetBulb: float, Pressure: float) -> float:
     """
     Return relative humidity given dry-bulb temperature, wet bulb temperature and pressure.
@@ -262,7 +264,6 @@ def GetRelHumFromTWetBulb(TDryBulb: float, TWetBulb: float, Pressure: float) -> 
     RelHum =  GetRelHumFromHumRatio(TDryBulb, HumRatio, Pressure)
     return RelHum
 
-
 def GetTDewPointFromRelHum(TDryBulb: float, RelHum: float) -> float:
     """
     Return dew-point temperature given dry-bulb temperature and relative humidity.
@@ -284,7 +285,6 @@ def GetTDewPointFromRelHum(TDryBulb: float, RelHum: float) -> float:
     VapPres = GetVapPresFromRelHum(TDryBulb, RelHum)
     TDewPoint = GetTDewPointFromVapPres(TDryBulb, VapPres)
     return TDewPoint
-
 
 def GetTDewPointFromTWetBulb(TDryBulb: float, TWetBulb: float, Pressure: float) -> float:
     """
@@ -308,6 +308,7 @@ def GetTDewPointFromTWetBulb(TDryBulb: float, TWetBulb: float, Pressure: float) 
     HumRatio = GetHumRatioFromTWetBulb(TDryBulb, TWetBulb, Pressure)
     TDewPoint = GetTDewPointFromHumRatio(TDryBulb, HumRatio, Pressure)
     return TDewPoint
+
 
 #######################################################################################################
 # Conversions between dew point, or relative humidity and vapor pressure
@@ -334,7 +335,6 @@ def GetVapPresFromRelHum(TDryBulb: float, RelHum: float) -> float:
     VapPres = RelHum * GetSatVapPres(TDryBulb)
     return VapPres
 
-
 def GetRelHumFromVapPres(TDryBulb: float, VapPres: float) -> float:
     """
     Return relative humidity given dry-bulb temperature and vapor pressure.
@@ -355,7 +355,6 @@ def GetRelHumFromVapPres(TDryBulb: float, VapPres: float) -> float:
 
     RelHum = VapPres / GetSatVapPres(TDryBulb)
     return RelHum
-
 
 def GetTDewPointFromVapPres(TDryBulb: float, VapPres: float) -> float:
     """
@@ -423,7 +422,6 @@ def GetTDewPointFromVapPres(TDryBulb: float, VapPres: float) -> float:
     TDewPoint = min(TDewPoint, TDryBulb)
     return TDewPoint
 
-
 def GetVapPresFromTDewPoint(TDewPoint: float) -> float:
     """
     Return vapor pressure given dew point temperature.
@@ -488,7 +486,6 @@ def GetTWetBulbFromHumRatio(TDryBulb: float, HumRatio: float, Pressure: float) -
         TWetBulb = (TWetBulbSup + TWetBulbInf) / 2
     return TWetBulb
 
-
 def GetHumRatioFromTWetBulb(TDryBulb: float, TWetBulb: float, Pressure: float) -> float:
     """
     Return humidity ratio given dry-bulb temperature, wet-bulb temperature, and pressure.
@@ -526,7 +523,6 @@ def GetHumRatioFromTWetBulb(TDryBulb: float, TWetBulb: float, Pressure: float) -
                     / (2830. + 1.86 * TDryBulb - 2.1 * TWetBulb)
     return HumRatio
 
-
 def GetHumRatioFromRelHum(TDryBulb: float, RelHum: float, Pressure: float) -> float:
     """
     Return humidity ratio given dry-bulb temperature, relative humidity, and pressure.
@@ -549,7 +545,6 @@ def GetHumRatioFromRelHum(TDryBulb: float, RelHum: float, Pressure: float) -> fl
     VapPres = GetVapPresFromRelHum(TDryBulb, RelHum)
     HumRatio = GetHumRatioFromVapPres(VapPres, Pressure)
     return HumRatio
-
 
 def GetRelHumFromHumRatio(TDryBulb: float, HumRatio: float, Pressure: float) -> float:
     """
@@ -574,7 +569,6 @@ def GetRelHumFromHumRatio(TDryBulb: float, HumRatio: float, Pressure: float) -> 
     RelHum = GetRelHumFromVapPres(TDryBulb, VapPres)
     return RelHum
 
-
 def GetHumRatioFromTDewPoint(TDewPoint: float, Pressure: float) -> float:
     """
     Return humidity ratio given dew-point temperature and pressure.
@@ -593,7 +587,6 @@ def GetHumRatioFromTDewPoint(TDewPoint: float, Pressure: float) -> float:
     VapPres = GetSatVapPres(TDewPoint)
     HumRatio = GetHumRatioFromVapPres(VapPres, Pressure)
     return HumRatio
-
 
 def GetTDewPointFromHumRatio(TDryBulb: float, HumRatio: float, Pressure: float) -> float:
     """
@@ -644,7 +637,6 @@ def GetHumRatioFromVapPres(VapPres: float, Pressure: float) -> float:
     HumRatio = 0.621945 * VapPres / (Pressure - VapPres)
     return HumRatio
 
-
 def GetVapPresFromHumRatio(HumRatio: float, Pressure: float) -> float:
     """
     Return vapor pressure given humidity ratio and pressure.
@@ -691,7 +683,6 @@ def GetDryAirEnthalpy(TDryBulb: float) -> float:
         DryAirEnthalpy = 1006 * TDryBulb
     return DryAirEnthalpy
 
-
 def GetDryAirDensity(TDryBulb: float, Pressure: float) -> float:
     """
     Return dry-air density given dry-bulb temperature and pressure.
@@ -717,7 +708,6 @@ def GetDryAirDensity(TDryBulb: float, Pressure: float) -> float:
     else:
         DryAirDensity = Pressure / R_DA_SI / GetTKelvinFromTCelsius(TDryBulb)
     return DryAirDensity
-
 
 def GetDryAirVolume(TDryBulb: float, Pressure: float) -> float:
     """
@@ -792,7 +782,6 @@ def GetSatVapPres(TDryBulb: float) -> float:
     SatVapPres = math.exp(LnPws)
     return SatVapPres
 
-
 def GetSatHumRatio(TDryBulb: float, Pressure: float) -> float:
     """
     Return humidity ratio of saturated air given dry-bulb temperature and pressure.
@@ -811,7 +800,6 @@ def GetSatHumRatio(TDryBulb: float, Pressure: float) -> float:
     SatVaporPres = GetSatVapPres(TDryBulb)
     SatHumRatio = 0.621945 * SatVaporPres / (Pressure - SatVaporPres)
     return SatHumRatio
-
 
 def GetSatAirEnthalpy(TDryBulb: float, Pressure: float) -> float:
     """
@@ -860,7 +848,6 @@ def GetVaporPressureDeficit(TDryBulb: float, HumRatio: float, Pressure: float) -
     VaporPressureDeficit = GetSatVapPres(TDryBulb) * (1 - RelHum)
     return VaporPressureDeficit
 
-
 def GetDegreeOfSaturation(TDryBulb: float, HumRatio: float, Pressure: float) -> float:
     """
     Return the degree of saturation (i.e humidity ratio of the air / humidity ratio of the air at saturation
@@ -888,7 +875,6 @@ def GetDegreeOfSaturation(TDryBulb: float, HumRatio: float, Pressure: float) -> 
     DegreeOfSaturation = HumRatio / SatHumRatio
     return DegreeOfSaturation
 
-
 def GetMoistAirEnthalpy(TDryBulb: float, HumRatio: float) -> float:
     """
     Return moist air enthalpy given dry-bulb temperature and humidity ratio.
@@ -912,7 +898,6 @@ def GetMoistAirEnthalpy(TDryBulb: float, HumRatio: float) -> float:
     else:
         MoistAirEnthalpy = (1.006 * TDryBulb + HumRatio * (2501. + 1.86 * TDryBulb)) * 1000
     return MoistAirEnthalpy
-
 
 def GetMoistAirVolume(TDryBulb: float, HumRatio: float, Pressure: float) -> float:
     """
@@ -942,7 +927,6 @@ def GetMoistAirVolume(TDryBulb: float, HumRatio: float, Pressure: float) -> floa
     else:
         MoistAirVolume = R_DA_SI * GetTKelvinFromTCelsius(TDryBulb) * (1 + 1.607858 * HumRatio) / Pressure
     return MoistAirVolume
-
 
 def GetMoistAirDensity(TDryBulb: float, HumRatio: float, Pressure:float) -> float:
     """
@@ -993,7 +977,6 @@ def GetStandardAtmPressure(Altitude: float) -> float:
         StandardAtmPressure = 101325 * math.pow(1 - 2.25577e-05 * Altitude, 5.2559)
     return StandardAtmPressure
 
-
 def GetStandardAtmTemperature(Altitude: float) -> float:
     """
     Return standard atmosphere temperature, given the elevation (altitude).
@@ -1013,7 +996,6 @@ def GetStandardAtmTemperature(Altitude: float) -> float:
     else:
         StandardAtmTemperature = 15 - 0.0065 * Altitude
     return StandardAtmTemperature
-
 
 def GetSeaLevelPressure(StationPressure: float, Altitude: float, TDryBulb: float) -> float:
 
@@ -1056,7 +1038,6 @@ def GetSeaLevelPressure(StationPressure: float, Altitude: float, TDryBulb: float
     # Calculate the sea level pressure
     SeaLevelPressure = StationPressure * math.exp(Altitude / H)
     return SeaLevelPressure
-
 
 def GetStationPressure(SeaLevelPressure: float, Altitude: float, TDryBulb: float) -> float:
     """
