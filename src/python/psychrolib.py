@@ -43,6 +43,7 @@ Note from the Authors
 
 
 import math
+from enum import Enum, auto
 
 
 #######################################################################################################
@@ -76,17 +77,25 @@ R_DA_SI = 287.042
 # Helper functions
 #######################################################################################################
 
-__UNITS = ''
 # Unit system to use.
+class UnitSystem(Enum):
+    IP = auto()
+    SI = auto()
+
+IP = UnitSystem.IP
+SI = UnitSystem.SI
+
+__UNITS = None
+
 __TOL = 1.0
 # Tolerance.
 
-def SetUnitSystem(UnitSystem: str) -> None:
+def SetUnitSystem(Units: UnitSystem) -> None:
     """
     This function sets the system of units to use (SI or IP).
 
     Args:
-        UnitSystem: string indicating the system of units chosen (SI or IP)
+        Units: string indicating the system of units chosen (SI or IP)
 
     Notes:
         This function *HAS TO BE CALLED* before the library can be used
@@ -95,27 +104,25 @@ def SetUnitSystem(UnitSystem: str) -> None:
     global __UNITS
     global __TOL
 
-    UnitSystem = UnitSystem.upper()
+    if not isinstance(Units, UnitSystem):
+        raise ValueError("The system of units has to be either SI or IP.")
 
-    if (UnitSystem not in ['IP', 'SI']):
-        raise ValueError("The system of units has to be either 'SI' or 'IP'.")
-
-    __UNITS = UnitSystem
+    __UNITS = Units
 
     # Define tolerance on temperature calculations
     # The tolerance is the same in IP and SI
-    if UnitSystem == 'IP':
+    if Units == IP:
         __TOL = 0.001 * 9 / 5
     else:
         __TOL = 0.001
 
-def GetUnitSystem() -> str:
+def GetUnitSystem() -> UnitSystem:
     return __UNITS
 
 def isIP() -> bool:
-    if __UNITS == 'IP':
+    if __UNITS == IP:
         return True
-    elif __UNITS == 'SI':
+    elif __UNITS == SI:
         return False
     else:
         raise ValueError('The system of units has not been defined.')

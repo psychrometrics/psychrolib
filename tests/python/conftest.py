@@ -8,12 +8,12 @@ import pytest
 PACKAGE_PATH = Path(__file__).parents[2] / 'src' / 'python'
 sys.path.append(str(PACKAGE_PATH))
 
-from psychrolib import SetUnitSystem
+from psychrolib import SetUnitSystem, SI, IP
 
 @pytest.fixture(scope = 'module')
 def SetUnitSystem_IP():
-    SetUnitSystem('IP')
+    SetUnitSystem(IP)
 
 @pytest.fixture(scope = 'module')
 def SetUnitSystem_SI():
-    SetUnitSystem('SI')
+    SetUnitSystem(SI)
