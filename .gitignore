@@ -1,6 +1,7 @@
 # Global
 .vscode/
 .DS_Store
+*.plist
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -113,3 +114,11 @@ venv.bak/
 .mypy_cache/
 .dmypy.json
 dmypy.json
+
+# nodejs
+node_modules
+package-lock.json
+
+# cffi temp files
+psychroc.c
+psychroc.o

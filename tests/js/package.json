@@ -1,0 +1,11 @@
+{
+  "name": "testing",
+  "scripts": {
+    "test": "mocha test_*.js"
+  },
+  "devDependencies": {
+    "chai": "^4.1.1",
+    "math-relative-difference": "^1.0.0",
+    "mocha": "^3.5.0"
+  }
+}

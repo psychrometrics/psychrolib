@@ -18,7 +18,7 @@ Example
     >>> import psychrolib
     >>> # Set the unit system, for example to SI (can be either 'SI' or 'IP')
     >>> psychrolib.SetUnitSystem('SI')
-    >>> # Calculate the dew point temperature for a dry bulb temperature of 25 C, a relative humidity of 80%, at an atmospheric pressure of 101325 Pa
+    >>> # Calculate the dew point temperature for a dry bulb temperature of 25 C and a relative humidity of 80%
     >>> TDewPoint = psychrolib.GetTDewPointFromRelHum(25.0, 0.80)
     >>> print(TDewPoint)
     21.309397163661785
@@ -79,20 +79,23 @@ R_DA_SI = 287.042
 
 # Unit system to use.
 class UnitSystem(Enum):
+    """
+    Private class not exposed used to set automatic enumeration values.
+    """
     IP = auto()
     SI = auto()
 
 IP = UnitSystem.IP
 SI = UnitSystem.SI
 
-__UNITS = None
+PSYCHROLIB_UNITS = None
 
-__TOL = 1.0
-# Tolerance.
+PSYCHROLIB_TOLERANCE = 1.0
+# Tolerance of temperature calculations
 
 def SetUnitSystem(Units: UnitSystem) -> None:
     """
-    This function sets the system of units to use (SI or IP).
+    Set the system of units to use (SI or IP).
 
     Args:
         Units: string indicating the system of units chosen (SI or IP)
@@ -101,28 +104,36 @@ def SetUnitSystem(Units: UnitSystem) -> None:
         This function *HAS TO BE CALLED* before the library can be used
 
     """
-    global __UNITS
-    global __TOL
+    global PSYCHROLIB_UNITS
+    global PSYCHROLIB_TOLERANCE
 
     if not isinstance(Units, UnitSystem):
         raise ValueError("The system of units has to be either SI or IP.")
 
-    __UNITS = Units
+    PSYCHROLIB_UNITS = Units
 
     # Define tolerance on temperature calculations
     # The tolerance is the same in IP and SI
     if Units == IP:
-        __TOL = 0.001 * 9 / 5
+        PSYCHROLIB_TOLERANCE = 0.001 * 9 / 5
     else:
-        __TOL = 0.001
+        PSYCHROLIB_TOLERANCE = 0.001
 
 def GetUnitSystem() -> UnitSystem:
-    return __UNITS
+    """
+    Return system of units in use.
+
+    """
+    return PSYCHROLIB_UNITS
 
 def isIP() -> bool:
-    if __UNITS == IP:
+    """
+    Check whether the system in use is IP or SI.
+
+    """
+    if PSYCHROLIB_UNITS == IP:
         return True
-    elif __UNITS == SI:
+    elif PSYCHROLIB_UNITS == SI:
         return False
     else:
         raise ValueError('The system of units has not been defined.')
@@ -423,7 +434,7 @@ def GetTDewPointFromVapPres(TDryBulb: float, VapPres: float) -> float:
         TDewPoint = max(TDewPoint, _BOUNDS[0])
         TDewPoint = min(TDewPoint, _BOUNDS[1])
 
-        if math.fabs(TDewPoint - TDewPoint_iter) <= __TOL:
+        if math.fabs(TDewPoint - TDewPoint_iter) <= PSYCHROLIB_TOLERANCE:
            break
 
     TDewPoint = min(TDewPoint, TDryBulb)
@@ -478,7 +489,7 @@ def GetTWetBulbFromHumRatio(TDryBulb: float, HumRatio: float, Pressure: float) -
     TWetBulb = (TWetBulbInf + TWetBulbSup) / 2
 
     # Bisection loop
-    while (TWetBulbSup - TWetBulbInf > __TOL):
+    while (TWetBulbSup - TWetBulbInf > PSYCHROLIB_TOLERANCE):
 
         # Compute humidity ratio at temperature Tstar
         Wstar = GetHumRatioFromTWetBulb(TDryBulb, TWetBulb, Pressure)
@@ -588,7 +599,7 @@ def GetHumRatioFromTDewPoint(TDewPoint: float, Pressure: float) -> float:
         Humidity ratio in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]
 
     Reference:
-        ASHRAE Handbook - Fundamentals (2017) ch. 1
+        ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 13
 
     """
     VapPres = GetSatVapPres(TDewPoint)
@@ -737,9 +748,9 @@ def GetDryAirVolume(TDryBulb: float, Pressure: float) -> float:
 
     """
     if isIP():
-        DryAirVolume = GetTRankineFromTFahrenheit(TDryBulb) * R_DA_IP / (144 * Pressure)
+        DryAirVolume = R_DA_IP * GetTRankineFromTFahrenheit(TDryBulb) / (144 * Pressure)
     else:
-        DryAirVolume = GetTKelvinFromTCelsius(TDryBulb) * R_DA_SI / Pressure
+        DryAirVolume = R_DA_SI * GetTKelvinFromTCelsius(TDryBulb) / Pressure
     return DryAirVolume
 
 
@@ -758,7 +769,7 @@ def GetSatVapPres(TDryBulb: float) -> float:
         Vapor pressure of saturated air in Psi [IP] or Pa [SI]
 
     Reference:
-        ASHRAE Handbook - Fundamentals (2017) ch. 1  eqn 5
+        ASHRAE Handbook - Fundamentals (2017) ch. 1  eqn 5 & 6
 
     """
     if isIP():

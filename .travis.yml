@@ -1,18 +1,26 @@
 language: python
-python: "3.6"
-
+dist: xenial
+python:
+    - "3.6"
+    - "3.6-dev"
+    - "3.7"
+    - "3.7-dev"
 
 before_install:
-  - pip install Sphinx sphinx_bootstrap_theme sphinx-autodoc-typehints
+  - sudo apt-get install gfortran
+  - pip install Sphinx sphinx_bootstrap_theme sphinx-autodoc-typehints cffi
 
 install:
   - sphinx-build docs/python build/html/python
   - touch build/html/python/.nojekyll # https://help.github.com/articles/files-that-start-with-an-underscore-are-missing/
+  - cd tests/js && npm install
+  - cd $TRAVIS_BUILD_DIR
 
 script:
   # See https://stackoverflow.com/a/34140498 for why "python -m" is needed.
   - python -m pytest -v -s
-
+  - cd tests/js && npm test
+  - cd $TRAVIS_BUILD_DIR
 
 deploy:
  provider: pages
