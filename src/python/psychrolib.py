@@ -140,7 +140,7 @@ def isIP() -> bool:
 
 
 #######################################################################################################
-# Conversions between dew point, wet bulb, and relative humidity
+# Conversion between temperature units
 #######################################################################################################
 
 def GetTRankineFromTFahrenheit(TFahrenheit: float) -> float:
