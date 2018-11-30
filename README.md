@@ -1,7 +1,7 @@
 <p align="center"><img src="assets/psychrolib-logo.svg" alt="PsychroLib Logo" height="150" width="150"></p>
 
 # PsychroLib
-[![Build Status](https://travis-ci.com/psychrometrics/psychrolib.svg)](https://travis-ci.com/psychrometrics/psychrolib)
+[![Build Status](https://travis-ci.com/psychrometrics/Libraries.svg?branch=master)](https://travis-ci.com/psychrometrics/Libraries)
 
 Psychrometric is the study of physical and thermodynamic properties of moist air. These properties include, for example, the air's dew point temperature, its wet bulb temperature, relative humidity, humidity ratio, enthalpy.
 
