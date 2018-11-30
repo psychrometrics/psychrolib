@@ -23,9 +23,9 @@ import psychrolib
 
 # -- Project information -----------------------------------------------------
 
-project = 'PsychroLibs'
-copyright = '2018'
-author = 'Authors'
+project = 'PsychroLib'
+copyright = '2018, D. Thevenard and D. Meyer'
+author = 'D. Thevenard and D. Meyer'
 
 # -- General configuration ---------------------------------------------------
 
@@ -102,63 +102,5 @@ html_theme_options = {
 #
 # html_sidebars = {}
 
+# Keep the same order as in the source file.
 autodoc_member_order = 'bysource'
-
-# -- Options for HTMLHelp output ---------------------------------------------
-
-# Output file base name for HTML help builder.
-htmlhelp_basename = 'fdoc'
-
-
-# -- Options for LaTeX output ------------------------------------------------
-
-latex_elements = {
-    # The paper size ('letterpaper' or 'a4paper').
-    #
-    # 'papersize': 'letterpaper',
-
-    # The font size ('10pt', '11pt' or '12pt').
-    #
-    # 'pointsize': '10pt',
-
-    # Additional stuff for the LaTeX preamble.
-    #
-    # 'preamble': '',
-
-    # Latex figure (float) alignment
-    #
-    # 'figure_align': 'htbp',
-}
-
-# Grouping the document tree into LaTeX files. List of tuples
-# (source start file, target name, title,
-#  author, documentclass [howto, manual, or own class]).
-latex_documents = [
-    (master_doc, 'f.tex', 'f Documentation',
-     'g', 'manual'),
-]
-
-
-# -- Options for manual page output ------------------------------------------
-
-# One entry per manual page. List of tuples
-# (source start file, name, description, authors, manual section).
-man_pages = [
-    (master_doc, 'f', 'f Documentation',
-     [author], 1)
-]
-
-
-# -- Options for Texinfo output ----------------------------------------------
-
-# Grouping the document tree into Texinfo files. List of tuples
-# (source start file, target name, title, author,
-#  dir menu entry, description, category)
-texinfo_documents = [
-    (master_doc, 'f', 'f Documentation',
-     author, 'f', 'One line description of project.',
-     'Miscellaneous'),
-]
-
-
-# -- Extension configuration -------------------------------------------------

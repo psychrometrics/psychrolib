@@ -1,4 +1,4 @@
-psychrolib
+PsychroLib
 =================
 
 .. automodule:: psychrolib
