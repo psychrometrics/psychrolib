@@ -66,7 +66,7 @@ The following psychrometric functions are currently available in PsychroLib acro
 PsychroLib is available for Python, C, Fortran, JavaScript, and Microsoft Excel Visual Basic for Applications (VBA). A list of functions available in the library can be found in the [PsychroLib application programming interface (API) documentation](https://psychrometrics.github.io/psychrolib). The page provides a comprehensive description of all the functions available in PsychroLib. Although it describes the Python version of the library, PsychroLib uses a common API across all the supported language implementations.
 
 ### Installation instructions
-If you are using Python, PsychroLib can be installed using the Python Package Index (PyPI). Assuming you have PyPI installed on your system, type the following in your command prompt:
+If you are using Python, PsychroLib is available though the Python Package Index (PyPI) at https://pypi.org/project/PsychroLib. Assuming you have PyPI installed on your system, type the following in your command prompt:
 ```
 pip install psychrolib
 ```
