@@ -1,7 +1,7 @@
 <p align="center"><img src="assets/psychrolib-logo.svg" alt="PsychroLib Logo" height="150" width="150"></p>
 
 # PsychroLib - A Library of Psychrometric Functions in C, Fortran, VBA (Excel), JavaScript, and Python
-[![Build Status](https://travis-ci.com/psychrometrics/Libraries.svg?branch=master)](https://travis-ci.com/psychrometrics/Libraries)
+[![Build Status](https://travis-ci.com/psychrometrics/psychrolib.svg?branch=master)](https://travis-ci.com/psychrometrics/psychrolib)
 
 Psychrometrics are the study of physical and thermodynamic properties of moist air. These properties include, for example, the air's dew point temperature, its wet bulb temperature, relative humidity, humidity ratio, enthalpy.
 
