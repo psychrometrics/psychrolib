@@ -5,6 +5,7 @@ python:
     - "3.7"
 
 before_install:
+  - echo $TRAVIS_PYTHON_VERSION
   - sudo apt-get install gfortran
   - pip install Sphinx sphinx_bootstrap_theme sphinx-autodoc-typehints cffi
 
@@ -27,3 +28,4 @@ deploy:
  local_dir: build/html/api-docs
  on:
    all_branches: true
+   condition: $TRAVIS_PYTHON_VERSION == 3.6
