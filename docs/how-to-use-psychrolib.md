@@ -12,8 +12,8 @@ From the python interactive shell:
 >>> psychrolib.SetUnitSystem(psychrolib.SI)
 >>> # Calculate the dew point temperature for a dry bulb temperature of 25 C and a relative humidity of 80%
 >>> TDewPoint = psychrolib.GetTDewPointFromRelHum(25.0, 0.80)
->>> print(TDewPoint)
-21.309397163661785
+>>> print(f'TDewPoint: {TDewPoint} degree C')
+TDewPoint: 21.309397163661785 degree C
 ```
 
 ### C
@@ -26,22 +26,22 @@ Create a source file for your program and include the following:
 SetUnitSystem(SI);
 // Calculate the dew point temperature for a dry bulb temperature of 25 C and a relative humidity of 80%
 double TDewPoint = GetTDewPointFromRelHum(25.0, 0.80);
-printf("%lg", TDewPoint);
+printf("TDewPoint: %f degree C\n", TDewPoint);
 ```
 
 Compile your code and execute the program, the output will be:
 
 ```
-21.3094
+TDewPoint: 21.309397 degree C
 ```
 
 ### Fortran
 Create a source file for your program and include the following:
 
 ```fortran
-use psychrolib, only: GetTDewPointFromRelHum, SI
+use psychrolib, only: GetTDewPointFromRelHum, SetUnitSystem, SI
 ! Set the unit system, for example to SI (can be either 'SI' or 'IP') - this needs to be done only once
-SetUnitSystem(SI)
+call SetUnitSystem(SI)
 ! Calculate the dew point temperature for a dry bulb temperature of 25 C and a relative humidity of 80%
 print *, GetTDewPointFromRelHum(25.0, 0.80)
 ```
@@ -49,7 +49,7 @@ print *, GetTDewPointFromRelHum(25.0, 0.80)
 Compile your code and execute the program, the output will be:
 
 ```
-21.3094
+TDewPoint:    21.30935     degree C
 ```
 
 ### JavaScript
@@ -63,8 +63,8 @@ If you are  HTML, in the `<head>` section of your html page, include `<script sr
 >>> psychrolib.SetUnitSystem(psychrolib.SI)
 >>> // Calculate the dew point temperature for a dry bulb temperature of 25 C and a relative humidity of 80%
 >>> var TDewPoint = psychrolib.GetTDewPointFromRelHum(25.0, 0.80);
->>> console.log('TDewPoint: %d', TDewPoint);
-21.3094
+>>> console.log('TDewPoint: %d degree C', TDewPoint);
+TDewPoint: 21.309397 degree C
 ```
 
 ### Microsoft Excel Visual Basic for Applications (VBA)
