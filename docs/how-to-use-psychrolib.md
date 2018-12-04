@@ -1,6 +1,6 @@
 ## How to use PsychroLib
 
-The following are examples on how to use PsychroLib's `GetTDewPointFromRelHum` to calculate the dew-point temperature given dry-bulb temperature and relative humidity. For all languages make sure to choose the unit system to use (`SI` or `IP`) with the `SetUnitSystem` function, or in VBA by uncommenting the appropriate line in the code.
+The following are snippets are examples showing you how to use PsychroLib's `GetTDewPointFromRelHum` to calculate the dew-point temperature given dry-bulb temperature and relative humidity in your program. For all languages make sure to choose the unit system to use (`SI` or `IP`) with the `SetUnitSystem` function, or in VBA by uncommenting the appropriate line in the code. If you are looking for ready-made examples that you can straight away run on your system, please see the [`examples`](../examples/README.md).
 
 ### Python
 
@@ -64,7 +64,7 @@ If you are  HTML, in the `<head>` section of your html page, include `<script sr
 >>> // Calculate the dew point temperature for a dry bulb temperature of 25 C and a relative humidity of 80%
 >>> var TDewPoint = psychrolib.GetTDewPointFromRelHum(25.0, 0.80);
 >>> console.log('TDewPoint: %d degree C', TDewPoint);
-TDewPoint: 21.309397 degree C
+TDewPoint: 21.309397163661785 degree C
 ```
 
 ### Microsoft Excel Visual Basic for Applications (VBA)

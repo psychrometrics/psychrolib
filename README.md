@@ -74,7 +74,7 @@ pip install psychrolib
 For all other languages, clone the repository or download the file directly from the repository, and include PsychroLib to your code according to the language specifications.
 
 ### Example usage
-For examples on how to use PsychroLib in Python, C, Fortran, JavaScript, and Microsoft Excel Visual Basic for Applications (VBA) please see [this guide](docs/how-to-use-psychrolib.md).
+For examples on how to use PsychroLib in Python, C, Fortran, JavaScript, and Microsoft Excel Visual Basic for Applications (VBA) please see [this guide](docs/how-to-use-psychrolib.md). If you are looking for ready-made examples to run on your system, please see the [`examples`](examples/README.md) folder.
 
 ## Contributing
 If you would like to contribute to the PsychroLib project, clone this repository, make your changes, and create a pull request with a **clear description** of your changes. If your changes are merged, you will appear as one of our [Contributors](https://github.com/psychrometrics/psychrolib/graphs/contributors).
