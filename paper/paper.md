@@ -29,7 +29,7 @@ bibliography: paper.bib
 
 # Summary
 
-![Relationships of common functions as implemented in PsychroLib. Bold arrows show the relationship between function involving a direct call while light arrow show the relationship between two or more. For a complete list of functions available in PsychroLib, see the README file in the project’s repository.](psychrolib-relationships.pdf){ width=20% }
+![Relationships of common functions as implemented in PsychroLib. Bold arrows show the relationship between function involving a direct call while light arrow show the relationship between two or more. For a complete list of functions available in PsychroLib, see the README file in the project’s repository.](psychrolib-relationships.pdf){ width=90% }
 
 The estimation of psychrometric properties of air is critical in several engineering and scientific applications such as heating, ventilation, and air conditioning (HVAC) and meteorology. Although formulae to calculate the psychrometric properties of air are widely available in the literature [@Stull2011; @Wexler1983; @Stoecker1982; @Dilley1968; @Humphreys1920], their implementation in computer programs or spreadsheets can be challenging and time consuming. To our knowledge, only few numerical implementations of such formulae are freely available as standalone software libraries for programming languages and spreadsheets used in science and engineering.
 
