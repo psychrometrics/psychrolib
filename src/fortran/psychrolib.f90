@@ -15,9 +15,9 @@ module psychrolib
   !+  each function for their respective reference.
   !+
   !+ Example
-  !+  use psychrolib, only: GetTDewPointFromRelHum, SI
+  !+  use psychrolib, only: GetTDewPointFromRelHum, SetUnitSystem, SI
   !+  ! Set the unit system, for example to SI (can be either 'SI' or 'IP')
-  !+  SetUnitSystem(SI)
+  !+  call SetUnitSystem(SI)
   !+  ! Calculate the dew point temperature for a dry bulb temperature of 25 C and a relative humidity of 80%
   !+  print *, GetTDewPointFromRelHum(25.0, 0.80)
   !+ 21.3094
