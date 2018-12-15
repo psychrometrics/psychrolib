@@ -6,11 +6,11 @@ python:
 
 before_install:
   - sudo apt-get install gfortran
-  - pip install Sphinx sphinx_bootstrap_theme sphinx-autodoc-typehints cffi
+  - pip install Sphinx sphinx_bootstrap_theme sphinx-autodoc-typehints m2r cffi
 
 install:
-  - sphinx-build docs/api-docs build/html/api-docs
-  - touch build/html/api-docs/.nojekyll # https://help.github.com/articles/files-that-start-with-an-underscore-are-missing/
+  - sphinx-build docs/sphinx build/html
+  - touch build/html/.nojekyll # https://help.github.com/articles/files-that-start-with-an-underscore-are-missing/
   - cd tests/js && npm install
   - cd $TRAVIS_BUILD_DIR
 
@@ -24,7 +24,7 @@ deploy:
  provider: pages
  skip_cleanup: true
  github_token: $GITHUB_TOKEN
- local_dir: build/html/api-docs
+ local_dir: build/html
  on:
    branch: master
    condition: $TRAVIS_PYTHON_VERSION == 3.6

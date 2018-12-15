@@ -1,4 +1,4 @@
-<p align="center"><img src="assets/psychrolib-logo.svg" alt="PsychroLib Logo" height="150" width="150"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/psychrometrics/psychrolib/master/assets/psychrolib-logo.svg?sanitize=true" alt="PsychroLib Logo" height="150" width="150"></p>
 
 # PsychroLib - A Library of Psychrometric Functions in C, Fortran, VBA (Excel), JavaScript, and Python
 [![Build Status](https://travis-ci.com/psychrometrics/psychrolib.svg?branch=master)](https://travis-ci.com/psychrometrics/psychrolib)
@@ -17,7 +17,7 @@ PsychroLib is a library of functions to enable calculating psychrometric propert
 
 Relationships between these various functions are illustrated in Figure 1. To compute a moist air property such as enthalpy, knowing a humidity parameter such as dew point temperature, one first has to compute the humidity ratio from the dew point temperature, then compute the enthalpy from the humidity ratio. The functions in point (1) above include primary relationships corresponding to formulae from the ASHRAE Handbook, and secondary relationships which use a combination of primary relationships to calculate the result. For example, to compute dew point temperature knowing the partial pressure of water vapor in moist air, the library uses a formula from the ASHRAE Handbook (primary relationship). On the other hand to compute dew point temperature from relative humidity, the library first computes the partial pressure of water vapor, then computes the dew point temperature (secondary relationship). Primary relationships are shown with bold double arrows in Figure 1.
 
-<p align="center"><img src="assets/psychrolib-relationships.svg" alt="Psychrometric relationships"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/psychrometrics/psychrolib/master/assets/psychrolib-relationships.svg?sanitize=true" alt="Psychrometric relationships"></p>
 <p align="center"><b>Figure 1</b> - Psychrometric relationships.</p>
 
 ## Features
@@ -63,7 +63,7 @@ The following psychrometric functions are currently available in PsychroLib acro
 |`CalcPsychrometricsFromRelHum`|Utility function to calculate humidity ratio, wet-bulb temperature, dew-point temperature, vapour pressure, moist air enthalpy, moist air volume, and degree of saturation of air given dry-bulb temperature, relative humidity and pressure.|
 
 ## Getting started
-PsychroLib is available for Python, C, Fortran, JavaScript, and Microsoft Excel Visual Basic for Applications (VBA). A list of functions available in the library can be found in the [PsychroLib application programming interface (API) documentation](https://psychrometrics.github.io/psychrolib). The page provides a comprehensive description of all the functions available in PsychroLib. Although it describes the Python version of the library, PsychroLib uses a common API across all the supported language implementations.
+PsychroLib is available for Python, C, Fortran, JavaScript, and Microsoft Excel Visual Basic for Applications (VBA). A list of functions available in the library can be found in the [PsychroLib application programming interface (API) documentation](https://psychrometrics.github.io/psychrolib/api-docs.html). The page provides a comprehensive description of all the functions available in PsychroLib. Although it describes the Python version of the library, PsychroLib uses a common API across all the supported language implementations.
 
 ### Installation instructions
 If you are using Python, PsychroLib is available though the Python Package Index (PyPI) at https://pypi.org/project/PsychroLib. Assuming you have PyPI installed on your system, type the following in your command prompt:
@@ -74,7 +74,7 @@ pip install psychrolib
 For all other languages, clone the repository or download the file directly from the repository, and include PsychroLib to your code according to the language specifications.
 
 ### Example usage
-For examples on how to use PsychroLib in Python, C, Fortran, JavaScript, and Microsoft Excel Visual Basic for Applications (VBA) please see [this guide](docs/how-to-use-psychrolib.md).
+For examples on how to use PsychroLib in Python, C, Fortran, JavaScript, and Microsoft Excel Visual Basic for Applications (VBA) please see [this guide](https://github.com/psychrometrics/psychrolib/blob/master/docs/how-to-use-psychrolib.md).
 
 ## Contributing
 If you would like to contribute to the PsychroLib project, clone this repository, make your changes, and create a pull request with a **clear description** of your changes. If your changes are merged, you will appear as one of our [Contributors](https://github.com/psychrometrics/psychrolib/graphs/contributors).
@@ -92,7 +92,7 @@ Copyright
 
 Licence
 
-- Licensed under the [MIT License](LICENSE.txt).
+- Licensed under the [MIT License](https://github.com/psychrometrics/psychrolib/blob/master/LICENSE.txt).
 
 ## Acknowledgements
 Many thanks to Tom Worster ([tom--](https://github.com/tom--)) for his suggestions with the original JavaScript library implementation.

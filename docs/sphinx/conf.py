@@ -40,7 +40,8 @@ extensions = ['sphinx.ext.autodoc',
               'sphinx.ext.coverage',
               'sphinx.ext.napoleon',
               'sphinx_autodoc_typehints',
-              'sphinx.ext.viewcode']
+              'sphinx.ext.viewcode',
+              'm2r']
 
 # Add any paths that contain templates here, relative to this directory.
 #templates_path = ['_templates']
@@ -48,8 +49,7 @@ extensions = ['sphinx.ext.autodoc',
 # The suffix(es) of source filenames.
 # You can specify multiple suffix as a list of string:
 #
-# source_suffix = ['.rst', '.md']
-source_suffix = '.rst'
+source_suffix = ['.rst', '.md']
 
 # The master toctree document.
 master_doc = 'index'
@@ -108,7 +108,7 @@ html_theme_options = {
     # will break.
     #
     # Values: "true" (default) or "false"
-    'globaltoc_includehidden': "true",
+    'globaltoc_includehidden': "false",
 
     # HTML navbar class (Default: "navbar") to attach to <div> element.
     # For black navbar, do "navbar navbar-inverse"
@@ -132,7 +132,7 @@ html_theme_options = {
     # * sandstone (v3 only)
     # * united
     # * yeti (v3 only)
-    #'bootswatch_theme': "flatly",
+    'bootswatch_theme': "yeti",
 
     # Choose Bootstrap version.
     # Values: "3" (default) or "2" (in quotes)
