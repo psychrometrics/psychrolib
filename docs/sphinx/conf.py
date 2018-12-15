@@ -97,6 +97,10 @@ html_theme_options = {
     #     ("Link", "http://example.com", True),
     # ],
 
+     'navbar_links': [
+         ("Get PsychroLib", "https://github.com/psychrometrics/psychrolib", True),
+     ],
+
     # Global TOC depth for "site" navbar tab. (Default: 1)
     # Switching to -1 shows all levels.
     # 'globaltoc_depth': -1
