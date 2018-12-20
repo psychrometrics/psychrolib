@@ -1,5 +1,0 @@
-PsychroLib
-=================
-
-.. automodule:: psychrolib
-   :members:
