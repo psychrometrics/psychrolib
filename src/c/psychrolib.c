@@ -320,7 +320,7 @@ double GetTDewPointFromVapPres  // (o) Dew Point temperature in °F [IP] or °C 
   double TMidPoint = (_BOUNDS[0] + _BOUNDS[1]) / 2.;     // Midpoint of domain of validity
 
   // Bounds outside which a solution cannot be found
-  ASSERT (VapPres >= GetSatVapPres(_BOUNDS[0]) && VapPres <= GetSatVapPres(_BOUNDS[1]), "Partial pressure of water vapor is outside range of validity of equations")
+  ASSERT (VapPres < GetSatVapPres(_BOUNDS[0]) || VapPres > GetSatVapPres(_BOUNDS[1]), "Partial pressure of water vapor is outside range of validity of equations")
 
   // First guess
   double Tdp = TDryBulb;      // Calculated value of dew point temperatures, solved for iteratively in °F [IP] or °C [SI]

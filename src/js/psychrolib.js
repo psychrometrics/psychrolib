@@ -282,7 +282,7 @@ function Psychrometrics() {
   var TMidPoint = (_BOUNDS[0] + _BOUNDS[1]) / 2.;     // Midpoint of domain of validity
 
   // Bounds outside which a solution cannot be found
-  if (VapPres <= this.GetSatVapPres(_BOUNDS[0]) && VapPres >= this.GetSatVapPres(_BOUNDS[1]))
+  if (VapPres < this.GetSatVapPres(_BOUNDS[0]) || VapPres > this.GetSatVapPres(_BOUNDS[1]))
     throw new Error("Partial pressure of water vapor is outside range of validity of equations");
 
   // First guess
