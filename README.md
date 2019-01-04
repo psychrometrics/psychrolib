@@ -106,6 +106,6 @@ Many thanks to Tom Worster ([tom--](https://github.com/tom--)) for his suggestio
 
 [@Stoecker1982]: https://books.google.de/books?id=PrZTAAAAMAAJ&dq "Stoecker, W., & Jones, J. (1982). Refrigeration and air conditioning. McGraw-hill international editions. New York, NY: McGraw-Hill."
 
-[@Stull2011]: https://dx.doi.org/10.1175/jamc-d11-0143.1 "Stull, R. (2011). Wet-bulb temperature from relative humidity and air temperature. Journal of Applied Meteorology and Climatology, 50(11), 2267–2269. doi:10.1175/jamc-d11-0143.1"
+[@Stull2011]: https://doi.org/10.1175/JAMC-D-11-0143.1 "Stull, R. (2011). Wet-bulb temperature from relative humidity and air temperature. Journal of Applied Meteorology and Climatology, 50(11), 2267–2269. doi:10.1175/jamc-d11-0143.1"
 
 [@Wexler1983]: https://books.google.de/books?id=MH8URAAACAAJ "Wexler, A., Hyland, R., Stewart, R., & American Society of Heating, Refrigerating and Air-Conditioning Engineers. (1983). Thermodynamic properties of dry air, moist air and water and si psychrometric charts. Atlanta, GA: ASHRAE."
