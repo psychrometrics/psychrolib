@@ -5,7 +5,7 @@
 
 Psychrometrics are the study of physical and thermodynamic properties of moist air. These properties include, for example, the air's dew point temperature, its wet bulb temperature, relative humidity, humidity ratio, enthalpy.
 
-The estimation of these properties is critical in several engineering and scientific applications such as heating, ventilation, and air conditioning (HVAC) and meteorology. Although formulae to calculate the psychrometric properties of air are widely available in the literature [@Stull2011; @Wexler1983; @Stoecker1982; @Dilley1968; @Humphreys1920], their implementation in computer programs or spreadsheets can be challenging and time consuming.
+The estimation of these properties is critical in several engineering and scientific applications such as heating, ventilation, and air conditioning (HVAC) and meteorology. Although formulae to calculate the psychrometric properties of air are widely available in the literature ([@Stull2011]; [@Wexler1983]; [@Stoecker1982]; [@Dilley1968]; [@Humphreys1920]), their implementation in computer programs or spreadsheets can be challenging and time consuming.
 
 PsychroLib is a library of functions to enable calculating psychrometric properties of moist and dry air. The library is available for Python, C, Fortran, JavaScript, and Microsoft Excel Visual Basic for Applications (VBA). The functions are based of formulae from the  2017 ASHRAE Handbook — Fundamentals, Chapter 1. Functions can be grouped into two categories:
 
