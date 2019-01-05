@@ -434,7 +434,7 @@ module psychrolib
     TMidPoint = (BOUNDS(2) + BOUNDS(2)) / 2.0
 
     ! Bounds outside which a solution cannot be found
-    if (VapPres <= GetSatVapPres(BOUNDS(1)) .or. VapPres >= GetSatVapPres(BOUNDS(2))) then
+    if (VapPres < GetSatVapPres(BOUNDS(1)) .or. VapPres > GetSatVapPres(BOUNDS(2))) then
       error stop "Error: partial pressure of water vapor is outside range of validity of equations"
     end if
 
