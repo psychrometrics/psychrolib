@@ -56,9 +56,11 @@ This project uses [semantic versioning](https://semver.org/).
 
 ## Copyright and license
 
-- Copyright (c) 2018 D. Thevenard and D. Meyer for the current library implementation
-- Copyright (c) 2017 ASHRAE Handbook — Fundamentals (https://www.ashrae.org) for equations and coefficients published ASHRAE Handbook — Fundamentals Chapter 1.
-- Licensed under the [MIT License](https://github.com/psychrometrics/psychrolib/blob/master/LICENSE.txt).
+Copyright (c) 2018 D. Thevenard and D. Meyer for the current library implementation.
+
+Copyright (c) 2017 ASHRAE Handbook — Fundamentals (https://www.ashrae.org) for equations and coefficients published ASHRAE Handbook — Fundamentals Chapter 1.
+
+Licensed under the [MIT License](https://github.com/psychrometrics/psychrolib/blob/master/LICENSE.txt).
 
 
 ## Acknowledgements
