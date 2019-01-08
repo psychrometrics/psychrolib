@@ -41,7 +41,7 @@ Clone the repository, or download the file directly from the repository, and inc
 
 ## Example usage
 
-For examples on how to use PsychroLib in Python, C, Fortran, JavaScript, and Microsoft Excel Visual Basic for Applications (VBA) please see [this guide](https://github.com/psychrometrics/psychrolib/blob/master/docs/how-to-use-psychrolib.md).
+For examples on how to use PsychroLib in Python, C, Fortran, JavaScript, and Microsoft Excel Visual Basic for Applications (VBA) please see [this guide](docs/how-to-use-psychrolib.md).
 
 
 ## Contributing
@@ -56,7 +56,9 @@ This project uses [semantic versioning](https://semver.org/).
 
 ## Copyright and license
 
-Copyright (c) 2018 D. Thevenard and D. Meyer for the current library implementation & Copyright (c) 2017 ASHRAE Handbook — Fundamentals (https://www.ashrae.org) for equations and coefficients published ASHRAE Handbook — Fundamentals Chapter 1. Licensed under the [MIT License](https://github.com/psychrometrics/psychrolib/blob/master/LICENSE.txt).
+- Copyright (c) 2018 D. Thevenard and D. Meyer for the current library implementation
+- Copyright (c) 2017 ASHRAE Handbook — Fundamentals (https://www.ashrae.org) for equations and coefficients published ASHRAE Handbook — Fundamentals Chapter 1.
+- Licensed under the [MIT License](https://github.com/psychrometrics/psychrolib/blob/master/LICENSE.txt).
 
 
 ## Acknowledgements

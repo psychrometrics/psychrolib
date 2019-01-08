@@ -1,6 +1,6 @@
 ## How to use PsychroLib
 
-The following are examples on how to use PsychroLib's `GetTDewPointFromRelHum` to calculate the dew-point temperature given dry-bulb temperature and relative humidity. For all languages make sure to choose the unit system to use (`SI` or `IP`) with the `SetUnitSystem` function, or in VBA by uncommenting the appropriate line in the code.
+The following are examples on how to use PsychroLib's `GetTDewPointFromRelHum` to calculate the dew-point temperature given dry-bulb temperature and relative humidity. For all languages make sure to choose the unit system to use (`SI` or `IP`) with the `SetUnitSystem` function, or in VBA by uncommenting the appropriate line in the code. Note that as per ASHRAE Handbook, the unit of temperature is degree Celsius for the SI version and degree Fahrenheit for the IP version.
 
 ### Python
 
