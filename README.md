@@ -65,7 +65,7 @@ Licensed under the [MIT License](https://github.com/psychrometrics/psychrolib/bl
 
 ## Acknowledgements
 
-Many thanks to Tom Worster ([tom--](https://github.com/tom--)) for his suggestions with the original JavaScript library implementation.
+Many thanks to Tom Worster ([@tom--](https://github.com/tom--)) for his suggestions with the original JavaScript library implementation.
 
 
 
