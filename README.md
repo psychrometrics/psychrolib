@@ -1,4 +1,4 @@
-<p align="center"><img src="https://raw.githubusercontent.com/psychrometrics/psychrolib/master/assets/psychrolib-logo.svg?sanitize=true" alt="PsychroLib Logo" height="150" width="150"></p>
+<p align="center"><img src="assets/psychrolib-logo.svg" alt="PsychroLib Logo" height="150" width="150"></p>
 
 # PsychroLib: a library of psychrometric functions for Python, C, Fortran, JavaScript and VBA/Excel
 
@@ -16,7 +16,7 @@ PsychroLib is a library of functions to enable calculating psychrometric propert
 
 Relationships between these various functions are illustrated in Figure 1. To compute a moist air property such as enthalpy, knowing a humidity parameter such as dew point temperature, one first has to compute the humidity ratio from the dew point temperature, then compute the enthalpy from the humidity ratio. The functions in point (1) above include primary relationships corresponding to formulae from the ASHRAE Handbook, and secondary relationships which use a combination of primary relationships to calculate the result. For example, to compute dew point temperature knowing the partial pressure of water vapor in moist air, the library uses a formula from the ASHRAE Handbook (primary relationship). On the other hand to compute dew point temperature from relative humidity, the library first computes the partial pressure of water vapor, then computes the dew point temperature (secondary relationship). Primary relationships are shown with bold double arrows in Figure 1.
 
-<p align="center"><img src="https://raw.githubusercontent.com/psychrometrics/psychrolib/master/assets/psychrolib-relationships.svg?sanitize=true" alt="Psychrometric relationships"></p>
+<p align="center"><img src="assets/psychrolib-relationships.svg" alt="Psychrometric relationships"></p>
 <p align="center"><b>Figure 1</b> - Psychrometric relationships.</p>
 
 
@@ -60,7 +60,7 @@ Copyright (c) 2018 D. Thevenard and D. Meyer for the current library implementat
 
 Copyright (c) 2017 ASHRAE Handbook — Fundamentals (https://www.ashrae.org) for equations and coefficients published ASHRAE Handbook — Fundamentals Chapter 1.
 
-Licensed under the [MIT License](https://github.com/psychrometrics/psychrolib/blob/master/LICENSE.txt).
+Licensed under the [MIT License](LICENSE.txt).
 
 
 ## Acknowledgements
