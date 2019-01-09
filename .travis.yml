@@ -26,5 +26,5 @@ deploy:
  github_token: $GITHUB_TOKEN
  local_dir: build/html
  on:
-   branch: dmey/paper # FIXME: use master
+   branch: master
    condition: $TRAVIS_PYTHON_VERSION == 3.6

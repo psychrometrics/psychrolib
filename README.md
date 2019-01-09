@@ -46,7 +46,7 @@ For examples on how to use PsychroLib in Python, C, Fortran, JavaScript, and Mic
 
 ## Contributing
 
-If you are looking to contribute, please read our [Contributors' Guide](CONTRIBUTING.md) for details.
+If you are looking to contribute, please read our [Contributors' guide](CONTRIBUTING.md) for details.
 
 
 ## Versioning
