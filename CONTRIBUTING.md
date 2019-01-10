@@ -59,9 +59,9 @@ For VBA/Excel, navigate to `tests/vba` and launch the `test_psychrolib_ip.xlsm` 
 
 The followings are minimal guidelines for new contributors aiming to contribute to the source code. To become acquainted with the conventions it may be easier to first read some of the functions already implemented in the language you are interested to contribute to.
 
-- Always use the language-specific syntax except for function name where we camel case must be used irrespective of the language used (e.g. `GetTRankineFromTFahrenheit`).
+- Always use the language-specific syntax except when defining function names where camel case (e.g. `GetTRankineFromTFahrenheit`) is used irrespective of the language.
 - Include a clear description of the function, its inputs, outputs and types.
-- Include the reference.
-- Include clear and comprehensive tests.
+- Include references.
+- Write clear and comprehensive tests.
 
 Thank you!
