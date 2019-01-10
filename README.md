@@ -1,6 +1,6 @@
 <p align="center"><img src="assets/psychrolib-logo.svg" alt="PsychroLib Logo" height="150" width="150"></p>
 
-# PsychroLib: a library of psychrometric functions for Python, C, Fortran, JavaScript and VBA/Excel [![Build Status](https://travis-ci.com/psychrometrics/psychrolib.svg?branch=master)](https://travis-ci.com/psychrometrics/psychrolib)
+## **PsychroLib**: a library of psychrometric functions for Python, C, Fortran, JavaScript and VBA/Excel [![Build Status](https://travis-ci.com/psychrometrics/psychrolib.svg?branch=master)](https://travis-ci.com/psychrometrics/psychrolib)
 
 
 ### Table of contents
