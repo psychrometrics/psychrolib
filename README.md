@@ -1,6 +1,12 @@
 <p align="center"><img src="assets/psychrolib-logo.svg" alt="PsychroLib Logo" height="150" width="150"></p>
 
-# PsychroLib: a library of psychrometric functions for Python, C, Fortran, JavaScript and VBA/Excel [![Build Status](https://travis-ci.com/psychrometrics/psychrolib.svg?branch=master)](https://travis-ci.com/psychrometrics/psychrolib)
+# PsychroLib: a library of psychrometric functions for Python, C, Fortran, JavaScript and VBA/Excel
+
+[![Build Status](https://travis-ci.com/psychrometrics/psychrolib.svg?branch=master)](https://travis-ci.com/psychrometrics/psychrolib) &nbsp; [![DOI](https://joss.theoj.org/papers/10.21105/joss.01137/status.svg)](https://doi.org/10.21105/joss.01137) &nbsp; [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.2537945.svg)](https://doi.org/10.5281/zenodo.2537945)
+
+
+
+
 
 
 ### Table of contents
@@ -8,6 +14,7 @@
 - [Documentation](#documentation)
 - [Installing](#installing)
 - [Example usage](#example-usage)
+- [Citing](#citing)
 - [Contributing](#contributing)
 - [Versioning](#versioning)
 - [Copyright and license](#copyright-and-license)
@@ -54,6 +61,18 @@ Clone the repository, or download the file directly from the repository, and inc
 ## Example usage
 
 For examples on how to use PsychroLib in Python, C, Fortran, JavaScript, and Microsoft Excel Visual Basic for Applications (VBA) please see [this guide](docs/how-to-use-psychrolib.md).
+
+
+## Citing
+
+If you are using PsychroLib, we ask to please cite both the article, and the software. For the article, cite as follows:
+```
+Meyer, D., & Thevenard, D. (2019). PsychroLib: a library of psychrometric
+functions to calculate thermodynamic properties of air. Journal of Open Source
+Software, 4(33), 1137. https://doi.org/10.21105/joss.01137
+```
+
+For the software, please cite the specific PsychroLib version you are using as listed on Zenodo -- see https://doi.org/10.5281/zenodo.2537945
 
 
 ## Contributing
