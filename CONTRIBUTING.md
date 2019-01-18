@@ -5,6 +5,7 @@ Thank you for considering contributing to PsychroLib. In general, you can contri
 - [Report a bug](#report-a-bug)
 - [Testing](#testing)
 - [Coding conventions](#coding-conventions)
+- [Versioning](#versioning)
 
 
 ## Report a bug
@@ -64,4 +65,7 @@ The followings are minimal guidelines for new contributors aiming to contribute 
 - Include references.
 - Write clear and comprehensive tests.
 
-Thank you!
+
+## Versioning
+
+This project uses [semantic versioning](https://semver.org/).
