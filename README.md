@@ -12,7 +12,7 @@ PsychroLib is a library of functions written in Python, C, Fortran, JavaScript, 
 
 The API documentation is available [here](https://psychrometrics.github.io/psychrolib/api_docs.html). Please note that although the API describes the Python version of the library, the API is common across all the supported language implementations.
 
-Examples on how to use PsychroLib in all the supported languages are described in [this guide](docs/how_to_use_psychrolib.md).
+Examples on how to use PsychroLib in all the supported languages are described in [this guide](docs/examples.md).
 
 
 ## Installing
