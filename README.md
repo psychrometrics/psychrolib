@@ -1,6 +1,5 @@
-<p align="center"><img src="assets/psychrolib_logo.svg" alt="PsychroLib Logo" height="100" width="100"></p>
+# <img src="assets/psychrolib_logo.svg" alt="PsychroLib Logo" height="40" width="40"> PsychroLib
 
-# PsychroLib
 
 |CI and Tests | Paper DOI | Software DOI |
 |---|---|------|
