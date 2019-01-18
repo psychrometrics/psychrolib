@@ -5,6 +5,7 @@ python:
     - "3.7"
 
 before_install:
+  - pip freeze
   - sudo apt-get install gfortran
   - pip install Sphinx sphinx_bootstrap_theme sphinx-autodoc-typehints m2r cffi
 
