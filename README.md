@@ -1,22 +1,6 @@
-<p align="center"><img src="assets/psychrolib-logo.svg" alt="PsychroLib Logo" height="150" width="150"></p>
-
-# PsychroLib: a library of psychrometric functions for Python, C, Fortran, JavaScript and VBA/Excel
-
 |CI and Tests | Paper DOI | Software DOI |
 |---|---|------|
 |[![Build Status](https://travis-ci.com/psychrometrics/psychrolib.svg?branch=master)](https://travis-ci.com/psychrometrics/psychrolib) | [![DOI](https://joss.theoj.org/papers/10.21105/joss.01137/status.svg)](https://doi.org/10.21105/joss.01137) | [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.2537945.svg)](https://doi.org/10.5281/zenodo.2537945)|
-
-
-### Table of contents
-- [Introduction](#introduction)
-- [Documentation](#documentation)
-- [Installing](#installing)
-- [Example usage](#example-usage)
-- [Citing](#citing)
-- [Contributing](#contributing)
-- [Versioning](#versioning)
-- [Copyright and license](#copyright-and-license)
-- [Acknowledgements](#acknowledgements)
 
 
 ## Introduction
