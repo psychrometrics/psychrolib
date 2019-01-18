@@ -6,7 +6,7 @@ python:
 
 before_install:
   - pip freeze
-  - pip uninstall numpy && pip install numpy==1.15.4 # FIXME: Temporary fix as f2py is buggy on numpy 1.16.0
+  - pip uninstall numpy -y && pip install numpy==1.15.4 # FIXME: Temporary fix as f2py is buggy on numpy 1.16.0
   - sudo apt-get install gfortran
   - pip install Sphinx sphinx_bootstrap_theme sphinx-autodoc-typehints m2r cffi
 
