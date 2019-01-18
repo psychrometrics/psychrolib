@@ -1,4 +1,4 @@
-<p align="center"><img src="assets/psychrolib_logo.svg" alt="PsychroLib Logo" height="60" width="60"></p>
+<p align="center"><img src="assets/psychrolib_logo.svg" alt="PsychroLib Logo" height="100" width="100"></p>
 
 # PsychroLib
 
