@@ -1080,6 +1080,51 @@ def GetStationPressure(SeaLevelPressure: float, Altitude: float, TDryBulb: float
     return StationPressure
 
 
+#######################################################################################################
+# Conversion between humidity types
+#######################################################################################################
+
+def GetSpecificHumFromHumRatio(HumRatio: float) -> float:
+    """
+    Return the specific humidity from humidity ratio (aka mixing ratio).
+
+    Args:
+        HumRatio : Humidity ratio in lb_H₂O lb_Dry_Air⁻¹ [IP] or kg_H₂O kg_Dry_Air⁻¹ [SI]
+
+    Returns:
+        Specific humidity in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]
+
+    Reference:
+        ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 9b
+
+    """
+    if HumRatio < 0:
+        raise ValueError("Humidity ratio cannot be negative")
+
+    SpecificHum = HumRatio / (1.0 + HumRatio)
+    return SpecificHum
+
+def GetHumRatioFromSpecificHum(SpecificHum: float) -> float:
+    """
+    Return the humidity ratio (aka mixing ratio) from specific humidity.
+
+    Args:
+        SpecificHum : Specific Humidity in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]
+
+    Returns:
+        Humidity ratio in lb_H₂O lb_Dry_Air⁻¹ [IP] or kg_H₂O kg_Dry_Air⁻¹ [SI]
+
+    Reference:
+        ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 9b (solved for humidity ratio)
+
+    """
+    if SpecificHum < 0:
+        raise ValueError("Specific humidity cannot be negative")
+
+    HumRatio = SpecificHum / (1.0 - SpecificHum)
+    return SpecificHum
+
+
 ######################################################################################################
 # Functions to set all psychrometric values
 #######################################################################################################
