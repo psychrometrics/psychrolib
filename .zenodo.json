@@ -1,0 +1,37 @@
+{
+    "title": "PsychroLib: a library of psychrometric functions to calculate thermodynamic properties of air",
+    "description": "PsychroLib is a software library for estimating dry, moist, saturated properties of air, and standard atmosphere written in Python, C, Fortran, JavaScript, and Microsoft Excel Visual Basic for Applications (VBA). It is aimed at scientist and engineers developing software and working with psychrometric calculations.",
+    "keywords": [
+        "python",
+        "vba",
+        "excel",
+        "fortran",
+        "c",
+        "javascript",
+        "engineering",
+        "hvac",
+        "ashrae",
+        "temperature",
+        "pressure",
+        "meteorology"
+    ],
+    "upload_type": "software",
+    "access_right": "open",
+    "license": "MIT",
+    "creators": [
+        {
+            "orcid": "0000-0002-7071-7547",
+            "name": "D. Meyer"
+        },
+        {
+            "orcid": "0000-0002-0749-6841",
+            "name": "D. Thevenard"
+        }
+    ],
+    "related_identifiers": [
+        {
+            "relation": "isSupplementedBy",
+            "identifier": "10.21105/joss.01137"
+        }
+    ]
+}
