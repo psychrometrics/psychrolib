@@ -793,8 +793,8 @@ function Psychrometrics() {
   this.GetHumRatioFromSpecificHum = function  // (o) Humidity ratio in lb_H₂O lb_Dry_Air⁻¹ [IP] or kg_H₂O kg_Dry_Air⁻¹ [SI]
     ( SpecificHum                             // (i) Specific Humidity ratio in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]
     ) {
-    if (!(SpecificHum >= 0.))
-      throw new Error("Specific humidity is negative");
+    if (!(SpecificHum >= 0.0 && SpecificHum <= 1.0))
+      throw new Error("Specific humidity is outside range [0, 1]");
 
     return SpecificHum / (1.0 - SpecificHum);
   }

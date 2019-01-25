@@ -1118,8 +1118,8 @@ def GetHumRatioFromSpecificHum(SpecificHum: float) -> float:
         ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 9b (solved for humidity ratio)
 
     """
-    if SpecificHum < 0:
-        raise ValueError("Specific humidity cannot be negative")
+    if SpecificHum < 0.0 or SpecificHum > 1.0:
+        raise ValueError("Specific humidity is outside range [0, 1]")
 
     HumRatio = SpecificHum / (1.0 - SpecificHum)
     return SpecificHum
