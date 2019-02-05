@@ -782,7 +782,7 @@ module psychrolib
   end function GetDryAirVolume
 
   function GetTDryBulbFromMoistAirEnthalpy(MoistAirEnthalpy, HumRatio) result(TDryBulb)
-    !+ Returhn dry bulb temperature from enthalpy and humidity ratio
+    !+ Return dry bulb temperature from enthalpy and humidity ratio
     !+ Reference:
     !+ ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 30
     !+ Notes:

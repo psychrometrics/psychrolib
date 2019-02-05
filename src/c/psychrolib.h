@@ -147,18 +147,23 @@ double GetVapPresFromHumRatio   // (o) Partial pressure of water vapor in moist 
  * Dry Air Calculations
  *****************************************************************************************************/
 
-double GetDryAirEnthalpy        // (o) Dry air enthalpy in Btu lb⁻¹ [IP] or J kg⁻¹ [SI]
-  ( double TDryBulb             // (i) Dry bulb temperature in °F [IP] or °C [SI]
+double GetDryAirEnthalpy                  // (o) Dry air enthalpy in Btu lb⁻¹ [IP] or J kg⁻¹ [SI]
+  ( double TDryBulb                       // (i) Dry bulb temperature in °F [IP] or °C [SI]
   );
 
-double GetDryAirDensity         // (o) Dry air density in lb ft⁻³ [IP] or kg m⁻³ [SI]
-  ( double TDryBulb             // (i) Dry bulb temperature in °F [IP] or °C [SI]
-  , double Pressure             // (i) Atmospheric pressure in Psi [IP] or Pa [SI]
+double GetDryAirDensity                   // (o) Dry air density in lb ft⁻³ [IP] or kg m⁻³ [SI]
+  ( double TDryBulb                       // (i) Dry bulb temperature in °F [IP] or °C [SI]
+  , double Pressure                       // (i) Atmospheric pressure in Psi [IP] or Pa [SI]
   );
 
-double GetDryAirVolume          // (o) Dry air volume ft³ lb⁻¹ [IP] or in m³ kg⁻¹ [SI]
-  ( double TDryBulb             // (i) Dry bulb temperature in °F [IP] or °C [SI]
-  , double Pressure             // (i) Atmospheric pressure in Psi [IP] or Pa [SI]
+double GetDryAirVolume                    // (o) Dry air volume ft³ lb⁻¹ [IP] or in m³ kg⁻¹ [SI]
+  ( double TDryBulb                       // (i) Dry bulb temperature in °F [IP] or °C [SI]
+  , double Pressure                       // (i) Atmospheric pressure in Psi [IP] or Pa [SI]
+  );
+
+double GetTDryBulbFromMoistAirEnthalpy    // (o) Dry-bulb temperature in °F [IP] or °C [SI]
+  ( double MoistAirEnthalpy               // (i) Moist air enthalpy in Btu lb⁻¹ [IP] or J kg⁻¹
+  , double HumRatio                       // (i) Humidity ratio in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]
   );
 
 
