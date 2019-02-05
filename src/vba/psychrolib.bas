@@ -1426,6 +1426,71 @@ ErrHandler:
 
 End Function
 
+
+
+'******************************************************************************************************
+' Conversion between humidity types
+'******************************************************************************************************
+
+Function GetSpecificHumFromHumRatio(ByVal HumRatio As Variant) As Variant
+'
+' Return the specific humidity from humidity ratio (aka mixing ratio).
+'
+' Args:
+'     HumRatio : Humidity ratio in lb_H₂O lb_Dry_Air⁻¹ [IP] or kg_H₂O kg_Dry_Air⁻¹ [SI]
+'
+' Returns:
+'     Specific humidity in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]
+'
+' Reference:
+'     ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 9b
+'
+'
+  On Error GoTo ErrHandler
+
+  If (HumRatio < 0) Then
+    MyMsgBox ("Humidity ratio is negative")
+    GoTo ErrHandler
+  End If
+
+    SpecificHum = HumRatio / (1.0 + HumRatio)
+  Exit Function
+
+ErrHandler:
+  GetSatAirEnthalpy = CVErr(xlErrNA)
+
+End Function
+
+Function GetHumRatioFromSpecificHum(ByVal SpecificHum As Variant) As Variant
+'
+' Return the humidity ratio (aka mixing ratio) from specific humidity.
+'
+' Args:
+'     SpecificHum : Specific Humidity in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]
+'
+' Returns:
+'     Humidity ratio in lb_H₂O lb_Dry_Air⁻¹ [IP] or kg_H₂O kg_Dry_Air⁻¹ [SI]
+'
+' Reference:
+'     ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 9b (solved for humidity ratio)
+'
+'
+  On Error GoTo ErrHandler
+
+  If (SpecificHum < 0 Or SpecificHum > 1) Then
+    MyMsgBox ("Specific humidity is outside range [0, 1]")
+    GoTo ErrHandler
+  End If
+
+    HumRatio = SpecificHum / (1.0 - SpecificHum)
+  Exit Function
+
+ErrHandler:
+  GetSatAirEnthalpy = CVErr(xlErrNA)
+
+End Function
+
+
 '******************************************************************************************************
 ' Functions to set all psychrometric values
 '******************************************************************************************************
