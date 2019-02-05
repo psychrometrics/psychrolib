@@ -1029,6 +1029,11 @@ Function GetTDryBulbFromMoistAirEnthalpy(ByVal MoistAirEnthalpy As Variant, ByVa
   End If
   Exit Function
 
+ErrHandler:
+  GetDryAirVolume = CVErr(xlErrNA)
+
+End Function
+
 
 '******************************************************************************************************
 ' Saturated Air Calculations
