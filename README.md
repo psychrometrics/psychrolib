@@ -17,11 +17,11 @@ Examples on how to use PsychroLib in all the supported languages are described i
 
 ## Installing
 
-In Python, from the command prompt with: `pip install psychrolib`.
+- Python: from the command prompt with `pip install psychrolib`.
 
-In Excel, download the ready-made spreadsheets from the [release tab](https://github.com/psychrometrics/psychrolib/releases).
+- VBA/Excel: download the ready-made spreadsheets from the [release tab](https://github.com/psychrometrics/psychrolib/releases).
 
-In C, Fortran and JavaScript, clone the repository, and bundle according to your requirements.
+- C, Fortran and JavaScript: clone the repository, and bundle according to your requirements.
 
 
 ## Citing
