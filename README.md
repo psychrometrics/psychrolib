@@ -26,16 +26,7 @@ In C, Fortran and JavaScript, clone the repository, and bundle according to your
 
 ## Citing
 
-If you are using PsychroLib, **please cite both the paper, and the software**.
-
-For the paper, please use, or adapt from, the following:
-```
-Meyer, D., & Thevenard, D. (2019). PsychroLib: a library of psychrometric
-functions to calculate thermodynamic properties of air. Journal of Open Source
-Software, 4(33), 1137. https://doi.org/10.21105/joss.01137
-```
-
-For the software, **please cite the specific version of PsychroLib you are using** as listed on Zenodo -- see https://doi.org/10.5281/zenodo.2537945
+If you are using PsychroLib, please cite the specific version you are using (https://doi.org/10.5281/zenodo.2537945), and the summary paper (https://doi.org/10.21105/joss.01137).
 
 
 ## Contributing
