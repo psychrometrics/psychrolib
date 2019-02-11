@@ -79,4 +79,4 @@ Then back in the worksheet, to calculate dew point temperature for a dry bulb te
 =GetTDewPointFromRelHum(A2,B2)
 ```
 Excel will calculate the result as 21.30939716, as shown in the example below.
-<p align="center"><img src="../assets/excel-example.png" alt="Excel/VBA"></p>
+<p align="center"><img src="../assets/excel_example.png" alt="Excel/VBA"></p>
