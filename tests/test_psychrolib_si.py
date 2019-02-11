@@ -153,6 +153,15 @@ def test_SeaLevel_Station_Pressure(psy):
     assert SeaLevelPressure == pytest.approx(102484.0, abs = 1)
     assert psy.GetStationPressure(SeaLevelPressure, 105, 17.19) == pytest.approx(101226.5, abs = 1)
 
+###############################################################################
+# Test conversion between humidity types
+###############################################################################
+
+def test_GetSpecificHumFromHumRatio(psy):
+    assert psy.GetSpecificHumFromHumRatio(0.006) == pytest.approx(0.00596421471, rel=0.01)
+
+def test_GetHumRatioFromSpecificHum(psy):
+    assert psy.GetHumRatioFromSpecificHum(0.00596421471) == pytest.approx(0.006, rel=0.01)
 
 ###############################################################################
 # Test against Example 1 of ch. 1 of the 2017 ASHRAE Handbook - Fundamentals
