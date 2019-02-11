@@ -679,7 +679,7 @@ def GetVapPresFromHumRatio(HumRatio: float, Pressure: float) -> float:
 
 
 #######################################################################################################
-# Conversion between humidity types
+# Conversions between humidity ratio and specific humidity
 #######################################################################################################
 
 def GetSpecificHumFromHumRatio(HumRatio: float) -> float:

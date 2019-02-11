@@ -498,7 +498,7 @@ function Psychrometrics() {
 
 
   /******************************************************************************************************
-   * Conversion between humidity types
+   * Conversions between humidity ratio and specific humidity
    *****************************************************************************************************/
 
   // Return the specific humidity from humidity ratio (aka mixing ratio)
