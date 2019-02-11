@@ -39,6 +39,8 @@ The following psychrometric functions are currently available across all the sup
 |`GetTDewPointFromHumRatio`|Return dew-point temperature given dry-bulb temperature, humidity ratio, and pressure.|
 |`GetHumRatioFromVapPres`|Return humidity ratio given water vapor pressure and atmospheric pressure.|
 |`GetVapPresFromHumRatio`|Return vapor pressure given humidity ratio and pressure.|
+|`GetSpecificHumFromHumRatio`|Return the specific humidity from humidity ratio (aka mixing ratio).|
+|`GetHumRatioFromSpecificHum`|Return the humidity ratio (aka mixing ratio) from specific humidity.|
 |`GetDryAirEnthalpy`|Return dry-air enthalpy given dry-bulb temperature.|
 |`GetDryAirDensity`|Return dry-air density given dry-bulb temperature and pressure.|
 |`GetDryAirVolume`|Return dry-air volume given dry-bulb temperature and pressure.|
