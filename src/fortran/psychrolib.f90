@@ -82,6 +82,8 @@ module psychrolib
   public :: GetStandardAtmTemperature
   public :: GetSeaLevelPressure
   public :: GetStationPressure
+  public :: GetSpecificHumFromHumRatio
+  public :: GetHumRatioFromSpecificHum
   public :: CalcPsychrometricsFromTWetBulb
   public :: CalcPsychrometricsFromTDewPoint
   public :: CalcPsychrometricsFromRelHum
@@ -712,6 +714,45 @@ module psychrolib
 
     VapPres = Pressure * HumRatio / (0.621945 + HumRatio)
   end function GetVapPresFromHumRatio
+
+
+  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  ! Conversion between humidity types
+  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  function GetSpecificHumFromHumRatio(HumRatio) result(SpecificHum)
+    !+ Return the specific humidity from humidity ratio (aka mixing ratio).
+    !+ Reference:
+    !+ ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 9b
+
+    real, intent(in) :: HumRatio
+      !+ Humidity ratio in lb_H₂O lb_Dry_Air⁻¹ [IP] or kg_H₂O kg_Dry_Air⁻¹ [SI]
+    real             :: SpecificHum
+      !+ Specific humidity in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]
+
+    if (HumRatio < 0.0) then
+      error stop "Error: humidity ratio cannot be negative"
+    end if
+
+    SpecificHum = HumRatio / (1.0 + HumRatio)
+  end function GetSpecificHumFromHumRatio
+
+  function GetHumRatioFromSpecificHum(SpecificHum) result(HumRatio)
+    !+ Return the humidity ratio (aka mixing ratio) from specific humidity.
+    !+ Reference:
+    !+ ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 9b (solved for humidity ratio)
+
+    real, intent(in)  :: SpecificHum
+      !+ Specific humidity in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]
+    real              :: HumRatio
+      !+ Humidity ratio in lb_H₂O lb_Dry_Air⁻¹ [IP] or kg_H₂O kg_Dry_Air⁻¹ [SI]
+
+    if (SpecificHum < 0.0 .or. SpecificHum >= 1.0) then
+      error stop "Error: specific humidity is outside range [0, 1["
+    end if
+
+    HumRatio = SpecificHum / (1.0 - SpecificHum)
+  end function GetHumRatioFromSpecificHum
 
 
   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

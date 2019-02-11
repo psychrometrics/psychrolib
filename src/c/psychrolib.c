@@ -538,6 +538,31 @@ double GetVapPresFromHumRatio   // (o) Partial pressure of water vapor in moist 
 
 
 /******************************************************************************************************
+ * Conversion between humidity types
+ *****************************************************************************************************/
+
+// Return the specific humidity from humidity ratio (aka mixing ratio)
+// Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 9b
+double GetSpecificHumFromHumRatio // (o) Specific humidity ratio in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]
+  ( double HumRatio               // (i) Humidity ratio in lb_H₂O lb_Dry_Air⁻¹ [IP] or kg_H₂O kg_Dry_Air⁻¹ [SI]
+  )
+{
+  ASSERT (HumRatio >= 0., "Humidity ratio is negative")
+  return HumRatio / (1.0 + HumRatio);
+}
+
+// Return the humidity ratio (aka mixing ratio) from specific humidity
+// Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 9b (solved for humidity ratio)
+double GetHumRatioFromSpecificHum // (o) Humidity ratio in lb_H₂O lb_Dry_Air⁻¹ [IP] or kg_H₂O kg_Dry_Air⁻¹ [SI]
+  ( double SpecificHum            // (i) Specific humidity ratio in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]
+  )
+{
+  ASSERT (SpecificHum >= 0.0 && SpecificHum < 1.0, "Specific humidity is outside range [0,1[")
+  return SpecificHum / (1.0 - SpecificHum);
+}
+
+
+/******************************************************************************************************
  * Dry Air Calculations
  *****************************************************************************************************/
 

@@ -184,6 +184,17 @@ it('test_SeaLevel_Station_Pressure', function () {
 });
 
 /**
+ * Test conversion between humidity types
+ */
+it('test_GetSpecificHumFromHumRatio', function () {
+    checkRelDiff(psyjs.GetSpecificHumFromHumRatio(0.006),0.00596421471, 0.01)
+});
+
+it('test_GetHumRatioFromSpecificHum', function () {
+    checkRelDiff(psyjs.GetHumRatioFromSpecificHum(0.00596421471),0.006, 0.01)
+});
+
+/**
  * Test against Example 1 of ch. 1 of the 2017 ASHRAE Handbook - Fundamentals
  */
 // The functions are tested against Table 1 of ch. 1 of the 2017 ASHRAE Handbook - Fundamentals

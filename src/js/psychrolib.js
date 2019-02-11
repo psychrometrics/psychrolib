@@ -498,6 +498,33 @@ function Psychrometrics() {
 
 
   /******************************************************************************************************
+   * Conversion between humidity types
+   *****************************************************************************************************/
+
+  // Return the specific humidity from humidity ratio (aka mixing ratio)
+  // Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 9b
+  this.GetSpecificHumFromHumRatio = function  // (o) Specific humidity ratio in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]
+    ( HumRatio                                // (i) Humidity ratio in lb_H₂O lb_Dry_Air⁻¹ [IP] or kg_H₂O kg_Dry_Air⁻¹ [SI]
+    ) {
+    if (!(HumRatio >= 0.))
+      throw new Error("Humidity ratio is negative");
+
+    return HumRatio / (1.0 + HumRatio);
+  }
+
+  // Return the humidity ratio (aka mixing ratio) from specific humidity
+  // Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 9b (solved for humidity ratio)
+  this.GetHumRatioFromSpecificHum = function  // (o) Humidity ratio in lb_H₂O lb_Dry_Air⁻¹ [IP] or kg_H₂O kg_Dry_Air⁻¹ [SI]
+    ( SpecificHum                             // (i) Specific humidity ratio in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]
+    ) {
+    if (!(SpecificHum >= 0.0 && SpecificHum < 1.0))
+      throw new Error("Specific humidity is outside range [0, 1[");
+
+    return SpecificHum / (1.0 - SpecificHum);
+  }
+
+
+  /******************************************************************************************************
    * Dry Air Calculations
    *****************************************************************************************************/
 
