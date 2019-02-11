@@ -144,6 +144,19 @@ double GetVapPresFromHumRatio   // (o) Partial pressure of water vapor in moist 
 
 
 /******************************************************************************************************
+ * Conversion between humidity types
+ *****************************************************************************************************/
+
+double GetSpecificHumFromHumRatio // (o) Specific humidity ratio in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]
+  ( double HumRatio               // (i) Humidity ratio in lb_H₂O lb_Dry_Air⁻¹ [IP] or kg_H₂O kg_Dry_Air⁻¹ [SI]
+  );
+
+double GetHumRatioFromSpecificHum // (o) Humidity ratio in lb_H₂O lb_Dry_Air⁻¹ [IP] or kg_H₂O kg_Dry_Air⁻¹ [SI]
+  ( double SpecificHum            // (i) Specific humidity ratio in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]
+  );
+
+
+/******************************************************************************************************
  * Dry Air Calculations
  *****************************************************************************************************/
 
@@ -236,19 +249,6 @@ double GetStationPressure    // (o) Station pressure in Psi [IP] or Pa [SI]
   ( double SeaLevelPressure  // (i) Sea level barometric pressure in Psi [IP] or Pa [SI]
   , double Altitude          // (i) Altitude above sea level in ft [IP] or m [SI]
   , double TDryBulb          // (i) Dry bulb temperature in °F [IP] or °C [SI]
-  );
-
-
-/******************************************************************************************************
- * Conversion between humidity types
- *****************************************************************************************************/
-
-double GetSpecificHumFromHumRatio // (o) Specific humidity ratio in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]
-  ( double HumRatio               // (i) Humidity ratio in lb_H₂O lb_Dry_Air⁻¹ [IP] or kg_H₂O kg_Dry_Air⁻¹ [SI]
-  );
-
-double GetHumRatioFromSpecificHum // (o) Humidity ratio in lb_H₂O lb_Dry_Air⁻¹ [IP] or kg_H₂O kg_Dry_Air⁻¹ [SI]
-  ( double SpecificHum            // (i) Specific humidity ratio in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]
   );
 
 
