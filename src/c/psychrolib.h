@@ -144,7 +144,7 @@ double GetVapPresFromHumRatio   // (o) Partial pressure of water vapor in moist 
 
 
 /******************************************************************************************************
- * Conversion between humidity types
+ * Conversions between humidity ratio and specific humidity
  *****************************************************************************************************/
 
 double GetSpecificHumFromHumRatio // (o) Specific humidity ratio in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]
