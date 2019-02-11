@@ -69,7 +69,7 @@ module psychrolib
   public :: GetDryAirEnthalpy
   public :: GetDryAirDensity
   public :: GetDryAirVolume
-  public :: GetTDryBulbFromMoistAirEnthalpy
+  public :: GetTDryBulbFromEnthalpyAndHumRatio
   public :: GetSatVapPres
   public :: GetSatHumRatio
   public :: GetSatAirEnthalpy
@@ -822,7 +822,7 @@ module psychrolib
     end if
   end function GetDryAirVolume
 
-  function GetTDryBulbFromMoistAirEnthalpy(MoistAirEnthalpy, HumRatio) result(TDryBulb)
+  function GetTDryBulbFromEnthalpyAndHumRatio(MoistAirEnthalpy, HumRatio) result(TDryBulb)
     !+ Return dry bulb temperature from enthalpy and humidity ratio
     !+ Reference:
     !+ ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 30
@@ -847,7 +847,7 @@ module psychrolib
     end if
 
 
-  end function GetTDryBulbFromMoistAirEnthalpy
+  end function GetTDryBulbFromEnthalpyAndHumRatio
 
 
   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

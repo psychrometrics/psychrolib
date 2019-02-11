@@ -800,7 +800,7 @@ def GetDryAirVolume(TDryBulb: float, Pressure: float) -> float:
     return DryAirVolume
 
 
-def GetTDryBulbFromMoistAirEnthalpy(MoistAirEnthalpy: float, HumRatio: float) -> float:
+def GetTDryBulbFromEnthalpyAndHumRatio(MoistAirEnthalpy: float, HumRatio: float) -> float:
     """
     Return dry bulb temperature from enthalpy and humidity ratio
 

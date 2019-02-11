@@ -1065,7 +1065,7 @@ ErrHandler:
 
 End Function
 
-Function GetTDryBulbFromMoistAirEnthalpy(ByVal MoistAirEnthalpy As Variant, ByVal HumRatio As Variant) As Variant
+Function GetTDryBulbFromEnthalpyAndHumRatio(ByVal MoistAirEnthalpy As Variant, ByVal HumRatio As Variant) As Variant
 '
 ' Return dry bulb temperature from enthalpy and humidity ratio
 '
