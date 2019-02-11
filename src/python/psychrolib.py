@@ -1109,7 +1109,7 @@ def GetHumRatioFromSpecificHum(SpecificHum: float) -> float:
     Return the humidity ratio (aka mixing ratio) from specific humidity.
 
     Args:
-        SpecificHum : Specific Humidity in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]
+        SpecificHum : Specific humidity in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]
 
     Returns:
         Humidity ratio in lb_H₂O lb_Dry_Air⁻¹ [IP] or kg_H₂O kg_Dry_Air⁻¹ [SI]
