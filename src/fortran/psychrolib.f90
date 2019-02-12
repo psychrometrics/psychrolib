@@ -823,7 +823,7 @@ module psychrolib
   end function GetDryAirVolume
 
 
-  function GetHumRatioFromEnthalpyAndTDryBulb(MoistAirEnthalpy, HumRatio) result(TDryBulb)
+  function GetHumRatioFromEnthalpyAndTDryBulb(MoistAirEnthalpy, TDryBulb) result(HumRatio)
     !+ Return humidity ratio from enthalpy and dry-bulb temperature.
     !+ Reference:
     !+ ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 30
