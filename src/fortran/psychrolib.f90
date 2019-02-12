@@ -69,6 +69,7 @@ module psychrolib
   public :: GetDryAirEnthalpy
   public :: GetDryAirDensity
   public :: GetDryAirVolume
+  public :: GetHumRatioFromEnthalpyAndTDryBulb
   public :: GetSatVapPres
   public :: GetSatHumRatio
   public :: GetSatAirEnthalpy
@@ -820,6 +821,28 @@ module psychrolib
       DryAirVolume = GetTKelvinFromTCelsius(TDryBulb) * R_DA_SI / Pressure
     end if
   end function GetDryAirVolume
+
+
+  function GetHumRatioFromEnthalpyAndTDryBulb(MoistAirEnthalpy, HumRatio) result(TDryBulb)
+    !+ Return humidity ratio from enthalpy and dry-bulb temperature.
+    !+ Reference:
+    !+ ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 30
+    !+ Notes:
+    !+ Based on the `GetMoistAirEnthalpy` function, rearranged for dry-bulb temperature
+
+    real, intent(in)  ::  MoistAirEnthalpy
+      !+ Moist air enthalpy in Btu lb⁻¹ [IP] or J kg⁻¹
+    real, intent(in)  ::  TDryBulb
+      !+ Dry-bulb temperature in °F [IP] or °C [SI]
+    real              ::  HumRatio
+      !+ Humidity ratio in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]
+
+    if (isIP()) then
+      HumRatio  = (MoistAirEnthalpy - 0.240 * TDryBulb) / (1061.0 + 0.444 * TDryBulb)
+    else
+      HumRatio  = (MoistAirEnthalpy / 1000.0 - 1.006 * TDryBulb) / (2501.0 + 1.86 * TDryBulb)
+    end if
+  end function GetHumRatioFromEnthalpyAndTDryBulb
 
 
   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
