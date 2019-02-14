@@ -836,19 +836,21 @@ module psychrolib
       !+ Humidity ratio in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]
     real              ::  TDryBulb
       !+ Dry-bulb temperature in °F [IP] or °C [SI]
+    real              ::  BoundedHumRatio
+    !+ Local function humidity ratio bounded to no less than 1.0E-5 kgH₂O kgAIR⁻¹
 
     if (HumRatio < 0.0) then
       error stop "Error: humidity ratio is negative"
     end if
 
+    ! Bound humidity ratio to no less than 1.0E-5 kgH₂O kgAIR⁻¹
+    BoundedHumRatio = max(HumRatio, 1.0E-5)
+
     if (isIP()) then
-      TDryBulb  = (MoistAirEnthalpy - 1061.0 * HumRatio) / (0.240 + 0.444 * HumRatio)
+      TDryBulb  = (MoistAirEnthalpy - 1061.0 * BoundedHumRatio) / (0.240 + 0.444 * BoundedHumRatio)
     else
-      TDryBulb  = (MoistAirEnthalpy / 1000.0 - 2501.0 * HumRatio) / (1.006 + 1.86 * HumRatio)
+      TDryBulb  = (MoistAirEnthalpy / 1000.0 - 2501.0 * BoundedHumRatio) / (1.006 + 1.86 * BoundedHumRatio)
     end if
-
-
-  end function GetTDryBulbFromEnthalpyAndHumRatio
 
 
   function GetHumRatioFromEnthalpyAndTDryBulb(MoistAirEnthalpy, TDryBulb) result(HumRatio)
