@@ -611,6 +611,22 @@ double GetDryAirVolume          // (o) Dry air volume ft³ lb⁻¹ [IP] or in m�
 }
 
 
+// Return dry bulb temperature from enthalpy and humidity ratio
+// Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 30
+// Notes: based on the `GetMoistAirEnthalpy` function, rearranged for humidity ratio
+double GetTDryBulbFromEnthalpyAndHumRatio  // (o) Dry-bulb temperature in °F [IP] or °C [SI]
+  ( double MoistAirEnthalpy                // (i) Moist air enthalpy in Btu lb⁻¹ [IP] or J kg⁻¹
+  , double HumRatio                        // (i) Humidity ratio in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]
+  )
+{
+  ASSERT (HumRatio >= 0., "Humidity ratio is negative")
+
+  if (isIP())
+    return (MoistAirEnthalpy - 1061.0 * HumRatio) / (0.240 + 0.444 * HumRatio);
+  else
+    return (MoistAirEnthalpy / 1000.0 - 2501.0 * HumRatio) / (1.006 + 1.86 * HumRatio);
+}
+
 /******************************************************************************************************
  * Saturated Air Calculations
  *****************************************************************************************************/
