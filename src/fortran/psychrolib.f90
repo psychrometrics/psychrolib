@@ -109,13 +109,17 @@ module psychrolib
     !+ Unit system to use.
 
   real ::  PSYCHROLIB_TOLERANCE = 1.0
-    !+ Tolerance of temperature calculations
+    !+ Tolerance of temperature calculations.
 
   integer, parameter  :: MIN_ITER_COUNT = 5
-    !+ Minimum number of iterations before exiting while loops
+    !+ Minimum number of iterations before exiting while loops.
 
-  integer, parameter  :: MAX_ITER_COUNT = 1E+6
-    !+ Maximum number of iterations before exiting while loops
+  integer, parameter  :: MAX_ITER_COUNT = 1E+3
+    !+ Maximum number of iterations before exiting while loops.
+
+  integer, parameter  :: MIN_HUM_RATIO = 1E-7
+    !+ Minimum acceptable humidity ratio used/returned by any functions.
+    !+ Any value above 0 or below the MIN_HUM_RATIO will be reset to this value.
 
 
   contains
@@ -450,7 +454,7 @@ module psychrolib
     Tdp = TDryBulb
     lnVP = log(VapPres)
     Tdp_c = Tdp
-    index = 1 ! initialise index
+    index = 1
 
     do while (((abs(Tdp - Tdp_c) > PSYCHROLIB_TOLERANCE) .or. (index < MIN_ITER_COUNT)) &
               .and. (index < MAX_ITER_COUNT))
@@ -517,16 +521,14 @@ module psychrolib
     real              ::  Wstar
       !+ Humidity ratio at temperature Tstar in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]
     real              ::  BoundedHumRatio
-    !+ Local function humidity ratio bounded to no less than 1.0E-5 kg_H₂O kg_Air⁻¹
-    integer           :: index
-    !+ index used in iteration
+      !+ Humidity ratio bounded to MIN_HUM_RATIO
+    integer           ::  index
+      !+ index used in iteration
 
     if (HumRatio < 0.0) then
       error stop "Error: humidity ratio cannot be negative"
     end if
-
-    ! Bound humidity ratio to no less than 1.0E-5 kg_H₂O kg_Air⁻¹
-    BoundedHumRatio = max(HumRatio, 1.0E-5)
+    BoundedHumRatio = max(HumRatio, MIN_HUM_RATIO)
 
     TDewPoint = GetTDewPointFromHumRatio(TDryBulb, BoundedHumRatio, Pressure)
 
@@ -535,7 +537,7 @@ module psychrolib
     TWetBulbInf = TDewPoint
     TWetBulb = (TWetBulbInf + TWetBulbSup) / 2.0
 
-    index = 1 ! initialise index
+    index = 1
     ! Bisection loop
     do while(((TWetBulbSup - TWetBulbInf > PSYCHROLIB_TOLERANCE) .or. (index < MIN_ITER_COUNT)) &
               .and. (index < MAX_ITER_COUNT))
@@ -596,8 +598,8 @@ module psychrolib
       end if
     end if
 
-    ! Validity check -- do not let humidity ratio be less than 1.E-5
-    HumRatio = max(HumRatio, 1.E-5)
+    ! Validity check.
+    HumRatio = max(HumRatio, MIN_HUM_RATIO)
   end function GetHumRatioFromTWetBulb
 
   function GetHumRatioFromRelHum(TDryBulb, RelHum, Pressure) result(HumRatio)
@@ -714,8 +716,8 @@ module psychrolib
 
     HumRatio = 0.621945 * VapPres / (Pressure-VapPres)
 
-    ! Validity check -- do not let humidity ratio be less than 1.E-5
-    HumRatio = max(HumRatio, 1.E-5)
+    ! Validity check.
+    HumRatio = max(HumRatio, MIN_HUM_RATIO)
   end function GetHumRatioFromVapPres
 
   function GetVapPresFromHumRatio(HumRatio, Pressure) result(VapPres)
@@ -730,14 +732,13 @@ module psychrolib
     real              ::  VapPres
       !+ Partial pressure of water vapor in moist air in Psi [IP] or Pa [SI]
     real              ::  BoundedHumRatio
-    !+ Local function humidity ratio bounded to no less than 1.0E-5 kg_H₂O kg_Air⁻¹
+      !+ Humidity ratio bounded to MIN_HUM_RATIO
 
     if (HumRatio < 0.0) then
       error stop "Error: humidity ratio is negative"
     end if
 
-    ! Bound humidity ratio to no less than 1.0E-5 kg_H₂O kg_Air⁻¹
-    BoundedHumRatio = max(HumRatio, 1.0E-5)
+    BoundedHumRatio = max(HumRatio, MIN_HUM_RATIO)
 
     VapPres = Pressure * BoundedHumRatio / (0.621945 + BoundedHumRatio)
   end function GetVapPresFromHumRatio
@@ -780,8 +781,8 @@ module psychrolib
 
     HumRatio = SpecificHum / (1.0 - SpecificHum)
 
-    ! Validity check -- do not let humidity ratio be less than 1.E-5
-    HumRatio = max(HumRatio, 1.E-5)
+    ! Validity check.
+    HumRatio = max(HumRatio, MIN_HUM_RATIO)
   end function GetHumRatioFromSpecificHum
 
 
@@ -922,8 +923,8 @@ module psychrolib
     SatVaporPres  = GetSatVapPres(TDryBulb)
     SatHumRatio   = 0.621945 * SatVaporPres / (Pressure-SatVaporPres)
 
-    ! Validity check -- do not let humidity ratio be less than 1.E-5
-    SatHumRatio = max(SatHumRatio, 1.E-5)
+    ! Validity check.
+    SatHumRatio = max(SatHumRatio, MIN_HUM_RATIO)
   end function GetSatHumRatio
 
   function GetSatAirEnthalpy(TDryBulb, Pressure) result(SatAirEnthalpy)
@@ -987,14 +988,12 @@ module psychrolib
     real              ::  DegreeOfSaturation
       !+ Degree of saturation in arbitrary unit
     real              ::  BoundedHumRatio
-    !+ Local function humidity ratio bounded to no less than 1.0E-5 kg_H₂O kg_Air⁻¹
+      !+ Humidity ratio bounded to MIN_HUM_RATIO
 
     if (HumRatio < 0.0) then
       error stop "Error: humidity ratio is negative"
     end if
-
-    ! Bound humidity ratio to no less than 1.0E-5 kg_H₂O kg_Air⁻¹
-    BoundedHumRatio = max(HumRatio, 1.0E-5)
+    BoundedHumRatio = max(HumRatio, MIN_HUM_RATIO)
 
     DegreeOfSaturation = BoundedHumRatio / GetSatHumRatio(TDryBulb, Pressure)
   end function GetDegreeOfSaturation
@@ -1011,14 +1010,12 @@ module psychrolib
     real              ::  MoistAirEnthalpy
       !+ Moist air enthalpy in Btu lb⁻¹ [IP] or J kg⁻¹
     real              ::  BoundedHumRatio
-    !+ Local function humidity ratio bounded to no less than 1.0E-5 kg_H₂O kg_Air⁻¹
+      !+ Humidity ratio bounded to MIN_HUM_RATIO
 
     if (HumRatio < 0.0) then
       error stop "Error: humidity ratio is negative"
     end if
-
-    ! Bound humidity ratio to no less than 1.0E-5 kg_H₂O kg_Air⁻¹
-    BoundedHumRatio = max(HumRatio, 1.0E-5)
+    BoundedHumRatio = max(HumRatio, MIN_HUM_RATIO)
 
     if (isIP()) then
         MoistAirEnthalpy = 0.240 * TDryBulb + BoundedHumRatio * (1061.0 + 0.444 * TDryBulb)
@@ -1044,14 +1041,12 @@ module psychrolib
     real              ::  MoistAirVolume
       !+ Specific volume of moist air in ft³ lb⁻¹ of dry air [IP] or in m³ kg⁻¹ of dry air [SI]
     real              ::  BoundedHumRatio
-    !+ Local function humidity ratio bounded to no less than 1.0E-5 kg_H₂O kg_Air⁻¹
+      !+ Humidity ratio bounded to MIN_HUM_RATIO
 
     if (HumRatio < 0.0) then
       error stop "Error: humidity ratio is negative"
     end if
-
-    ! Bound humidity ratio to no less than 1.0E-5 kg_H₂O kg_Air⁻¹
-    BoundedHumRatio = max(HumRatio, 1.0E-5)
+    BoundedHumRatio = max(HumRatio, MIN_HUM_RATIO)
 
     if (isIP()) then
         MoistAirVolume = R_DA_IP * GetTRankineFromTFahrenheit(TDryBulb) * (1.0 + 1.607858 * BoundedHumRatio) / (144.0 * Pressure)
@@ -1074,14 +1069,12 @@ module psychrolib
     real              ::  MoistAirDensity
       !+ Moist air density in lb ft⁻³ [IP] or kg m⁻³ [SI]
     real              ::  BoundedHumRatio
-    !+ Local function humidity ratio bounded to no less than 1.0E-5 kg_H₂O kg_Air⁻¹
+      !+ Humidity ratio bounded to MIN_HUM_RATIO
 
     if (HumRatio < 0.0) then
       error stop "Error: humidity ratio is negative"
     end if
-
-    ! Bound humidity ratio to no less than 1.0E-5 kg_H₂O kg_Air⁻¹
-    BoundedHumRatio = max(HumRatio, 1.0E-5)
+    BoundedHumRatio = max(HumRatio, MIN_HUM_RATIO)
 
     MoistAirDensity = (1.0 + BoundedHumRatio) / GetMoistAirVolume(TDryBulb, BoundedHumRatio, Pressure)
   end function GetMoistAirDensity
