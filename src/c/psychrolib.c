@@ -53,12 +53,18 @@
  * Global constants
  *****************************************************************************************************/
 
-#define R_DA_IP 53.350    // Universal gas constant for dry air (IP version) in ft∙lbf/lb_da/R
-                          // Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1
-#define R_DA_SI 287.042   // Universal gas constant for dry air (SI version) in J/kg_da/K
-                          // Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1
+#define R_DA_IP 53.350            // Universal gas constant for dry air (IP version) in ft∙lbf/lb_da/R
+                                  // Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1
+#define R_DA_SI 287.042           // Universal gas constant for dry air (SI version) in J/kg_da/K
+                                  // Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1
+#define INVALID -99999            // Invalid value
 
-#define INVALID -99999    // Invalid value
+#define MIN_ITER_COUNT 5          // Minimum number of iterations before exiting while loops.
+
+#define MAX_ITER_COUNT 1E+3       // Maximum number of iterations before exiting while loops.
+
+#define MIN_HUM_RATIO 1E-7        // Minimum acceptable humidity ratio used/returned by any functions.
+                                  // Any value above 0 or below the MIN_HUM_RATIO will be reset to this value.
 
 
 /******************************************************************************************************
@@ -329,6 +335,8 @@ double GetTDewPointFromVapPres  // (o) Dew Point temperature in °F [IP] or °C 
   double Tdp_c;               // Value of Tdp used in NR calculation
   double lnVP_c;              // Value of log of vapor water pressure used in NR calculation
   double d_Tdp;               // Value of temperature step used in NR calculation
+  int index = 0;
+
   do
   {
     // Current point
@@ -347,8 +355,9 @@ double GetTDewPointFromVapPres  // (o) Dew Point temperature in °F [IP] or °C 
     Tdp = Tdp_c - (lnVP_c - lnVP) / d_lnVP;
     Tdp = max(Tdp, _BOUNDS[0]);
     Tdp = min(Tdp, _BOUNDS[1]);
+    index = index + 1;
   }
-  while (fabs(Tdp - Tdp_c) > PSYCHROLIB_TOLERANCE);
+  while (((fabs(Tdp - Tdp_c) > PSYCHROLIB_TOLERANCE || (index < MIN_ITER_COUNT)) && (index < MAX_ITER_COUNT)));
   return min(Tdp, TDryBulb);
 }
 
@@ -376,11 +385,13 @@ double GetTWetBulbFromHumRatio  // (o) Wet bulb temperature in °F [IP] or °C [
 {
   // Declarations
   double Wstar;
-  double TDewPoint, TWetBulb, TWetBulbSup, TWetBulbInf;
+  double TDewPoint, TWetBulb, TWetBulbSup, TWetBulbInf, BoundedHumRatio;
+  int index = 1;
 
   ASSERT (HumRatio >= 0., "Humidity ratio is negative")
+  BoundedHumRatio = max(HumRatio, MIN_HUM_RATIO);
 
-  TDewPoint = GetTDewPointFromHumRatio(TDryBulb, HumRatio, Pressure);
+  TDewPoint = GetTDewPointFromHumRatio(TDryBulb, BoundedHumRatio, Pressure);
 
   // Initial guesses
   TWetBulbSup = TDryBulb;
@@ -388,19 +399,20 @@ double GetTWetBulbFromHumRatio  // (o) Wet bulb temperature in °F [IP] or °C [
   TWetBulb = (TWetBulbInf + TWetBulbSup) / 2.;
 
   // Bisection loop
-  while(TWetBulbSup - TWetBulbInf > PSYCHROLIB_TOLERANCE)
+  while(((TWetBulbSup - TWetBulbInf > PSYCHROLIB_TOLERANCE || (index < MIN_ITER_COUNT)) && (index < MAX_ITER_COUNT)));
   {
    // Compute humidity ratio at temperature Tstar
    Wstar = GetHumRatioFromTWetBulb(TDryBulb, TWetBulb, Pressure);
 
    // Get new bounds
-   if (Wstar > HumRatio)
+   if (Wstar > BoundedHumRatio)
     TWetBulbSup = TWetBulb;
    else
     TWetBulbInf = TWetBulb;
 
    // New guess of wet bulb temperature
    TWetBulb = (TWetBulbSup+TWetBulbInf) / 2.;
+   index = index + 1;
   }
 
   return TWetBulb;
@@ -439,8 +451,8 @@ double GetHumRatioFromTWetBulb  // (o) Humidity Ratio in lb_H₂O lb_Air⁻¹ [I
       HumRatio = ((2830. - 0.24 * TWetBulb) * Wsstar - 1.006 * (TDryBulb - TWetBulb))
          / (2830. + 1.86 * TDryBulb - 2.1 * TWetBulb);
   }
-
-  return HumRatio;
+  // Validity check.
+  return max(HumRatio, MIN_HUM_RATIO);
 }
 
 // Return humidity ratio given dry-bulb temperature, relative humidity, and pressure.
@@ -516,9 +528,14 @@ double GetHumRatioFromVapPres   // (o) Humidity Ratio in lb_H₂O lb_Air⁻¹ [I
   , double Pressure             // (i) Atmospheric pressure in Psi [IP] or Pa [SI]
   )
 {
+  double HumRatio;
+
   ASSERT (VapPres >= 0., "Partial pressure of water vapor in moist air is negative")
 
-  return 0.621945 * VapPres / (Pressure - VapPres);
+  HumRatio = 0.621945 * VapPres / (Pressure - VapPres);
+
+  // Validity check.
+  return max(HumRatio, MIN_HUM_RATIO);
 }
 
 // Return vapor pressure given humidity ratio and pressure.
@@ -528,9 +545,10 @@ double GetVapPresFromHumRatio   // (o) Partial pressure of water vapor in moist 
   , double Pressure             // (i) Atmospheric pressure in Psi [IP] or Pa [SI]
   )
 {
-  double VapPres;
+  double VapPres, BoundedHumRatio;
 
   ASSERT (HumRatio >= 0., "Humidity ratio is negative")
+  BoundedHumRatio = max(HumRatio, MIN_HUM_RATIO);
 
   VapPres = Pressure * HumRatio/(0.621945 + HumRatio);
   return VapPres;
@@ -557,8 +575,14 @@ double GetHumRatioFromSpecificHum // (o) Humidity ratio in lb_H₂O lb_Dry_Air�
   ( double SpecificHum            // (i) Specific humidity ratio in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]
   )
 {
+  double HumRatio;
+
   ASSERT (SpecificHum >= 0.0 && SpecificHum < 1.0, "Specific humidity is outside range [0,1[")
-  return SpecificHum / (1.0 - SpecificHum);
+
+  HumRatio = SpecificHum / (1.0 - SpecificHum);
+
+  // Validity check
+  return max(HumRatio, MIN_HUM_RATIO);
 }
 
 
@@ -662,10 +686,13 @@ double GetSatHumRatio           // (o) Humidity ratio of saturated air in lb_H�
   , double Pressure             // (i) Atmospheric pressure in Psi [IP] or Pa [SI]
   )
 {
-  double SatVaporPres;
+  double SatVaporPres, SatHumRatio;
 
   SatVaporPres = GetSatVapPres(TDryBulb);
-  return 0.621945 * SatVaporPres / (Pressure - SatVaporPres);
+  SatHumRatio = 0.621945 * SatVaporPres / (Pressure - SatVaporPres);
+
+  // Validity check.
+  return max(SatHumRatio, MIN_HUM_RATIO);
 }
 
 // Return saturated air enthalpy given dry-bulb temperature and pressure.
@@ -708,9 +735,12 @@ double GetDegreeOfSaturation    // (o) Degree of saturation []
   , double Pressure             // (i) Atmospheric pressure in Psi [IP] or Pa [SI]
   )
 {
-  ASSERT (HumRatio >= 0., "Humidity ratio is negative")
+  double BoundedHumRatio;
 
-  return HumRatio / GetSatHumRatio(TDryBulb, Pressure);
+  ASSERT (HumRatio >= 0., "Humidity ratio is negative")
+  BoundedHumRatio = max(HumRatio, MIN_HUM_RATIO);
+
+  return BoundedHumRatio / GetSatHumRatio(TDryBulb, Pressure);
 }
 
 // Return moist air enthalpy given dry-bulb temperature and humidity ratio.
@@ -720,12 +750,15 @@ double GetMoistAirEnthalpy      // (o) Moist Air Enthalpy in Btu lb⁻¹ [IP] or
   , double HumRatio             // (i) Humidity ratio in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]
   )
 {
+  double BoundedHumRatio;
+
   ASSERT (HumRatio >= 0., "Humidity ratio is negative")
+  BoundedHumRatio = max(HumRatio, MIN_HUM_RATIO);
 
   if (isIP())
-    return 0.240 * TDryBulb + HumRatio*(1061. + 0.444 * TDryBulb);
+    return 0.240 * TDryBulb + BoundedHumRatio*(1061. + 0.444 * TDryBulb);
   else
-    return (1.006 * TDryBulb + HumRatio*(2501. + 1.86 * TDryBulb)) * 1000.;
+    return (1.006 * TDryBulb + BoundedHumRatio*(2501. + 1.86 * TDryBulb)) * 1000.;
 }
 
 // Return moist air specific volume given dry-bulb temperature, humidity ratio, and pressure.
@@ -738,12 +771,15 @@ double GetMoistAirVolume        // (o) Specific Volume ft³ lb⁻¹ [IP] or in m
   , double Pressure             // (i) Atmospheric pressure in Psi [IP] or Pa [SI]
   )
 {
-  ASSERT(HumRatio >= 0., "Humidity ratio is negative")
+  double BoundedHumRatio;
+
+  ASSERT (HumRatio >= 0., "Humidity ratio is negative")
+  BoundedHumRatio = max(HumRatio, MIN_HUM_RATIO);
 
   if (isIP())
-    return R_DA_IP * GetTRankineFromTFahrenheit(TDryBulb) * (1. + 1.607858*HumRatio) / (144. * Pressure);
+    return R_DA_IP * GetTRankineFromTFahrenheit(TDryBulb) * (1. + 1.607858 * BoundedHumRatio) / (144. * Pressure);
   else
-    return R_DA_SI * GetTKelvinFromTCelsius(TDryBulb) * (1. + 1.607858*HumRatio) / Pressure;
+    return R_DA_SI * GetTKelvinFromTCelsius(TDryBulb) * (1. + 1.607858 * BoundedHumRatio) / Pressure;
 }
 
 // Return moist air density given humidity ratio, dry bulb temperature, and pressure.
@@ -754,9 +790,12 @@ double GetMoistAirDensity       // (o) Moist air density in lb ft⁻³ [IP] or k
   , double Pressure             // (i) Atmospheric pressure in Psi [IP] or Pa [SI]
   )
 {
-  ASSERT (HumRatio >= 0., "Humidity ratio is negative")
+  double BoundedHumRatio;
 
-  return (1. + HumRatio) / GetMoistAirVolume(TDryBulb, HumRatio, Pressure);
+  ASSERT (HumRatio >= 0., "Humidity ratio is negative")
+  BoundedHumRatio = max(HumRatio, MIN_HUM_RATIO);
+
+  return (1. + BoundedHumRatio) / GetMoistAirVolume(TDryBulb, BoundedHumRatio, Pressure);
 }
 
 
