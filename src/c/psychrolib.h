@@ -179,6 +179,11 @@ double GetTDryBulbFromEnthalpyAndHumRatio    // (o) Dry-bulb temperature in °F 
   , double HumRatio                          // (i) Humidity ratio in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]
   );
 
+double GetHumRatioFromEnthalpyAndTDryBulb  // (o) Humidity ratio in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]
+  ( double MoistAirEnthalpy                // (i) Moist air enthalpy in Btu lb⁻¹ [IP] or J kg⁻¹
+  , double TDryBulb                        // (i) Dry-bulb temperature in °F [IP] or °C [SI]
+  );
+
 
 /******************************************************************************************************
  * Saturated Air Calculations

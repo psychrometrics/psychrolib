@@ -585,6 +585,19 @@ function Psychrometrics() {
       return (MoistAirEnthalpy / 1000.0 - 2501.0 * HumRatio) / (1.006 + 1.86 * HumRatio);
     }
 
+  // Return humidity ratio from enthalpy and dry-bulb temperature.
+  // Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 30
+  // Notes: based on the `GetMoistAirEnthalpy` function, rearranged for dry-bulb temperature.
+  this.GetHumRatioFromEnthalpyAndTDryBulb = function   // (o) Humidity ratio in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻
+    ( MoistAirEnthalpy                                 // (i) Moist air enthalpy in Btu lb⁻¹ [IP] or J kg⁻¹
+    , TDryBulb                                         // (i) Dry-bulb temperature in °F [IP] or °C [SI]
+    ) {
+    if (this.isIP())
+      return (MoistAirEnthalpy - 0.240 * TDryBulb) / (1061.0 + 0.444 * TDryBulb);
+    else
+      return (MoistAirEnthalpy / 1000.0 - 1.006 * TDryBulb) / (2501.0 + 1.86 * TDryBulb);
+    }
+
 
   /******************************************************************************************************
    * Saturated Air Calculations

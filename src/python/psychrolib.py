@@ -828,6 +828,31 @@ def GetTDryBulbFromEnthalpyAndHumRatio(MoistAirEnthalpy: float, HumRatio: float)
         TDryBulb  = (MoistAirEnthalpy / 1000.0 - 2501.0 * HumRatio) / (1.006 + 1.86 * HumRatio)
     return TDryBulb
 
+def GetHumRatioFromEnthalpyAndTDryBulb(MoistAirEnthalpy: float, TDryBulb: float) -> float:
+    """
+    Return humidity ratio from enthalpy and dry-bulb temperature.
+
+
+    Args:
+        MoistAirEnthalpy : Moist air enthalpy in Btu lb⁻¹ [IP] or J kg⁻¹.
+        TDryBulb : Dry-bulb temperature in °F [IP] or °C [SI].
+
+    Returns:
+        Humidity ratio in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI].
+
+    Reference:
+        ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 30.
+
+    Notes:
+        Based on the `GetMoistAirEnthalpy` function, rearranged for dry-bulb temperature.
+
+    """
+    if isIP():
+        HumRatio  = (MoistAirEnthalpy - 0.240 * TDryBulb) / (1061.0 + 0.444 * TDryBulb)
+    else:
+        HumRatio  = (MoistAirEnthalpy / 1000.0 - 1.006 * TDryBulb) / (2501.0 + 1.86 * TDryBulb)
+    return HumRatio
+
 
 #######################################################################################################
 # Saturated Air Calculations

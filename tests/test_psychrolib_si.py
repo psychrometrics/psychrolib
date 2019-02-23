@@ -110,6 +110,7 @@ def test_DryAir(psy):
     assert psy.GetDryAirVolume(25, 101325) == pytest.approx(0.8443, rel = 0.001)
     assert psy.GetDryAirDensity(25, 101325) == pytest.approx(1/0.8443, rel = 0.001)
     assert psy.GetTDryBulbFromEnthalpyAndHumRatio(81316, 0.02) == pytest.approx(30, rel = 0.001)
+    assert psy.GetHumRatioFromEnthalpyAndTDryBulb(81316, 30) == pytest.approx(0.02, rel = 0.001)
 
 
 ###############################################################################

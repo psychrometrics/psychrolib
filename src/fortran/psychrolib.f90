@@ -69,8 +69,8 @@ module psychrolib
   public :: GetDryAirEnthalpy
   public :: GetDryAirDensity
   public :: GetDryAirVolume
-  public :: GetHumRatioFromEnthalpyAndTDryBulb
   public :: GetTDryBulbFromEnthalpyAndHumRatio
+  public :: GetHumRatioFromEnthalpyAndTDryBulb
   public :: GetSatVapPres
   public :: GetSatHumRatio
   public :: GetSatAirEnthalpy
@@ -851,7 +851,7 @@ module psychrolib
     else
       TDryBulb  = (MoistAirEnthalpy / 1000.0 - 2501.0 * BoundedHumRatio) / (1.006 + 1.86 * BoundedHumRatio)
     end if
-
+  end function GetTDryBulbFromEnthalpyAndHumRatio
 
   function GetHumRatioFromEnthalpyAndTDryBulb(MoistAirEnthalpy, TDryBulb) result(HumRatio)
     !+ Return humidity ratio from enthalpy and dry-bulb temperature.

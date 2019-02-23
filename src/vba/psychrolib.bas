@@ -1103,6 +1103,39 @@ ErrHandler:
 
 End Function
 
+Function GetTDryBulbFromEnthalpyAndHumRatio(ByVal MoistAirEnthalpy As Variant, ByVal HumRatio As Variant) As Variant
+'
+' Return humidity ratio from enthalpy and dry-bulb temperature.
+'
+'
+' Args:
+'     MoistAirEnthalpy : Moist air enthalpy in Btu lb⁻¹ [IP] or J kg⁻¹.
+'     TDryBulb : Dry-bulb temperature in °F [IP] or °C [SI].
+'
+' Returns:
+'     Humidity ratio in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI].
+'
+' Reference:
+'     ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 30
+'
+' Notes:
+'     Based on the `GetMoistAirEnthalpy` function, rearranged for dry-bulb temperature.
+'
+
+  On Error GoTo ErrHandler
+
+  If (isIP()) Then
+    HumRatio  = (MoistAirEnthalpy - 0.240 * TDryBulb) / (1061.0 + 0.444 * TDryBulb)
+  Else:
+    HumRatio  = (MoistAirEnthalpy / 1000.0 - 1.006 * TDryBulb) / (2501.0 + 1.86 * TDryBulb)
+  End If
+  Exit Function
+
+ErrHandler:
+  GetDryAirVolume = CVErr(xlErrNA)
+
+End Function
+
 
 '******************************************************************************************************
 ' Saturated Air Calculations
