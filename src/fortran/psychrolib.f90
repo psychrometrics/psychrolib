@@ -737,7 +737,6 @@ module psychrolib
     if (HumRatio < 0.0) then
       error stop "Error: humidity ratio is negative"
     end if
-
     BoundedHumRatio = max(HumRatio, MIN_HUM_RATIO)
 
     VapPres = Pressure * BoundedHumRatio / (0.621945 + BoundedHumRatio)
