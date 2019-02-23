@@ -45,6 +45,7 @@ The following psychrometric functions are currently available across all the sup
 |`GetDryAirDensity`|Return dry-air density given dry-bulb temperature and pressure.|
 |`GetDryAirVolume`|Return dry-air volume given dry-bulb temperature and pressure.|
 |`GetTDryBulbFromEnthalpyAndHumRatio`|Return dry bulb temperature from enthalpy and humidity ratio.|
+|`GetHumRatioFromEnthalpyAndTDryBulb`|Return humidity ratio from enthalpy and dry-bulb temperature.|
 |`GetSatVapPres`|Return saturation vapor pressure given dry-bulb temperature.|
 |`GetSatHumRatio`|Return humidity ratio of saturated air given dry-bulb temperature and pressure.|
 |`GetSatAirEnthalpy`|Return saturated air enthalpy given dry-bulb temperature and pressure.|
