@@ -319,7 +319,8 @@ function Psychrometrics() {
     Tdp = min(Tdp, _BOUNDS[1]);
     index = index + 1;
   }
-  while (((abs(Tdp - Tdp_c) > PSYCHROLIB_TOLERANCE || (index < MIN_ITER_COUNT)) && (index < MAX_ITER_COUNT)));
+  while (((abs(Tdp - Tdp_c) > PSYCHROLIB_TOLERANCE) && (index < MAX_ITER_COUNT))
+         || (index < MAX_ITER_COUNT));
   return min(Tdp, TDryBulb);
   }
 
@@ -360,7 +361,8 @@ function Psychrometrics() {
     TWetBulb = (TWetBulbInf + TWetBulbSup) / 2.;
 
     // Bisection loop
-    while (((TWetBulbSup - TWetBulbInf > PSYCHROLIB_TOLERANCE || (index < MIN_ITER_COUNT)) && (index < MAX_ITER_COUNT))); {
+    while ((((TWetBulbSup - TWetBulbInf) > PSYCHROLIB_TOLERANCE) && (index < MAX_ITER_COUNT))
+           || (index < MAX_ITER_COUNT)) {
       // Compute humidity ratio at temperature Tstar
       Wstar = this.GetHumRatioFromTWetBulb(TDryBulb, TWetBulb, Pressure);
 

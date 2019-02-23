@@ -456,8 +456,8 @@ module psychrolib
     Tdp_c = Tdp
     index = 1
 
-    do while (((abs(Tdp - Tdp_c) > PSYCHROLIB_TOLERANCE) .or. (index < MIN_ITER_COUNT)) &
-              .and. (index < MAX_ITER_COUNT))
+    do while (((abs(Tdp - Tdp_c) > PSYCHROLIB_TOLERANCE) .and. (index < MAX_ITER_COUNT)) &
+              .or. (index < MAX_ITER_COUNT))
       ! Current point
       Tdp_c = Tdp
       lnVP_c = log(GetSatVapPres(Tdp_c))
@@ -539,8 +539,8 @@ module psychrolib
 
     index = 1
     ! Bisection loop
-    do while(((TWetBulbSup - TWetBulbInf > PSYCHROLIB_TOLERANCE) .or. (index < MIN_ITER_COUNT)) &
-              .and. (index < MAX_ITER_COUNT))
+    do while ((((TWetBulbSup - TWetBulbInf) > PSYCHROLIB_TOLERANCE) .and. (index < MAX_ITER_COUNT)) &
+               .or. (index < MAX_ITER_COUNT))
 
     ! Compute humidity ratio at temperature Tstar
     Wstar = GetHumRatioFromTWetBulb(TDryBulb, TWetBulb, Pressure)

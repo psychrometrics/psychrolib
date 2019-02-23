@@ -335,7 +335,7 @@ double GetTDewPointFromVapPres  // (o) Dew Point temperature in °F [IP] or °C 
   double Tdp_c;               // Value of Tdp used in NR calculation
   double lnVP_c;              // Value of log of vapor water pressure used in NR calculation
   double d_Tdp;               // Value of temperature step used in NR calculation
-  int index = 0;
+  int index = 1;
 
   do
   {
@@ -357,7 +357,8 @@ double GetTDewPointFromVapPres  // (o) Dew Point temperature in °F [IP] or °C 
     Tdp = min(Tdp, _BOUNDS[1]);
     index = index + 1;
   }
-  while (((fabs(Tdp - Tdp_c) > PSYCHROLIB_TOLERANCE || (index < MIN_ITER_COUNT)) && (index < MAX_ITER_COUNT)));
+  while (((fabs(Tdp - Tdp_c) > PSYCHROLIB_TOLERANCE) && (index < MAX_ITER_COUNT))
+         || (index < MAX_ITER_COUNT));
   return min(Tdp, TDryBulb);
 }
 
@@ -399,7 +400,8 @@ double GetTWetBulbFromHumRatio  // (o) Wet bulb temperature in °F [IP] or °C [
   TWetBulb = (TWetBulbInf + TWetBulbSup) / 2.;
 
   // Bisection loop
-  while(((TWetBulbSup - TWetBulbInf > PSYCHROLIB_TOLERANCE || (index < MIN_ITER_COUNT)) && (index < MAX_ITER_COUNT)));
+  while ((((TWetBulbSup - TWetBulbInf) > PSYCHROLIB_TOLERANCE) && (index < MAX_ITER_COUNT))
+         || (index < MAX_ITER_COUNT))
   {
    // Compute humidity ratio at temperature Tstar
    Wstar = GetHumRatioFromTWetBulb(TDryBulb, TWetBulb, Pressure);

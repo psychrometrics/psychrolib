@@ -72,6 +72,22 @@ R_DA_SI = 287.042
 
 """
 
+MIN_ITER_COUNT = 5
+"""int: Minimum number of iterations before exiting while loops.
+
+"""
+
+MAX_ITER_COUNT = 1000
+"""int: Maximum number of iterations before exiting while loops.
+
+"""
+
+MIN_HUM_RATIO = 1E-7
+"""float: Minimum acceptable humidity ratio used/returned by any functions.
+          Any value above 0 or below the MIN_HUM_RATIO will be reset to this value.
+
+"""
+
 
 #######################################################################################################
 # Helper functions
@@ -416,6 +432,7 @@ def GetTDewPointFromVapPres(TDryBulb: float, VapPres: float) -> float:
 
     lnVP = math.log(VapPres)    # Partial pressure of water vapor in moist air
 
+    index = 0
     while True:
         TDewPoint_iter = TDewPoint   # Value of Tdp used in NR calculation
         # Step - negative in the right part of the curve, positive in the left part
@@ -433,8 +450,10 @@ def GetTDewPointFromVapPres(TDryBulb: float, VapPres: float) -> float:
         TDewPoint = TDewPoint_iter - (lnVP_iter - lnVP) / d_lnVP
         TDewPoint = max(TDewPoint, _BOUNDS[0])
         TDewPoint = min(TDewPoint, _BOUNDS[1])
+        index = index + 1
 
-        if math.fabs(TDewPoint - TDewPoint_iter) <= PSYCHROLIB_TOLERANCE:
+        if (((math.fabs(TDewPoint - TDewPoint_iter) <= PSYCHROLIB_TOLERANCE) and (index >= MAX_ITER_COUNT)) \
+            or (index >= MAX_ITER_COUNT)):
            break
 
     TDewPoint = min(TDewPoint, TDryBulb)
@@ -480,28 +499,32 @@ def GetTWetBulbFromHumRatio(TDryBulb: float, HumRatio: float, Pressure: float) -
     """
     if HumRatio < 0:
         raise ValueError("Humidity ratio cannot be negative")
+    BoundedHumRatio = max(HumRatio, MIN_HUM_RATIO)
 
-    TDewPoint = GetTDewPointFromHumRatio(TDryBulb, HumRatio, Pressure)
+    TDewPoint = GetTDewPointFromHumRatio(TDryBulb, BoundedHumRatio, Pressure)
 
     # Initial guesses
     TWetBulbSup = TDryBulb
     TWetBulbInf = TDewPoint
     TWetBulb = (TWetBulbInf + TWetBulbSup) / 2
 
+    index = 1
     # Bisection loop
-    while (TWetBulbSup - TWetBulbInf > PSYCHROLIB_TOLERANCE):
+    while ((((TWetBulbSup - TWetBulbInf) > PSYCHROLIB_TOLERANCE) and (index < MAX_ITER_COUNT)) \
+            or (index < MAX_ITER_COUNT)):
 
         # Compute humidity ratio at temperature Tstar
         Wstar = GetHumRatioFromTWetBulb(TDryBulb, TWetBulb, Pressure)
 
         # Get new bounds
-        if Wstar > HumRatio:
+        if Wstar > BoundedHumRatio:
             TWetBulbSup = TWetBulb
         else:
             TWetBulbInf = TWetBulb
 
         # New guess of wet bulb temperature
         TWetBulb = (TWetBulbSup + TWetBulbInf) / 2
+        index = index + 1
     return TWetBulb
 
 def GetHumRatioFromTWetBulb(TDryBulb: float, TWetBulb: float, Pressure: float) -> float:
@@ -539,7 +562,8 @@ def GetHumRatioFromTWetBulb(TDryBulb: float, TWetBulb: float, Pressure: float) -
        else:
            HumRatio = ((2830. - 0.24 * TWetBulb) * Wsstar - 1.006 * (TDryBulb - TWetBulb)) \
                     / (2830. + 1.86 * TDryBulb - 2.1 * TWetBulb)
-    return HumRatio
+    # Validity check.
+    return max(HumRatio, MIN_HUM_RATIO)
 
 def GetHumRatioFromRelHum(TDryBulb: float, RelHum: float, Pressure: float) -> float:
     """
@@ -653,7 +677,9 @@ def GetHumRatioFromVapPres(VapPres: float, Pressure: float) -> float:
         raise ValueError("Partial pressure of water vapor in moist air cannot be negative")
 
     HumRatio = 0.621945 * VapPres / (Pressure - VapPres)
-    return HumRatio
+
+    # Validity check.
+    return max(HumRatio, MIN_HUM_RATIO)
 
 def GetVapPresFromHumRatio(HumRatio: float, Pressure: float) -> float:
     """
@@ -672,8 +698,9 @@ def GetVapPresFromHumRatio(HumRatio: float, Pressure: float) -> float:
     """
     if HumRatio < 0:
         raise ValueError("Humidity ratio is negative")
+    BoundedHumRatio = max(HumRatio, MIN_HUM_RATIO)
 
-    VapPres = Pressure * HumRatio / (0.621945 + HumRatio)
+    VapPres = Pressure * BoundedHumRatio / (0.621945 + BoundedHumRatio)
     return VapPres
 
 
@@ -719,7 +746,9 @@ def GetHumRatioFromSpecificHum(SpecificHum: float) -> float:
         raise ValueError("Specific humidity is outside range [0, 1[")
 
     HumRatio = SpecificHum / (1.0 - SpecificHum)
-    return SpecificHum
+
+    # Validity check.
+    return max(HumRatio, MIN_HUM_RATIO)
 
 
 #######################################################################################################
@@ -862,7 +891,9 @@ def GetSatHumRatio(TDryBulb: float, Pressure: float) -> float:
     """
     SatVaporPres = GetSatVapPres(TDryBulb)
     SatHumRatio = 0.621945 * SatVaporPres / (Pressure - SatVaporPres)
-    return SatHumRatio
+
+    # Validity check.
+    return max(SatHumRatio, MIN_HUM_RATIO)
 
 def GetSatAirEnthalpy(TDryBulb: float, Pressure: float) -> float:
     """
@@ -933,9 +964,10 @@ def GetDegreeOfSaturation(TDryBulb: float, HumRatio: float, Pressure: float) -> 
     """
     if HumRatio < 0:
         raise ValueError("Humidity ratio is negative")
+    BoundedHumRatio = max(HumRatio, MIN_HUM_RATIO)
 
     SatHumRatio = GetSatHumRatio(TDryBulb, Pressure)
-    DegreeOfSaturation = HumRatio / SatHumRatio
+    DegreeOfSaturation = BoundedHumRatio / SatHumRatio
     return DegreeOfSaturation
 
 def GetMoistAirEnthalpy(TDryBulb: float, HumRatio: float) -> float:
@@ -955,11 +987,12 @@ def GetMoistAirEnthalpy(TDryBulb: float, HumRatio: float) -> float:
     """
     if HumRatio < 0:
         raise ValueError("Humidity ratio is negative")
+    BoundedHumRatio = max(HumRatio, MIN_HUM_RATIO)
 
     if isIP():
-        MoistAirEnthalpy = 0.240 * TDryBulb + HumRatio * (1061 + 0.444 * TDryBulb)
+        MoistAirEnthalpy = 0.240 * TDryBulb + BoundedHumRatio * (1061 + 0.444 * TDryBulb)
     else:
-        MoistAirEnthalpy = (1.006 * TDryBulb + HumRatio * (2501. + 1.86 * TDryBulb)) * 1000
+        MoistAirEnthalpy = (1.006 * TDryBulb + BoundedHumRatio * (2501. + 1.86 * TDryBulb)) * 1000
     return MoistAirEnthalpy
 
 def GetMoistAirVolume(TDryBulb: float, HumRatio: float, Pressure: float) -> float:
@@ -984,11 +1017,12 @@ def GetMoistAirVolume(TDryBulb: float, HumRatio: float, Pressure: float) -> floa
     """
     if HumRatio < 0:
         raise ValueError("Humidity ratio is negative")
+    BoundedHumRatio = max(HumRatio, MIN_HUM_RATIO)
 
     if isIP():
-        MoistAirVolume = R_DA_IP * GetTRankineFromTFahrenheit(TDryBulb) * (1 + 1.607858 * HumRatio) / (144 * Pressure)
+        MoistAirVolume = R_DA_IP * GetTRankineFromTFahrenheit(TDryBulb) * (1 + 1.607858 * BoundedHumRatio) / (144 * Pressure)
     else:
-        MoistAirVolume = R_DA_SI * GetTKelvinFromTCelsius(TDryBulb) * (1 + 1.607858 * HumRatio) / Pressure
+        MoistAirVolume = R_DA_SI * GetTKelvinFromTCelsius(TDryBulb) * (1 + 1.607858 * BoundedHumRatio) / Pressure
     return MoistAirVolume
 
 def GetMoistAirDensity(TDryBulb: float, HumRatio: float, Pressure:float) -> float:
@@ -1009,9 +1043,10 @@ def GetMoistAirDensity(TDryBulb: float, HumRatio: float, Pressure:float) -> floa
     """
     if HumRatio < 0:
         raise ValueError("Humidity ratio is negative")
+    BoundedHumRatio = max(HumRatio, MIN_HUM_RATIO)
 
-    MoistAirVolume = GetMoistAirVolume(TDryBulb, HumRatio, Pressure)
-    MoistAirDensity = (1 + HumRatio) / MoistAirVolume
+    MoistAirVolume = GetMoistAirVolume(TDryBulb, BoundedHumRatio, Pressure)
+    MoistAirDensity = (1 + BoundedHumRatio) / MoistAirVolume
     return MoistAirDensity
 
 
