@@ -57,12 +57,18 @@ function Psychrometrics() {
    * Global constants
    *****************************************************************************************************/
 
-  var R_DA_IP = 53.350;   // Universal gas constant for dry air (IP version) in ft lb_Force lb_DryAir⁻¹ R⁻¹
-                          // Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1
-  var R_DA_SI = 287.042;  // Universal gas constant for dry air (SI version) in J kg_DryAir⁻¹ K⁻¹
-                          // Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1
+  var R_DA_IP = 53.350;         // Universal gas constant for dry air (IP version) in ft lb_Force lb_DryAir⁻¹ R⁻¹
+                                // Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1
+  var R_DA_SI = 287.042;        // Universal gas constant for dry air (SI version) in J kg_DryAir⁻¹ K⁻¹
+                                // Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1
+  var INVALID = -99999;         // Invalid value (dimensionless)
 
-  var INVALID = -99999;   // Invalid value (dimensionless)
+  var MIN_ITER_COUNT = 5        // Minimum number of iterations before exiting while loops.
+
+  var MAX_ITER_COUNT = 1E+3     // Maximum number of iterations before exiting while loops.
+
+  var MIN_HUM_RATIO = 1E-7      // Minimum acceptable humidity ratio used/returned by any functions.
+                                // Any value above 0 or below the MIN_HUM_RATIO will be reset to this value.
 
 
   /******************************************************************************************************
@@ -292,6 +298,7 @@ function Psychrometrics() {
   var Tdp_c;               // Value of Tdp used in NR calculation
   var lnVP_c;              // Value of log of vapor water pressure used in NR calculation
   var d_Tdp;               // Value of temperature step used in NR calculation
+  var index = 0;
   do
   {
     // Current point
@@ -310,8 +317,9 @@ function Psychrometrics() {
     Tdp = Tdp_c - (lnVP_c - lnVP) / d_lnVP;
     Tdp = max(Tdp, _BOUNDS[0]);
     Tdp = min(Tdp, _BOUNDS[1]);
+    index = index + 1;
   }
-  while (abs(Tdp - Tdp_c) > PSYCHROLIB_TOLERANCE);
+  while (((abs(Tdp - Tdp_c) > PSYCHROLIB_TOLERANCE || (index < MIN_ITER_COUNT)) && (index < MAX_ITER_COUNT)));
   return min(Tdp, TDryBulb);
   }
 
@@ -337,12 +345,14 @@ function Psychrometrics() {
     ) {
     // Declarations
     var Wstar;
-    var TDewPoint, TWetBulb, TWetBulbSup, TWetBulbInf;
+    var TDewPoint, TWetBulb, TWetBulbSup, TWetBulbInf, BoundedHumRatio;
+    var index = 1;
 
     if (!(HumRatio >= 0.))
       throw new Error("Humidity ratio is negative");
+    BoundedHumRatio = max(HumRatio, MIN_HUM_RATIO);
 
-    TDewPoint = this.GetTDewPointFromHumRatio(TDryBulb, HumRatio, Pressure);
+    TDewPoint = this.GetTDewPointFromHumRatio(TDryBulb, BoundedHumRatio, Pressure);
 
     // Initial guesses
     TWetBulbSup = TDryBulb;
@@ -350,18 +360,19 @@ function Psychrometrics() {
     TWetBulb = (TWetBulbInf + TWetBulbSup) / 2.;
 
     // Bisection loop
-    while (TWetBulbSup - TWetBulbInf > PSYCHROLIB_TOLERANCE) {
+    while (((TWetBulbSup - TWetBulbInf > PSYCHROLIB_TOLERANCE || (index < MIN_ITER_COUNT)) && (index < MAX_ITER_COUNT))); {
       // Compute humidity ratio at temperature Tstar
       Wstar = this.GetHumRatioFromTWetBulb(TDryBulb, TWetBulb, Pressure);
 
       // Get new bounds
-      if (Wstar > HumRatio)
+      if (Wstar > BoundedHumRatio)
         TWetBulbSup = TWetBulb;
       else
         TWetBulbInf = TWetBulb;
 
       // New guess of wet bulb temperature
       TWetBulb = (TWetBulbSup + TWetBulbInf) / 2.;
+      index = index + 1;
     }
 
     return TWetBulb;
@@ -400,8 +411,8 @@ function Psychrometrics() {
           HumRatio = ((2830. - 0.24 * TWetBulb) * Wsstar - 1.006 * (TDryBulb - TWetBulb))
              / (2830. + 1.86 * TDryBulb - 2.1 * TWetBulb);
       }
-
-      return HumRatio;
+      // Validity check.
+      return max(HumRatio, MIN_HUM_RATIO);
     }
 
   // Return humidity ratio given dry-bulb temperature, relative humidity, and pressure.
@@ -475,10 +486,15 @@ function Psychrometrics() {
     ( VapPres                             // (i) Partial pressure of water vapor in moist air in Psi [IP] or Pa [SI]
     , Pressure                            // (i) Atmospheric pressure in Psi [IP] or Pa [SI]
     ) {
+    var HumRatio;
+
     if (!(VapPres >= 0.))
       throw new Error("Partial pressure of water vapor in moist air is negative");
 
-    return 0.621945 * VapPres / (Pressure - VapPres);
+    HumRatio = 0.621945 * VapPres / (Pressure - VapPres);
+
+    // Validity check.
+    return max(HumRatio, MIN_HUM_RATIO);
   }
 
   // Return vapor pressure given humidity ratio and pressure.
@@ -487,12 +503,13 @@ function Psychrometrics() {
     ( HumRatio                            // (i) Humidity ratio in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]
     , Pressure                            // (i) Atmospheric pressure in Psi [IP] or Pa [SI]
     ) {
-    var VapPres;
+    var VapPres, BoundedHumRatio;
 
     if (!(HumRatio >= 0.))
       throw new Error("Humidity ratio is negative");
+    BoundedHumRatio = max(HumRatio, MIN_HUM_RATIO);
 
-    VapPres = Pressure * HumRatio / (0.621945 + HumRatio);
+    VapPres = Pressure * BoundedHumRatio / (0.621945 + BoundedHumRatio);
     return VapPres;
   }
 
@@ -517,10 +534,15 @@ function Psychrometrics() {
   this.GetHumRatioFromSpecificHum = function  // (o) Humidity ratio in lb_H₂O lb_Dry_Air⁻¹ [IP] or kg_H₂O kg_Dry_Air⁻¹ [SI]
     ( SpecificHum                             // (i) Specific humidity ratio in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]
     ) {
+    var HumRatio;
+
     if (!(SpecificHum >= 0.0 && SpecificHum < 1.0))
       throw new Error("Specific humidity is outside range [0, 1[");
 
-    return SpecificHum / (1.0 - SpecificHum);
+    HumRatio = SpecificHum / (1.0 - SpecificHum);
+
+    // Validity check
+    return max(HumRatio, MIN_HUM_RATIO);
   }
 
 
@@ -622,10 +644,13 @@ function Psychrometrics() {
     ( TDryBulb                    // (i) Dry bulb temperature in °F [IP] or °C [SI]
     , Pressure                    // (i) Atmospheric pressure in Psi [IP] or Pa [SI]
     ) {
-    var SatVaporPres;
+    var SatVaporPres, SatHumRatio;
 
     SatVaporPres = this.GetSatVapPres(TDryBulb);
-    return 0.621945 * SatVaporPres / (Pressure - SatVaporPres);
+    SatHumRatio = 0.621945 * SatVaporPres / (Pressure - SatVaporPres);
+
+    // Validity check.
+    return max(SatHumRatio, MIN_HUM_RATIO);
   }
 
   // Return saturated air enthalpy given dry-bulb temperature and pressure.
@@ -667,11 +692,13 @@ function Psychrometrics() {
     , HumRatio                          // (i) Humidity ratio in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]
     , Pressure                          // (i) Atmospheric pressure in Psi [IP] or Pa [SI]
     ) {
+    var BoundedHumRatio;
 
     if (!(HumRatio >= 0.))
       throw new Error("Humidity ratio is negative");
+    BoundedHumRatio = max(HumRatio, MIN_HUM_RATIO);
 
-    return HumRatio / this.GetSatHumRatio(TDryBulb, Pressure);
+    return BoundedHumRatio / this.GetSatHumRatio(TDryBulb, Pressure);
   }
 
   // Return moist air enthalpy given dry-bulb temperature and humidity ratio.
@@ -680,11 +707,16 @@ function Psychrometrics() {
     ( TDryBulb                        // (i) Dry bulb temperature in °F [IP] or °C [SI]
     , HumRatio                        // (i) Humidity ratio in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]
     ) {
+    var BoundedHumRatio;
+
+    if (!(HumRatio >= 0.))
+      throw new Error("Humidity ratio is negative");
+    BoundedHumRatio = max(HumRatio, MIN_HUM_RATIO);
 
     if (this.isIP())
-      return 0.240 * TDryBulb + HumRatio * (1061. + 0.444 * TDryBulb);
+      return 0.240 * TDryBulb + BoundedHumRatio * (1061. + 0.444 * TDryBulb);
     else
-      return (1.006 * TDryBulb + HumRatio * (2501. + 1.86 * TDryBulb)) * 1000.;
+      return (1.006 * TDryBulb + BoundedHumRatio * (2501. + 1.86 * TDryBulb)) * 1000.;
   }
 
   // Return moist air specific volume given dry-bulb temperature, humidity ratio, and pressure.
@@ -696,14 +728,16 @@ function Psychrometrics() {
     , HumRatio                      // (i) Humidity ratio in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]
     , Pressure                      // (i) Atmospheric pressure in Psi [IP] or Pa [SI]
     ) {
+    var BoundedHumRatio;
 
     if (!(HumRatio >= 0.))
       throw new Error("Humidity ratio is negative");
+    BoundedHumRatio = max(HumRatio, MIN_HUM_RATIO);
 
     if (this.isIP())
-      return R_DA_IP * this.GetTRankineFromTFahrenheit(TDryBulb) * (1. + 1.607858 * HumRatio) / (144. * Pressure);
+      return R_DA_IP * this.GetTRankineFromTFahrenheit(TDryBulb) * (1. + 1.607858 * BoundedHumRatio) / (144. * Pressure);
     else
-      return R_DA_SI * this.GetTKelvinFromTCelsius(TDryBulb) * (1. + 1.607858 * HumRatio) / Pressure;
+      return R_DA_SI * this.GetTKelvinFromTCelsius(TDryBulb) * (1. + 1.607858 * BoundedHumRatio) / Pressure;
   }
 
   // Return moist air density given humidity ratio, dry bulb temperature, and pressure.
@@ -713,11 +747,13 @@ function Psychrometrics() {
     , HumRatio                        // (i) Humidity ratio in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]
     , Pressure                        // (i) Atmospheric pressure in Psi [IP] or Pa [SI]
     ) {
+    var BoundedHumRatio;
 
     if (!(HumRatio >= 0.))
       throw new Error("Humidity ratio is negative");
+    BoundedHumRatio = max(HumRatio, MIN_HUM_RATIO);
 
-    return (1. + HumRatio) / this.GetMoistAirVolume(TDryBulb, HumRatio, Pressure);
+    return (1. + BoundedHumRatio) / this.GetMoistAirVolume(TDryBulb, BoundedHumRatio, Pressure);
   }
 
 
