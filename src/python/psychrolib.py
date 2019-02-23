@@ -802,7 +802,7 @@ def GetDryAirVolume(TDryBulb: float, Pressure: float) -> float:
 
 def GetTDryBulbFromEnthalpyAndHumRatio(MoistAirEnthalpy: float, HumRatio: float) -> float:
     """
-    Return dry bulb temperature from enthalpy and humidity ratio
+    Return dry bulb temperature from enthalpy and humidity ratio.
 
 
     Args:
@@ -816,7 +816,7 @@ def GetTDryBulbFromEnthalpyAndHumRatio(MoistAirEnthalpy: float, HumRatio: float)
         ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 30
 
     Notes:
-        Based on the `GetMoistAirEnthalpy` function, rearranged for humidity ratio
+        Based on the `GetMoistAirEnthalpy` function, rearranged for humidity ratio.
 
     """
     if HumRatio < 0:
@@ -834,11 +834,11 @@ def GetHumRatioFromEnthalpyAndTDryBulb(MoistAirEnthalpy: float, TDryBulb: float)
 
 
     Args:
-        MoistAirEnthalpy : Moist air enthalpy in Btu lb⁻¹ [IP] or J kg⁻¹.
-        TDryBulb : Dry-bulb temperature in °F [IP] or °C [SI].
+        MoistAirEnthalpy : Moist air enthalpy in Btu lb⁻¹ [IP] or J kg⁻¹
+        TDryBulb : Dry-bulb temperature in °F [IP] or °C [SI]
 
     Returns:
-        Humidity ratio in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI].
+        Humidity ratio in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]
 
     Reference:
         ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 30.
