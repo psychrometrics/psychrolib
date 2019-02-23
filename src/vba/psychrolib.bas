@@ -917,7 +917,7 @@ Function GetSpecificHumFromHumRatio(ByVal HumRatio As Variant) As Variant
 '     ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 9b
 '
 '
-  Dim SpecificHum as Variant
+  Dim SpecificHum As Variant
 
   On Error GoTo ErrHandler
 
@@ -1092,18 +1092,18 @@ Function GetTDryBulbFromEnthalpyAndHumRatio(ByVal MoistAirEnthalpy As Variant, B
   End If
 
   If (isIP()) Then
-    TDryBulb  = (MoistAirEnthalpy - 1061.0 * HumRatio) / (0.240 + 0.444 * HumRatio)
+    GetTDryBulbFromEnthalpyAndHumRatio = (MoistAirEnthalpy - 1061.0 * HumRatio) / (0.24 + 0.444 * HumRatio)
   Else:
-    TDryBulb  = (MoistAirEnthalpy / 1000.0 - 2501.0 * HumRatio) / (1.006 + 1.86 * HumRatio)
+    GetTDryBulbFromEnthalpyAndHumRatio = (MoistAirEnthalpy / 1000.0 - 2501.0 * HumRatio) / (1.006 + 1.86 * HumRatio)
   End If
   Exit Function
 
 ErrHandler:
-  GetDryAirVolume = CVErr(xlErrNA)
+  GetTDryBulbFromEnthalpyAndHumRatio = CVErr(xlErrNA)
 
 End Function
 
-Function GetTDryBulbFromEnthalpyAndHumRatio(ByVal MoistAirEnthalpy As Variant, ByVal HumRatio As Variant) As Variant
+Function GetHumRatioFromEnthalpyAndTDryBulb(ByVal MoistAirEnthalpy As Variant, ByVal TDryBulb As Variant) As Variant
 '
 ' Return humidity ratio from enthalpy and dry-bulb temperature.
 '
@@ -1125,14 +1125,14 @@ Function GetTDryBulbFromEnthalpyAndHumRatio(ByVal MoistAirEnthalpy As Variant, B
   On Error GoTo ErrHandler
 
   If (isIP()) Then
-    HumRatio  = (MoistAirEnthalpy - 0.240 * TDryBulb) / (1061.0 + 0.444 * TDryBulb)
+    GetHumRatioFromEnthalpyAndTDryBulb = (MoistAirEnthalpy - 0.24 * TDryBulb) / (1061.0 + 0.444 * TDryBulb)
   Else:
-    HumRatio  = (MoistAirEnthalpy / 1000.0 - 1.006 * TDryBulb) / (2501.0 + 1.86 * TDryBulb)
+    GetHumRatioFromEnthalpyAndTDryBulb = (MoistAirEnthalpy / 1000.0 - 1.006 * TDryBulb) / (2501.0 + 1.86 * TDryBulb)
   End If
   Exit Function
 
 ErrHandler:
-  GetDryAirVolume = CVErr(xlErrNA)
+  GetHumRatioFromEnthalpyAndTDryBulb = CVErr(xlErrNA)
 
 End Function
 
