@@ -550,7 +550,7 @@ double GetVapPresFromHumRatio   // (o) Partial pressure of water vapor in moist 
   ASSERT (HumRatio >= 0., "Humidity ratio is negative")
   BoundedHumRatio = max(HumRatio, MIN_HUM_RATIO);
 
-  VapPres = Pressure * HumRatio/(0.621945 + HumRatio);
+  VapPres = Pressure * BoundedHumRatio / (0.621945 + BoundedHumRatio);
   return VapPres;
 }
 
