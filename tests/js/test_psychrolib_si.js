@@ -121,6 +121,9 @@ it('test_HumRatio_TWetBulb', function () {
         checkRelDiff(HumRatio, 0.00120399819933844, 0.0003)
         var TWetBulb = psyjs.GetTWetBulbFromHumRatio(-1, HumRatio, 95461)
         expect(TWetBulb).to.be.closeTo(-5, 0.001)
+
+        // Low HumRatio -- this should evaluate true as we clamp the HumRation to 1e-07.
+        expect(psyjs.GetTWetBulbFromHumRatio(-5,1e-09,95461)).to.equal(psyjs.GetTWetBulbFromHumRatio(-5,1e-07,95461))
 });
 
 /**

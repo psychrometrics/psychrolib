@@ -97,6 +97,8 @@ def test_HumRatio_TWetBulb(psy):
     assert HumRatio == pytest.approx(0.00114657481090184, rel = 0.0003)
     TWetBulb = psy.GetTWetBulbFromHumRatio(30.2, HumRatio, 14.1751)
     assert TWetBulb == pytest.approx(23.0, abs = 0.001)
+    # Low HumRatio -- this should evaluate true as we clamp the HumRation to 1e-07.
+    assert psy.GetTWetBulbFromHumRatio(25,1e-09,95461) == psy.GetTWetBulbFromHumRatio(25,1e-07,95461)
 
 
 ###############################################################################
