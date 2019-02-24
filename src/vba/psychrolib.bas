@@ -1081,7 +1081,7 @@ Function GetTDryBulbFromEnthalpyAndHumRatio(ByVal MoistAirEnthalpy As Variant, B
 '     ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 30
 '
 ' Notes:
-'     Based on the `GetMoistAirEnthalpy` function, rearranged for humidity ratio.
+'     Based on the `GetMoistAirEnthalpy` function, rearranged for temperature.
 '
 
   On Error GoTo ErrHandler
@@ -1119,7 +1119,7 @@ Function GetHumRatioFromEnthalpyAndTDryBulb(ByVal MoistAirEnthalpy As Variant, B
 '     ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 30
 '
 ' Notes:
-'     Based on the `GetMoistAirEnthalpy` function, rearranged for dry-bulb temperature.
+'     Based on the `GetMoistAirEnthalpy` function, rearranged for humidity ratio.
 '
 
   On Error GoTo ErrHandler

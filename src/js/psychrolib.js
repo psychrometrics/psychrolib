@@ -571,7 +571,7 @@ function Psychrometrics() {
 
   // Return dry bulb temperature from enthalpy and humidity ratio.
   // Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 30.
-  // Notes: based on the `GetMoistAirEnthalpy` function, rearranged for humidity ratio.
+  // Notes: based on the `GetMoistAirEnthalpy` function, rearranged for temperature.
   this.GetTDryBulbFromEnthalpyAndHumRatio = function   // (o) Dry-bulb temperature in °F [IP] or °C [SI]
     ( MoistAirEnthalpy                                 // (i) Moist air enthalpy in Btu lb⁻¹ [IP] or J kg⁻¹
     , HumRatio                                         // (i) Humidity ratio in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]
@@ -587,7 +587,7 @@ function Psychrometrics() {
 
   // Return humidity ratio from enthalpy and dry-bulb temperature.
   // Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 30.
-  // Notes: based on the `GetMoistAirEnthalpy` function, rearranged for dry-bulb temperature.
+  // Notes: based on the `GetMoistAirEnthalpy` function, rearranged for humidity ratio.
   this.GetHumRatioFromEnthalpyAndTDryBulb = function   // (o) Humidity ratio in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻
     ( MoistAirEnthalpy                                 // (i) Moist air enthalpy in Btu lb⁻¹ [IP] or J kg⁻¹
     , TDryBulb                                         // (i) Dry-bulb temperature in °F [IP] or °C [SI]

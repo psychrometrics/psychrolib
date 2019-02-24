@@ -816,7 +816,7 @@ def GetTDryBulbFromEnthalpyAndHumRatio(MoistAirEnthalpy: float, HumRatio: float)
         ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 30
 
     Notes:
-        Based on the `GetMoistAirEnthalpy` function, rearranged for humidity ratio.
+        Based on the `GetMoistAirEnthalpy` function, rearranged for temperature.
 
     """
     if HumRatio < 0:
@@ -844,7 +844,7 @@ def GetHumRatioFromEnthalpyAndTDryBulb(MoistAirEnthalpy: float, TDryBulb: float)
         ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 30.
 
     Notes:
-        Based on the `GetMoistAirEnthalpy` function, rearranged for dry-bulb temperature.
+        Based on the `GetMoistAirEnthalpy` function, rearranged for humidity ratio.
 
     """
     if isIP():

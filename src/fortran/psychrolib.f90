@@ -828,7 +828,7 @@ module psychrolib
     !+ Reference:
     !+ ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 30
     !+ Notes:
-    !+ Based on the `GetMoistAirEnthalpy` function, rearranged for humidity ratio.
+    !+ Based on the `GetMoistAirEnthalpy` function, rearranged for temperature.
 
     real, intent(in)  ::  MoistAirEnthalpy
       !+ Moist air enthalpy in Btu lb⁻¹ [IP] or J kg⁻¹
@@ -836,20 +836,15 @@ module psychrolib
       !+ Humidity ratio in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]
     real              ::  TDryBulb
       !+ Dry-bulb temperature in °F [IP] or °C [SI]
-    real              ::  BoundedHumRatio
-    !+ Local function humidity ratio bounded to no less than 1.0E-5 kgH₂O kgAIR⁻¹
 
     if (HumRatio < 0.0) then
       error stop "Error: humidity ratio is negative"
     end if
 
-    ! Bound humidity ratio to no less than 1.0E-5 kgH₂O kgAIR⁻¹
-    BoundedHumRatio = max(HumRatio, 1.0E-5)
-
     if (isIP()) then
-      TDryBulb  = (MoistAirEnthalpy - 1061.0 * BoundedHumRatio) / (0.240 + 0.444 * BoundedHumRatio)
+      TDryBulb  = (MoistAirEnthalpy - 1061.0 * HumRatio) / (0.240 + 0.444 * HumRatio)
     else
-      TDryBulb  = (MoistAirEnthalpy / 1000.0 - 2501.0 * BoundedHumRatio) / (1.006 + 1.86 * BoundedHumRatio)
+      TDryBulb  = (MoistAirEnthalpy / 1000.0 - 2501.0 * HumRatio) / (1.006 + 1.86 * HumRatio)
     end if
   end function GetTDryBulbFromEnthalpyAndHumRatio
 
@@ -858,7 +853,7 @@ module psychrolib
     !+ Reference:
     !+ ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 30
     !+ Notes:
-    !+ Based on the `GetMoistAirEnthalpy` function, rearranged for dry-bulb temperature.
+    !+ Based on the `GetMoistAirEnthalpy` function, rearranged for humidity ratio.
 
     real, intent(in)  ::  MoistAirEnthalpy
       !+ Moist air enthalpy in Btu lb⁻¹ [IP] or J kg⁻¹
