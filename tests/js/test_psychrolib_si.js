@@ -133,7 +133,7 @@ it('test_DryAir', function () {
         checkRelDiff(psyjs.GetDryAirEnthalpy(25), 25148, 0.0003)
         checkRelDiff(psyjs.GetDryAirVolume(25, 101325), 0.8443, 0.001)
         checkRelDiff(psyjs.GetDryAirDensity(25, 101325), 1/0.8443, 0.001)
-        checkRelDiff(psyjs.GetTDryBulbFromEnthalpyAndHumRatio(81316, 0.02), 30, 0.001)
+        expect(psyjs.GetTDryBulbFromEnthalpyAndHumRatio(81316, 0.02)).to.be.closeTo(30, 0.001)
         checkRelDiff(psyjs.GetHumRatioFromEnthalpyAndTDryBulb(81316, 30), 0.02, 0.001)
 });
 

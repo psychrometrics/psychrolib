@@ -179,7 +179,7 @@ Sub test_DryAir()
   Call TestExpression("GetDryAirEnthalpy", GetDryAirEnthalpy(25), 25148, relt:=0.0003)
   Call TestExpression("GetDryAirVolume", GetDryAirVolume(25, 101325), 0.8443, relt:=0.001)
   Call TestExpression("GetDryAirDensity", GetDryAirDensity(25, 101325), 1 / 0.8443, relt:=0.001)
-  Call TestExpression("GetTDryBulbFromEnthalpyAndHumRatio", GetTDryBulbFromEnthalpyAndHumRatio(81316, 0.02), 30, relt:=0.001)
+  Call TestExpression("GetTDryBulbFromEnthalpyAndHumRatio", GetTDryBulbFromEnthalpyAndHumRatio(81316, 0.02), 30, abst:=0.001)
   Call TestExpression("GetHumRatioFromEnthalpyAndTDryBulb", GetHumRatioFromEnthalpyAndTDryBulb(81316, 30), 0.02, relt:=0.001)
 End Sub
 
