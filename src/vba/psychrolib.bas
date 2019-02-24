@@ -64,6 +64,10 @@ End Enum
 
 Private Const R_DA_IP = 53.35               ' Universal gas constant for dry air (IP version) in ft lbf/lb_DryAir/R
 Private Const R_DA_SI = 287.042             ' Universal gas constant for dry air (SI version) in J/kg_DryAir/K
+Private Const MIN_ITER_COUNT = 5            ' Minimum number of iterations before exiting while loops.
+Private Const MAX_ITER_COUNT = 1000         ' Maximum number of iterations before exiting while loops.
+Private Const MIN_HUM_RATIO = 1E-7          ' Minimum acceptable humidity ratio used/returned by any functions.
+                                            ' Any value above 0 or below the MIN_HUM_RATIO will be reset to this value.
 
 
 '******************************************************************************************************
@@ -536,10 +540,12 @@ Function GetTDewPointFromVapPres(ByVal TDryBulb As Variant, ByVal VapPres As Var
   Dim lnVP_iter
   TDewPoint = TDryBulb        ' Calculated value of dew point temperatures, solved for iteratively
   Dim Tol As Variant
+  Dim index As Variant
 
   lnVP = Log(VapPres)          ' Partial pressure of water vapor in moist air
 
   Tol = GetTol()
+  index = 0
   Do
     TDewPoint_iter = TDewPoint   ' Value of Tdp used in NR calculation
 
@@ -559,8 +565,9 @@ Function GetTDewPointFromVapPres(ByVal TDryBulb As Variant, ByVal VapPres As Var
     TDewPoint = TDewPoint_iter - (lnVP_iter - lnVP) / d_lnVP
     TDewPoint = Max(TDewPoint, BOUNDS_(1))
     TDewPoint = Min(TDewPoint, BOUNDS_(2))
+    index = index + 1
 
-  Loop While (Abs(TDewPoint - TDewPoint_iter) > Tol)
+  Loop While (((Abs(TDewPoint - TDewPoint_iter) > Tol) And (index < MAX_ITER_COUNT)) Or (index < MAX_ITER_COUNT))
 
   TDewPoint = Min(TDewPoint, TDryBulb)
   GetTDewPointFromVapPres = TDewPoint
@@ -617,7 +624,7 @@ Function GetTWetBulbFromHumRatio(ByVal TDryBulb As Variant, ByVal HumRatio As Va
   ' Declarations
   Dim Wstar As Variant
   Dim TDewPoint As Variant, TWetBulb As Variant, TWetBulbSup As Variant, TWetBulbInf As Variant
-  Dim Tol As Variant
+  Dim Tol As Variant, BoundedHumRatio As Variant, index As Variant
 
   On Error GoTo ErrHandler
 
@@ -625,8 +632,9 @@ Function GetTWetBulbFromHumRatio(ByVal TDryBulb As Variant, ByVal HumRatio As Va
     MyMsgBox ("Humidity ratio cannot be negative")
     GoTo ErrHandler
   End If
+  BoundedHumRatio = max(HumRatio, MIN_HUM_RATIO)
 
-  TDewPoint = GetTDewPointFromHumRatio(TDryBulb, HumRatio, Pressure)
+  TDewPoint = GetTDewPointFromHumRatio(TDryBulb, BoundedHumRatio, Pressure)
 
   ' Initial guesses
   TWetBulbSup = TDryBulb
@@ -635,13 +643,14 @@ Function GetTWetBulbFromHumRatio(ByVal TDryBulb As Variant, ByVal HumRatio As Va
 
   ' Bisection loop
   Tol = GetTol()
-  While (TWetBulbSup - TWetBulbInf > Tol)
+  index = 0
+  While ((((TWetBulbSup - TWetBulbInf) > Tol) And (index < MAX_ITER_COUNT)) Or (index < MAX_ITER_COUNT))
 
    ' Compute humidity ratio at temperature Tstar
    Wstar = GetHumRatioFromTWetBulb(TDryBulb, TWetBulb, Pressure)
 
    ' Get new bounds
-   If (Wstar > HumRatio) Then
+   If (Wstar > BoundedHumRatio) Then
     TWetBulbSup = TWetBulb
    Else
     TWetBulbInf = TWetBulb
@@ -649,7 +658,7 @@ Function GetTWetBulbFromHumRatio(ByVal TDryBulb As Variant, ByVal HumRatio As Va
 
    ' New guess of wet bulb temperature
    TWetBulb = (TWetBulbSup + TWetBulbInf) / 2
-
+   index = index + 1
   Wend
 
   GetTWetBulbFromHumRatio = TWetBulb
@@ -675,7 +684,7 @@ Function GetHumRatioFromTWetBulb(ByVal TDryBulb As Variant, ByVal TWetBulb As Va
 ' Reference:
 '        ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 33 and 35
 
-  Dim Wsstar As Variant
+  Dim Wsstar As Variant, HumRatio As Variant
   Wsstar = GetSatHumRatio(TWetBulb, Pressure)
 
   On Error GoTo ErrHandler
@@ -687,17 +696,19 @@ Function GetHumRatioFromTWetBulb(ByVal TDryBulb As Variant, ByVal TWetBulb As Va
 
   If isIP() Then
     If (TWetBulb >= 32) Then
-      GetHumRatioFromTWetBulb = ((1093 - 0.556 * TWetBulb) * Wsstar - 0.24 * (TDryBulb - TWetBulb)) / (1093 + 0.444 * TDryBulb - TWetBulb)
+      HumRatio = ((1093 - 0.556 * TWetBulb) * Wsstar - 0.24 * (TDryBulb - TWetBulb)) / (1093 + 0.444 * TDryBulb - TWetBulb)
     Else
-      GetHumRatioFromTWetBulb = ((1220 - 0.04 * TWetBulb) * Wsstar - 0.24 * (TDryBulb - TWetBulb)) / (1220 + 0.444 * TDryBulb - 0.48 * TWetBulb)
+      HumRatio = ((1220 - 0.04 * TWetBulb) * Wsstar - 0.24 * (TDryBulb - TWetBulb)) / (1220 + 0.444 * TDryBulb - 0.48 * TWetBulb)
     End If
   Else
     If (TWetBulb >= 0) Then
-      GetHumRatioFromTWetBulb = ((2501 - 2.326 * TWetBulb) * Wsstar - 1.006 * (TDryBulb - TWetBulb)) / (2501 + 1.86 * TDryBulb - 4.186 * TWetBulb)
+      HumRatio = ((2501 - 2.326 * TWetBulb) * Wsstar - 1.006 * (TDryBulb - TWetBulb)) / (2501 + 1.86 * TDryBulb - 4.186 * TWetBulb)
     Else
-      GetHumRatioFromTWetBulb = ((2830# - 0.24 * TWetBulb) * Wsstar - 1.006 * (TDryBulb - TWetBulb)) / (2830# + 1.86 * TDryBulb - 2.1 * TWetBulb)
+      HumRatio = ((2830# - 0.24 * TWetBulb) * Wsstar - 1.006 * (TDryBulb - TWetBulb)) / (2830# + 1.86 * TDryBulb - 2.1 * TWetBulb)
     End If
   End If
+  ' Validity check.
+  GetHumRatioFromTWetBulb = max(HumRatio, MIN_HUM_RATIO)
   Exit Function
 
 ErrHandler:
@@ -850,6 +861,8 @@ Function GetHumRatioFromVapPres(ByVal VapPres As Variant, ByVal Pressure As Vari
 ' Reference:
 '        ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 20
 '
+  Dim HumRatio As Variant
+
   On Error GoTo ErrHandler
 
   If VapPres < 0 Then
@@ -857,7 +870,9 @@ Function GetHumRatioFromVapPres(ByVal VapPres As Variant, ByVal Pressure As Vari
     GoTo ErrHandler
   End If
 
-  GetHumRatioFromVapPres = 0.621945 * VapPres / (Pressure - VapPres)
+  HumRatio = 0.621945 * VapPres / (Pressure - VapPres)
+  ' Validity check.
+  GetHumRatioFromVapPres = max(HumRatio, MIN_HUM_RATIO)
   Exit Function
 
 ErrHandler:
@@ -880,7 +895,7 @@ Function GetVapPresFromHumRatio(ByVal HumRatio As Variant, ByVal Pressure As Var
 '        ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 20 solved for pw
 '
 
-  Dim VapPres As Variant
+  Dim VapPres As Variant, BoundedHumRatio As Variant
 
   On Error GoTo ErrHandler
 
@@ -888,8 +903,9 @@ Function GetVapPresFromHumRatio(ByVal HumRatio As Variant, ByVal Pressure As Var
     MyMsgBox ("Humidity ratio is negative")
     GoTo ErrHandler
   End If
+  BoundedHumRatio = max(HumRatio, MIN_HUM_RATIO)
 
-  VapPres = Pressure * HumRatio / (0.621945 + HumRatio)
+  VapPres = Pressure * BoundedHumRatio / (0.621945 + BoundedHumRatio)
   GetVapPresFromHumRatio = VapPres
   Exit Function
 
@@ -959,7 +975,7 @@ Function GetHumRatioFromSpecificHum(ByVal SpecificHum As Variant) As Variant
   End If
 
     HumRatio = SpecificHum / (1.0 - SpecificHum)
-    GetHumRatioFromSpecificHum = HumRatio
+    GetHumRatioFromSpecificHum = max(HumRatio, MIN_HUM_RATIO)
   Exit Function
 
 ErrHandler:
@@ -1142,12 +1158,13 @@ Function GetSatHumRatio(ByVal TDryBulb As Variant, ByVal Pressure As Variant) As
 ' Reference:
 '        ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 36, solved for W
 '
-  Dim SatVaporPres As Variant
+  Dim SatVaporPres As Variant, SatHumRatio As Variant
 
   On Error GoTo ErrHandler
 
   SatVaporPres = GetSatVapPres(TDryBulb)
-  GetSatHumRatio = 0.621945 * SatVaporPres / (Pressure - SatVaporPres)
+  SatHumRatio = 0.621945 * SatVaporPres / (Pressure - SatVaporPres)
+  GetSatHumRatio = max(SatHumRatio, MIN_HUM_RATIO)
   Exit Function
 
 ErrHandler:
@@ -1236,6 +1253,8 @@ Function GetDegreeOfSaturation(ByVal TDryBulb As Variant, ByVal HumRatio As Vari
 '
 ' Notes:
 '        This definition is absent from the 2017 Handbook. Using 2009 version instead.
+'
+  Dim BoundedHumRatio As Variant
 
   On Error GoTo ErrHandler
 
@@ -1243,8 +1262,9 @@ Function GetDegreeOfSaturation(ByVal TDryBulb As Variant, ByVal HumRatio As Vari
     MyMsgBox ("Humidity ratio is negative")
     GoTo ErrHandler
   End If
+  BoundedHumRatio = max(HumRatio, MIN_HUM_RATIO)
 
-  GetDegreeOfSaturation = HumRatio / GetSatHumRatio(TDryBulb, Pressure)
+  GetDegreeOfSaturation = BoundedHumRatio / GetSatHumRatio(TDryBulb, Pressure)
   Exit Function
 
 ErrHandler:
@@ -1266,17 +1286,20 @@ Function GetMoistAirEnthalpy(ByVal TDryBulb As Variant, ByVal HumRatio As Varian
 ' Reference:
 '        ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 30
 '
+  Dim BoundedHumRatio As Variant
+
   On Error GoTo ErrHandler
 
   If (HumRatio < 0) Then
     MyMsgBox ("Humidity ratio is negative")
     GoTo ErrHandler
   End If
+  BoundedHumRatio = max(HumRatio, MIN_HUM_RATIO)
 
   If (isIP()) Then
-    GetMoistAirEnthalpy = 0.24 * TDryBulb + HumRatio * (1061 + 0.444 * TDryBulb)
+    GetMoistAirEnthalpy = 0.24 * TDryBulb + BoundedHumRatio * (1061 + 0.444 * TDryBulb)
   Else
-    GetMoistAirEnthalpy = (1.006 * TDryBulb + HumRatio * (2501 + 1.86 * TDryBulb)) * 1000
+    GetMoistAirEnthalpy = (1.006 * TDryBulb + BoundedHumRatio * (2501 + 1.86 * TDryBulb)) * 1000
   End If
   Exit Function
 
@@ -1304,17 +1327,20 @@ Function GetMoistAirVolume(ByVal TDryBulb As Variant, ByVal HumRatio As Variant,
 '        In IP units, R_DA_IP / 144 equals 0.370486 which is the coefficient appearing in eqn 26
 '        The factor 144 is for the conversion of Psi = lb/in² to lb/ft².
 '
+  Dim BoundedHumRatio As Variant
+
   On Error GoTo ErrHandler
 
   If (HumRatio < 0) Then
     MyMsgBox ("Humidity ratio is negative")
     GoTo ErrHandler
   End If
+  BoundedHumRatio = max(HumRatio, MIN_HUM_RATIO)
 
   If (isIP()) Then
-    GetMoistAirVolume = R_DA_IP * GetTRankineFromTFahrenheit(TDryBulb) * (1 + 1.607858 * HumRatio) / (144 * Pressure)
+    GetMoistAirVolume = R_DA_IP * GetTRankineFromTFahrenheit(TDryBulb) * (1 + 1.607858 * BoundedHumRatio) / (144 * Pressure)
   Else
-    GetMoistAirVolume = R_DA_SI * GetTKelvinFromTCelsius(TDryBulb) * (1 + 1.607858 * HumRatio) / Pressure
+    GetMoistAirVolume = R_DA_SI * GetTKelvinFromTCelsius(TDryBulb) * (1 + 1.607858 * BoundedHumRatio) / Pressure
   End If
   Exit Function
 
@@ -1338,7 +1364,7 @@ Function GetMoistAirDensity(ByVal TDryBulb As Variant, ByVal HumRatio As Variant
 ' Reference:
 '        ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 11
 '
-  Dim MoistAirVolume As Variant
+  Dim MoistAirVolume As Variant, BoundedHumRatio As Variant
 
   On Error GoTo ErrHandler
 
@@ -1346,9 +1372,10 @@ Function GetMoistAirDensity(ByVal TDryBulb As Variant, ByVal HumRatio As Variant
     MyMsgBox ("Humidity ratio is negative")
     GoTo ErrHandler
   End If
+  BoundedHumRatio = max(HumRatio, MIN_HUM_RATIO)
 
-  MoistAirVolume = GetMoistAirVolume(TDryBulb, HumRatio, Pressure)
-  GetMoistAirDensity = (1 + HumRatio) / MoistAirVolume
+  MoistAirVolume = GetMoistAirVolume(TDryBulb, BoundedHumRatio, Pressure)
+  GetMoistAirDensity = (1 + BoundedHumRatio) / MoistAirVolume
   Exit Function
 
 ErrHandler:
