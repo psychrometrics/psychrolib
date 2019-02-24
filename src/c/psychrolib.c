@@ -335,7 +335,7 @@ double GetTDewPointFromVapPres  // (o) Dew Point temperature in °F [IP] or °C 
   double Tdp_c;               // Value of Tdp used in NR calculation
   double lnVP_c;              // Value of log of vapor water pressure used in NR calculation
   double d_Tdp;               // Value of temperature step used in NR calculation
-  int index = 1;
+  int index = 0;
 
   do
   {
@@ -387,7 +387,7 @@ double GetTWetBulbFromHumRatio  // (o) Wet bulb temperature in °F [IP] or °C [
   // Declarations
   double Wstar;
   double TDewPoint, TWetBulb, TWetBulbSup, TWetBulbInf, BoundedHumRatio;
-  int index = 1;
+  int index = 0;
 
   ASSERT (HumRatio >= 0., "Humidity ratio is negative")
   BoundedHumRatio = max(HumRatio, MIN_HUM_RATIO);

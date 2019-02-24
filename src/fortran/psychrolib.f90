@@ -454,7 +454,7 @@ module psychrolib
     Tdp = TDryBulb
     lnVP = log(VapPres)
     Tdp_c = Tdp
-    index = 1
+    index = 0
 
     do while (((abs(Tdp - Tdp_c) > PSYCHROLIB_TOLERANCE) .and. (index < MAX_ITER_COUNT)) &
               .or. (index < MAX_ITER_COUNT))
@@ -537,7 +537,7 @@ module psychrolib
     TWetBulbInf = TDewPoint
     TWetBulb = (TWetBulbInf + TWetBulbSup) / 2.0
 
-    index = 1
+    index = 0
     ! Bisection loop
     do while ((((TWetBulbSup - TWetBulbInf) > PSYCHROLIB_TOLERANCE) .and. (index < MAX_ITER_COUNT)) &
                .or. (index < MAX_ITER_COUNT))

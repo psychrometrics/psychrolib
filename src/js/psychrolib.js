@@ -347,7 +347,7 @@ function Psychrometrics() {
     // Declarations
     var Wstar;
     var TDewPoint, TWetBulb, TWetBulbSup, TWetBulbInf, BoundedHumRatio;
-    var index = 1;
+    var index = 0;
 
     if (!(HumRatio >= 0.))
       throw new Error("Humidity ratio is negative");

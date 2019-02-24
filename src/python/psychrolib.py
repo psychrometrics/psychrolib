@@ -508,7 +508,7 @@ def GetTWetBulbFromHumRatio(TDryBulb: float, HumRatio: float, Pressure: float) -
     TWetBulbInf = TDewPoint
     TWetBulb = (TWetBulbInf + TWetBulbSup) / 2
 
-    index = 1
+    index = 0
     # Bisection loop
     while ((((TWetBulbSup - TWetBulbInf) > PSYCHROLIB_TOLERANCE) and (index < MAX_ITER_COUNT)) \
             or (index < MAX_ITER_COUNT)):
