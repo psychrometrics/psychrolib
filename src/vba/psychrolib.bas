@@ -64,7 +64,7 @@ End Enum
 
 Private Const R_DA_IP = 53.35               ' Universal gas constant for dry air (IP version) in ft lbf/lb_DryAir/R
 Private Const R_DA_SI = 287.042             ' Universal gas constant for dry air (SI version) in J/kg_DryAir/K
-Private Const MIN_ITER_COUNT = 5            ' Minimum number of iterations before exiting while loops.
+Private Const MIN_ITER_COUNT = 3            ' Minimum number of iterations before exiting while loops.
 Private Const MAX_ITER_COUNT = 1000         ' Maximum number of iterations before exiting while loops.
 Private Const MIN_HUM_RATIO = 1e-7          ' Minimum acceptable humidity ratio used/returned by any functions.
                                             ' Any value above 0 or below the MIN_HUM_RATIO will be reset to this value.

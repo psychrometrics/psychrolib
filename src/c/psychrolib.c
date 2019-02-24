@@ -59,7 +59,7 @@
                                   // Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1
 #define INVALID -99999            // Invalid value
 
-#define MIN_ITER_COUNT 5          // Minimum number of iterations before exiting while loops.
+#define MIN_ITER_COUNT 3          // Minimum number of iterations before exiting while loops.
 
 #define MAX_ITER_COUNT 1000       // Maximum number of iterations before exiting while loops.
 

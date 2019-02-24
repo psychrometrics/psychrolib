@@ -72,7 +72,7 @@ R_DA_SI = 287.042
 
 """
 
-MIN_ITER_COUNT = 5
+MIN_ITER_COUNT = 3
 """int: Minimum number of iterations before exiting while loops.
 
 """

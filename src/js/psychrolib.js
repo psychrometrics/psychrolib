@@ -63,7 +63,7 @@ function Psychrometrics() {
                                 // Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1
   var INVALID = -99999;         // Invalid value (dimensionless)
 
-  var MIN_ITER_COUNT = 5        // Minimum number of iterations before exiting while loops.
+  var MIN_ITER_COUNT = 3        // Minimum number of iterations before exiting while loops.
 
   var MAX_ITER_COUNT = 1000     // Maximum number of iterations before exiting while loops.
 

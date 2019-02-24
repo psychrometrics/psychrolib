@@ -111,7 +111,7 @@ module psychrolib
   real ::  PSYCHROLIB_TOLERANCE = 1.0
     !+ Tolerance of temperature calculations.
 
-  integer, parameter  :: MIN_ITER_COUNT = 5
+  integer, parameter  :: MIN_ITER_COUNT = 3
     !+ Minimum number of iterations before exiting while loops.
 
   integer, parameter  :: MAX_ITER_COUNT = 1000
