@@ -82,7 +82,7 @@ MAX_ITER_COUNT = 1000
 
 """
 
-MIN_HUM_RATIO = 1E-7
+MIN_HUM_RATIO = 1e-7
 """float: Minimum acceptable humidity ratio used/returned by any functions.
           Any value above 0 or below the MIN_HUM_RATIO will be reset to this value.
 

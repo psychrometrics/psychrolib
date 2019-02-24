@@ -117,7 +117,7 @@ module psychrolib
   integer, parameter  :: MAX_ITER_COUNT = 1000
     !+ Maximum number of iterations before exiting while loops.
 
-  real, parameter  :: MIN_HUM_RATIO = 1E-7
+  real, parameter  :: MIN_HUM_RATIO = 1e-7
     !+ Minimum acceptable humidity ratio used/returned by any functions.
     !+ Any value above 0 or below the MIN_HUM_RATIO will be reset to this value.
 
