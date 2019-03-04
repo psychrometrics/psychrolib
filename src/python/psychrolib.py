@@ -44,6 +44,7 @@ Note from the Authors
 
 import math
 from enum import Enum, auto
+from typing import Optional
 
 
 #######################################################################################################
@@ -119,7 +120,7 @@ def SetUnitSystem(Units: UnitSystem) -> None:
     else:
         PSYCHROLIB_TOLERANCE = 0.001
 
-def GetUnitSystem() -> UnitSystem:
+def GetUnitSystem() -> Optional[UnitSystem]:
     """
     Return system of units in use.
 
@@ -797,6 +798,60 @@ def GetDryAirVolume(TDryBulb: float, Pressure: float) -> float:
     else:
         DryAirVolume = R_DA_SI * GetTKelvinFromTCelsius(TDryBulb) / Pressure
     return DryAirVolume
+
+
+def GetTDryBulbFromEnthalpyAndHumRatio(MoistAirEnthalpy: float, HumRatio: float) -> float:
+    """
+    Return dry bulb temperature from enthalpy and humidity ratio.
+
+
+    Args:
+        MoistAirEnthalpy : Moist air enthalpy in Btu lb⁻¹ [IP] or J kg⁻¹
+        HumRatio : Humidity ratio in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]
+
+    Returns:
+        Dry-bulb temperature in °F [IP] or °C [SI]
+
+    Reference:
+        ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 30
+
+    Notes:
+        Based on the `GetMoistAirEnthalpy` function, rearranged for temperature.
+
+    """
+    if HumRatio < 0:
+        raise ValueError("Humidity ratio is negative")
+
+    if isIP():
+        TDryBulb  = (MoistAirEnthalpy - 1061.0 * HumRatio) / (0.240 + 0.444 * HumRatio)
+    else:
+        TDryBulb  = (MoistAirEnthalpy / 1000.0 - 2501.0 * HumRatio) / (1.006 + 1.86 * HumRatio)
+    return TDryBulb
+
+def GetHumRatioFromEnthalpyAndTDryBulb(MoistAirEnthalpy: float, TDryBulb: float) -> float:
+    """
+    Return humidity ratio from enthalpy and dry-bulb temperature.
+
+
+    Args:
+        MoistAirEnthalpy : Moist air enthalpy in Btu lb⁻¹ [IP] or J kg⁻¹
+        TDryBulb : Dry-bulb temperature in °F [IP] or °C [SI]
+
+    Returns:
+        Humidity ratio in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]
+
+    Reference:
+        ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 30.
+
+    Notes:
+        Based on the `GetMoistAirEnthalpy` function, rearranged for humidity ratio.
+
+    """
+    if isIP():
+        HumRatio  = (MoistAirEnthalpy - 0.240 * TDryBulb) / (1061.0 + 0.444 * TDryBulb)
+    else:
+        HumRatio  = (MoistAirEnthalpy / 1000.0 - 1.006 * TDryBulb) / (2501.0 + 1.86 * TDryBulb)
+    return HumRatio
 
 
 #######################################################################################################

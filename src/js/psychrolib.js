@@ -555,7 +555,7 @@ function Psychrometrics() {
   }
 
   // Return dry-air volume given dry-bulb temperature and pressure.
-  // Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1
+  // Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1.
   // Notes: eqn 14 for the perfect gas relationship for dry air.
   // Eqn 1 for the universal gas constant.
   // The factor 144 in IP is for the conversion of Psi = lb in⁻² to lb ft⁻².
@@ -563,12 +563,40 @@ function Psychrometrics() {
     ( TDryBulb                    // (i) Dry bulb temperature in °F [IP] or °C [SI]
     , Pressure                    // (i) Atmospheric pressure in Psi [IP] or Pa [SI]
     ) {
-
     if (this.isIP())
       return R_DA_IP * this.GetTRankineFromTFahrenheit(TDryBulb) / (144. * Pressure);
     else
       return R_DA_SI * this.GetTKelvinFromTCelsius(TDryBulb) / Pressure;
   }
+
+  // Return dry bulb temperature from enthalpy and humidity ratio.
+  // Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 30.
+  // Notes: based on the `GetMoistAirEnthalpy` function, rearranged for temperature.
+  this.GetTDryBulbFromEnthalpyAndHumRatio = function   // (o) Dry-bulb temperature in °F [IP] or °C [SI]
+    ( MoistAirEnthalpy                                 // (i) Moist air enthalpy in Btu lb⁻¹ [IP] or J kg⁻¹
+    , HumRatio                                         // (i) Humidity ratio in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]
+    ) {
+    if (!(HumRatio >= 0.))
+      throw new Error("Humidity ratio is negative");
+
+    if (this.isIP())
+      return (MoistAirEnthalpy - 1061.0 * HumRatio) / (0.240 + 0.444 * HumRatio);
+    else
+      return (MoistAirEnthalpy / 1000.0 - 2501.0 * HumRatio) / (1.006 + 1.86 * HumRatio);
+    }
+
+  // Return humidity ratio from enthalpy and dry-bulb temperature.
+  // Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 30.
+  // Notes: based on the `GetMoistAirEnthalpy` function, rearranged for humidity ratio.
+  this.GetHumRatioFromEnthalpyAndTDryBulb = function   // (o) Humidity ratio in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻
+    ( MoistAirEnthalpy                                 // (i) Moist air enthalpy in Btu lb⁻¹ [IP] or J kg⁻¹
+    , TDryBulb                                         // (i) Dry-bulb temperature in °F [IP] or °C [SI]
+    ) {
+    if (this.isIP())
+      return (MoistAirEnthalpy - 0.240 * TDryBulb) / (1061.0 + 0.444 * TDryBulb);
+    else
+      return (MoistAirEnthalpy / 1000.0 - 1.006 * TDryBulb) / (2501.0 + 1.86 * TDryBulb);
+    }
 
 
   /******************************************************************************************************
