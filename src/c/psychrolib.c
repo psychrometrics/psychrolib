@@ -59,8 +59,6 @@
                                   // Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1
 #define INVALID -99999            // Invalid value
 
-#define MIN_ITER_COUNT 3          // Minimum number of iterations before exiting while loops.
-
 #define MAX_ITER_COUNT 1000       // Maximum number of iterations before exiting while loops.
 
 #define MIN_HUM_RATIO 1e-7        // Minimum acceptable humidity ratio used/returned by any functions.
@@ -357,8 +355,7 @@ double GetTDewPointFromVapPres  // (o) Dew Point temperature in °F [IP] or °C 
     Tdp = min(Tdp, _BOUNDS[1]);
     index = index + 1;
   }
-  while (((fabs(Tdp - Tdp_c) > PSYCHROLIB_TOLERANCE) && (index < MAX_ITER_COUNT))
-         || (index < MAX_ITER_COUNT));
+  while ((fabs(Tdp - Tdp_c) > PSYCHROLIB_TOLERANCE) || (index < MAX_ITER_COUNT));
   return min(Tdp, TDryBulb);
 }
 
@@ -400,8 +397,7 @@ double GetTWetBulbFromHumRatio  // (o) Wet bulb temperature in °F [IP] or °C [
   TWetBulb = (TWetBulbInf + TWetBulbSup) / 2.;
 
   // Bisection loop
-  while ((((TWetBulbSup - TWetBulbInf) > PSYCHROLIB_TOLERANCE) && (index < MAX_ITER_COUNT))
-         || (index < MAX_ITER_COUNT))
+  while (((TWetBulbSup - TWetBulbInf) > PSYCHROLIB_TOLERANCE) || (index < MAX_ITER_COUNT))
   {
    // Compute humidity ratio at temperature Tstar
    Wstar = GetHumRatioFromTWetBulb(TDryBulb, TWetBulb, Pressure);

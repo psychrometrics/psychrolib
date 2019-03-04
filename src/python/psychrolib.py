@@ -72,11 +72,6 @@ R_DA_SI = 287.042
 
 """
 
-MIN_ITER_COUNT = 3
-"""int: Minimum number of iterations before exiting while loops.
-
-"""
-
 MAX_ITER_COUNT = 1000
 """int: Maximum number of iterations before exiting while loops.
 
@@ -452,8 +447,7 @@ def GetTDewPointFromVapPres(TDryBulb: float, VapPres: float) -> float:
         TDewPoint = min(TDewPoint, _BOUNDS[1])
         index = index + 1
 
-        if (((math.fabs(TDewPoint - TDewPoint_iter) <= PSYCHROLIB_TOLERANCE) and (index >= MAX_ITER_COUNT)) \
-            or (index >= MAX_ITER_COUNT)):
+        if ((math.fabs(TDewPoint - TDewPoint_iter) <= PSYCHROLIB_TOLERANCE) or (index >= MAX_ITER_COUNT)):
            break
 
     TDewPoint = min(TDewPoint, TDryBulb)
@@ -510,8 +504,7 @@ def GetTWetBulbFromHumRatio(TDryBulb: float, HumRatio: float, Pressure: float) -
 
     index = 0
     # Bisection loop
-    while ((((TWetBulbSup - TWetBulbInf) > PSYCHROLIB_TOLERANCE) and (index < MAX_ITER_COUNT)) \
-            or (index < MAX_ITER_COUNT)):
+    while (((TWetBulbSup - TWetBulbInf) > PSYCHROLIB_TOLERANCE) or (index < MAX_ITER_COUNT)):
 
         # Compute humidity ratio at temperature Tstar
         Wstar = GetHumRatioFromTWetBulb(TDryBulb, TWetBulb, Pressure)

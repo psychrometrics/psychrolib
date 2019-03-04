@@ -63,8 +63,6 @@ function Psychrometrics() {
                                 // Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1
   var INVALID = -99999;         // Invalid value (dimensionless)
 
-  var MIN_ITER_COUNT = 3        // Minimum number of iterations before exiting while loops.
-
   var MAX_ITER_COUNT = 1000     // Maximum number of iterations before exiting while loops.
 
   var MIN_HUM_RATIO = 1e-7      // Minimum acceptable humidity ratio used/returned by any functions.
@@ -319,8 +317,7 @@ function Psychrometrics() {
     Tdp = min(Tdp, _BOUNDS[1]);
     index = index + 1;
   }
-  while (((abs(Tdp - Tdp_c) > PSYCHROLIB_TOLERANCE) && (index < MAX_ITER_COUNT))
-         || (index < MAX_ITER_COUNT));
+  while ((abs(Tdp - Tdp_c) > PSYCHROLIB_TOLERANCE) || (index < MAX_ITER_COUNT));
   return min(Tdp, TDryBulb);
   }
 
@@ -361,8 +358,7 @@ function Psychrometrics() {
     TWetBulb = (TWetBulbInf + TWetBulbSup) / 2.;
 
     // Bisection loop
-    while ((((TWetBulbSup - TWetBulbInf) > PSYCHROLIB_TOLERANCE) && (index < MAX_ITER_COUNT))
-           || (index < MAX_ITER_COUNT)) {
+    while (((TWetBulbSup - TWetBulbInf) > PSYCHROLIB_TOLERANCE) || (index < MAX_ITER_COUNT)) {
       // Compute humidity ratio at temperature Tstar
       Wstar = this.GetHumRatioFromTWetBulb(TDryBulb, TWetBulb, Pressure);
 
