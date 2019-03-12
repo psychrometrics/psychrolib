@@ -72,7 +72,7 @@ R_DA_SI = 287.042
 
 """
 
-MAX_ITER_COUNT = 1000
+MAX_ITER_COUNT = 100
 """int: Maximum number of iterations before exiting while loops.
 
 """
@@ -445,11 +445,21 @@ def GetTDewPointFromVapPres(TDryBulb: float, VapPres: float) -> float:
         TDewPoint = TDewPoint_iter - (lnVP_iter - lnVP) / d_lnVP
         TDewPoint = max(TDewPoint, _BOUNDS[0])
         TDewPoint = min(TDewPoint, _BOUNDS[1])
+
+        if ((math.fabs(TDewPoint - TDewPoint_iter) <= PSYCHROLIB_TOLERANCE)):
+            break
+
+        # The discontinuity of the saturated pressure curve at ~0 deg C (+/-) leads the
+        # calculation of dew point temperature to oscillate about the zero, thus not converging.
+        # Assuming an range of of +/-0.001, the vapour pressure at 0.001 deg C is 611.26 Pa and
+        # 611.10 Pa at -0.001 deg C.
+        if ((VapPres > 611.10) and (VapPres < 611.26) and (index == MAX_ITER_COUNT)):
+            break
+
+        if (index > MAX_ITER_COUNT):
+            raise ValueError("Convergence not reached. Stopping.")
+
         index = index + 1
-
-        if ((math.fabs(TDewPoint - TDewPoint_iter) <= PSYCHROLIB_TOLERANCE) or (index >= MAX_ITER_COUNT)):
-           break
-
     TDewPoint = min(TDewPoint, TDryBulb)
     return TDewPoint
 
@@ -504,7 +514,7 @@ def GetTWetBulbFromHumRatio(TDryBulb: float, HumRatio: float, Pressure: float) -
 
     index = 0
     # Bisection loop
-    while (((TWetBulbSup - TWetBulbInf) > PSYCHROLIB_TOLERANCE) or (index < MAX_ITER_COUNT)):
+    while ((TWetBulbSup - TWetBulbInf) > PSYCHROLIB_TOLERANCE):
 
         # Compute humidity ratio at temperature Tstar
         Wstar = GetHumRatioFromTWetBulb(TDryBulb, TWetBulb, Pressure)
@@ -517,6 +527,10 @@ def GetTWetBulbFromHumRatio(TDryBulb: float, HumRatio: float, Pressure: float) -
 
         # New guess of wet bulb temperature
         TWetBulb = (TWetBulbSup + TWetBulbInf) / 2
+
+        if (index >= MAX_ITER_COUNT):
+            raise ValueError("Convergence not reached. Stopping.")
+
         index = index + 1
     return TWetBulb
 
