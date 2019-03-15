@@ -1,0 +1,5 @@
+# GitHub Liniguist showing C header files `.h` as Objective-C.
+*.h linguist-language=C
+
+# Ignore all vba files in tests to make Python the main language used in this repo.
+tests/vba/* linguist-vendored
