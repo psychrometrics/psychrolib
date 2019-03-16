@@ -68,6 +68,13 @@ def test_VapPres_TDewPoint(psy):
     VapPres = psy.GetVapPresFromTDewPoint(50.0)
     assert psy.GetTDewPointFromVapPres(60.0, VapPres) == pytest.approx(50.0, abs = 0.001)
 
+# Test of relationships between wet bulb temperature and relative humidity
+# This test was known to cause a convergence issue in GetTDewPointFromVapPres
+# in versions of PsychroLib <= 2.0.0
+def test_TWetBulb_RelHum(psy):
+    TWetBulb = psy.GetTWetBulbFromRelHum(7, 0.61, 100000)
+    assert psy.GetHumRatioFromSpecificHum(TWetBulb) == pytest.approx(3.92667433781955, rel = 0.001)
+
 # Test of relationships between humidity ratio and vapour pressure
 # Humidity ratio values to test against are calculated with Excel
 def test_HumRatio_VapPres(psy):
