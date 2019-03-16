@@ -99,6 +99,15 @@ it('test_TWetBulb_RelHum', function () {
     checkRelDiff(TWetBulb, 3.92667433781955, 0.001)
 });
 
+// Test that the NR in GetTDewPointFromVapPres converges.
+// This test was known problem in versions of PsychroLib <= 2.0.0
+it('test_GetTDewPointFromVapPres_convergence', function () {
+    for (var TDryBulb = -100; TDryBulb <= 200; TDryBulb += 1)
+        for (var RelHum = 0; RelHum <= 1; RelHum += 0.1)
+            for (var Pressure = 60000; Pressure <= 120000; Pressure += 10000)
+                psyjs.GetTWetBulbFromRelHum(TDryBulb, RelHum, Pressure)
+});
+
 // Test of relationships between humidity ratio and vapour pressure
 it('test_HumRatio_VapPres', function () {
         var HumRatio = psyjs.GetHumRatioFromVapPres(3169.7, 95461)          // conditions at 25 C, std atm pressure at 500 m

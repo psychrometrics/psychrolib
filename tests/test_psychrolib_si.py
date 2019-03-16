@@ -78,14 +78,15 @@ def test_TWetBulb_RelHum(psy):
 
 # Test that the NR in GetTDewPointFromVapPres converges.
 # This test was known problem in versions of PsychroLib <= 2.0.0
-# def test_GetTDewPointFromVapPres_convergence(psy):
-#     TDryBulb = np.arange(30, 40, 0.1)
-#     RelHum = np.arange(0.1, 0.9, 0.01)
-#     Pressure = np.arange(101010, 120000)
-#     for T in TDryBulb:
-#         for RH in RelHum:
-#             for p in Pressure:
-#                 psy.GetTWetBulbFromRelHum(T, RH, p)
+def test_GetTDewPointFromVapPres_convergence(psy):
+    TDryBulb = np.arange(-100, 200, 1)
+    RelHum = np.arange(0, 1, 0.1)
+    Pressure = np.arange(60000, 120000, 10000)
+    for T in TDryBulb:
+        for RH in RelHum:
+            for p in Pressure:
+                psy.GetTWetBulbFromRelHum(T, RH, p)
+    print('GetTDewPointFromVapPres converged')
 
 # Test of relationships between humidity ratio and vapour pressure
 # Humidity ratio values to test against are calculated with Excel
