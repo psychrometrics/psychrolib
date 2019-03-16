@@ -91,6 +91,14 @@ it('test_VapPres_TDewPoint', function () {
     expect(psyjs.GetTDewPointFromVapPres(60.0, VapPres)).to.be.closeTo(50.0, 0.001)
 });
 
+// Test of relationships between wet bulb temperature and relative humidity
+// This test was known to cause a convergence issue in GetTDewPointFromVapPres
+// in versions of PsychroLib <= 2.0.0
+it('test_TWetBulb_RelHum', function () {
+    var TWetBulb = psyjs.GetTWetBulbFromRelHum(7, 0.61, 100000)
+    checkRelDiff(TWetBulb, 3.92667433781955, 0.001)
+});
+
 // Test of relationships between humidity ratio and vapour pressure
 it('test_HumRatio_VapPres', function () {
         var HumRatio = psyjs.GetHumRatioFromVapPres(3169.7, 95461)          // conditions at 25 C, std atm pressure at 500 m

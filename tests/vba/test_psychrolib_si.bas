@@ -126,6 +126,14 @@ Sub test_VapPres_TDewPoint()
   Call TestExpression("GetTDewPointFromVapPres", GetTDewPointFromVapPres(60#, VapPres), 50#, abst:=0.001)
 End Sub
 
+' Test of relationships between wet bulb temperature and relative humidity
+' This test was known to cause a convergence issue in GetTDewPointFromVapPres
+' in versions of PsychroLib <= 2.0.0
+Sub test_TWetBulb_RelHum()
+TWetBulb = GetTWetBulbFromRelHum(7, 0.61, 100000)
+Call TestExpression("GetTWetBulbFromRelHum", TWetBulb, 3.92667433781955, relt:=0.001)
+End Sub
+
 ' Test of relationships between humidity ratio and vapour pressure
 ' Humidity ratio values to test against are calculated with Excel
 Sub test_HumRatio_VapPres()
