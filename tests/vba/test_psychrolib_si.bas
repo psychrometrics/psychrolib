@@ -131,7 +131,7 @@ End Sub
 ' in versions of PsychroLib <= 2.0.0
 Sub test_TWetBulb_RelHum()
 TWetBulb = GetTWetBulbFromRelHum(7, 0.61, 100000)
-Call TestExpression("GetHumRatioFromSpecificHum", TWetBulb, 3.92667433781955, relt:=0.001)
+Call TestExpression("GetTWetBulbFromRelHum", TWetBulb, 3.92667433781955, relt:=0.001)
 End Sub
 
 ' Test of relationships between humidity ratio and vapour pressure

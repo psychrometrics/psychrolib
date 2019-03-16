@@ -96,7 +96,8 @@ it('test_VapPres_TDewPoint', function () {
 // in versions of PsychroLib <= 2.0.0
 it('test_TWetBulb_RelHum', function () {
     var TWetBulb = psyjs.GetTWetBulbFromRelHum(7, 0.61, 100000)
-    checkRelDiff(psyjs.GetHumRatioFromSpecificHum(TWetBulb), 3.92667433781955, 0.001)
+    checkRelDiff(TWetBulb, 3.92667433781955, 0.001)
+});
 
 // Test of relationships between humidity ratio and vapour pressure
 it('test_HumRatio_VapPres', function () {
