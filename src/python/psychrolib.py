@@ -450,13 +450,6 @@ def GetTDewPointFromVapPres(TDryBulb: float, VapPres: float) -> float:
         if ((math.fabs(TDewPoint - TDewPoint_iter) <= PSYCHROLIB_TOLERANCE)):
             break
 
-        # The discontinuity of the saturated pressure curve at ~0 deg C (+/-) leads the
-        # calculation of dew point temperature to oscillate about the zero, thus not converging.
-        # Assuming a range of of +/-0.001, the vapour pressure at 0.001 deg C is 611.26 Pa and
-        # 611.10 Pa at -0.001 deg C.
-        if ((VapPres > 611.10) and (VapPres < 611.26) and (index == MAX_ITER_COUNT)):
-            break
-
         if (index > MAX_ITER_COUNT):
             raise ValueError("Convergence not reached. Stopping.")
 
