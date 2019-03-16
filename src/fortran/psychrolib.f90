@@ -69,6 +69,8 @@ module psychrolib
   public :: GetDryAirEnthalpy
   public :: GetDryAirDensity
   public :: GetDryAirVolume
+  public :: GetTDryBulbFromEnthalpyAndHumRatio
+  public :: GetHumRatioFromEnthalpyAndTDryBulb
   public :: GetSatVapPres
   public :: GetSatHumRatio
   public :: GetSatAirEnthalpy
@@ -847,6 +849,52 @@ module psychrolib
     end if
   end function GetDryAirVolume
 
+  function GetTDryBulbFromEnthalpyAndHumRatio(MoistAirEnthalpy, HumRatio) result(TDryBulb)
+    !+ Return dry bulb temperature from enthalpy and humidity ratio.
+    !+ Reference:
+    !+ ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 30
+    !+ Notes:
+    !+ Based on the `GetMoistAirEnthalpy` function, rearranged for temperature.
+
+    real, intent(in)  ::  MoistAirEnthalpy
+      !+ Moist air enthalpy in Btu lb⁻¹ [IP] or J kg⁻¹
+    real, intent(in)  ::  HumRatio
+      !+ Humidity ratio in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]
+    real              ::  TDryBulb
+      !+ Dry-bulb temperature in °F [IP] or °C [SI]
+
+    if (HumRatio < 0.0) then
+      error stop "Error: humidity ratio is negative"
+    end if
+
+    if (isIP()) then
+      TDryBulb  = (MoistAirEnthalpy - 1061.0 * HumRatio) / (0.240 + 0.444 * HumRatio)
+    else
+      TDryBulb  = (MoistAirEnthalpy / 1000.0 - 2501.0 * HumRatio) / (1.006 + 1.86 * HumRatio)
+    end if
+  end function GetTDryBulbFromEnthalpyAndHumRatio
+
+  function GetHumRatioFromEnthalpyAndTDryBulb(MoistAirEnthalpy, TDryBulb) result(HumRatio)
+    !+ Return humidity ratio from enthalpy and dry-bulb temperature.
+    !+ Reference:
+    !+ ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 30
+    !+ Notes:
+    !+ Based on the `GetMoistAirEnthalpy` function, rearranged for humidity ratio.
+
+    real, intent(in)  ::  MoistAirEnthalpy
+      !+ Moist air enthalpy in Btu lb⁻¹ [IP] or J kg⁻¹
+    real, intent(in)  ::  TDryBulb
+      !+ Dry-bulb temperature in °F [IP] or °C [SI]
+    real              ::  HumRatio
+      !+ Humidity ratio in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]
+
+    if (isIP()) then
+      HumRatio  = (MoistAirEnthalpy - 0.240 * TDryBulb) / (1061.0 + 0.444 * TDryBulb)
+    else
+      HumRatio  = (MoistAirEnthalpy / 1000.0 - 1.006 * TDryBulb) / (2501.0 + 1.86 * TDryBulb)
+    end if
+  end function GetHumRatioFromEnthalpyAndTDryBulb
+
 
   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   ! Saturated Air Calculations
@@ -856,6 +904,11 @@ module psychrolib
     !+ Return saturation vapor pressure given dry-bulb temperature.
     !+ Reference:
     !+ ASHRAE Handbook - Fundamentals (2017) ch. 1  eqn 5
+    !+ Notes:
+    !+ The SI formulae show a discontinuity at 0 C. In rare cases this discontinuity creates issues
+    !+ in GetTDewPointFromVapPres. To avoid the problem, a small corrective term is added/subtracted
+    !+ to the ASHRAE formulae to make the formulae continuous at 0 C. The effect on the results is
+    !+ negligible (0.005%), well below the accuracy of the formulae
 
     real, intent(in)  ::  TDryBulb
       !+ Dry-bulb temperature in °F [IP] or °C [SI]
@@ -865,6 +918,8 @@ module psychrolib
       !+ Log of Vapor Pressure of saturated air (dimensionless)
     real              ::  T
       !+ Dry bulb temperature in R [IP] or K [SI]
+    real, parameter   :: CORRECTIVE_TERM_SI = 4.851e-05
+      !+ Small corrective term to make the function continuous at 0 C.
 
     if (isIP()) then
       if (TDryBulb < -148.0 .or. TDryBulb > 392.0) then
@@ -890,10 +945,10 @@ module psychrolib
 
         if (TDryBulb <= 0) then
           LnPws = -5.6745359E+03 / T + 6.3925247 - 9.677843E-03 * T + 6.2215701E-07 * T**2    &
-                  + 2.0747825E-09 * T**3 - 9.484024E-13 * T**4 + 4.1635019 * log(T)
+                  + 2.0747825E-09 * T**3 - 9.484024E-13 * T**4 + 4.1635019 * log(T) + CORRECTIVE_TERM_SI
         else
           LnPws = -5.8002206E+03 / T + 1.3914993 - 4.8640239E-02 * T + 4.1764768E-05 * T**2   &
-                  - 1.4452093E-08 * T**3 + 6.5459673 * log(T)
+                  - 1.4452093E-08 * T**3 + 6.5459673 * log(T) - CORRECTIVE_TERM_SI
         end if
       end if
 

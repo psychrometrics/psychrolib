@@ -632,6 +632,36 @@ double GetDryAirVolume          // (o) Dry air volume ft³ lb⁻¹ [IP] or in m�
     return R_DA_SI * GetTKelvinFromTCelsius(TDryBulb) / Pressure;
 }
 
+// Return dry bulb temperature from enthalpy and humidity ratio.
+// Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 30.
+// Notes: based on the `GetMoistAirEnthalpy` function, rearranged for temperature.
+double GetTDryBulbFromEnthalpyAndHumRatio  // (o) Dry-bulb temperature in °F [IP] or °C [SI]
+  ( double MoistAirEnthalpy                // (i) Moist air enthalpy in Btu lb⁻¹ [IP] or J kg⁻¹
+  , double HumRatio                        // (i) Humidity ratio in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]
+  )
+{
+  ASSERT (HumRatio >= 0., "Humidity ratio is negative")
+
+  if (isIP())
+    return (MoistAirEnthalpy - 1061.0 * HumRatio) / (0.240 + 0.444 * HumRatio);
+  else
+    return (MoistAirEnthalpy / 1000.0 - 2501.0 * HumRatio) / (1.006 + 1.86 * HumRatio);
+}
+
+// Return humidity ratio from enthalpy and dry-bulb temperature.
+// Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 30.
+// Notes: based on the `GetMoistAirEnthalpy` function, rearranged for humidity ratio.
+double GetHumRatioFromEnthalpyAndTDryBulb  // (o) Humidity ratio in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]
+  ( double MoistAirEnthalpy                // (i) Moist air enthalpy in Btu lb⁻¹ [IP] or J kg⁻¹
+  , double TDryBulb                        // (i) Dry-bulb temperature in °F [IP] or °C [SI]
+  )
+{
+  if (isIP())
+    return (MoistAirEnthalpy - 0.240 * TDryBulb) / (1061.0 + 0.444 * TDryBulb);
+  else
+    return (MoistAirEnthalpy / 1000.0 - 1.006 * TDryBulb) / (2501.0 + 1.86 * TDryBulb);
+}
+
 
 /******************************************************************************************************
  * Saturated Air Calculations
@@ -639,11 +669,16 @@ double GetDryAirVolume          // (o) Dry air volume ft³ lb⁻¹ [IP] or in m�
 
 // Return saturation vapor pressure given dry-bulb temperature.
 // Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn. 5 & 6
+// Notes: the SI formulae show a discontinuity at 0 C. In rare cases this discontinuity creates issues
+// in GetTDewPointFromVapPres. To avoid the problem, a small corrective term is added/subtracted
+// to the ASHRAE formulae to make the formulae continuous at 0 C. The effect on the results is
+// negligible (0.005%), well below the accuracy of the formulae
 double GetSatVapPres            // (o) Vapor Pressure of saturated air in Psi [IP] or Pa [SI]
   ( double TDryBulb             // (i) Dry bulb temperature in °F [IP] or °C [SI]
   )
 {
   double LnPws, T;
+  double CORRECTIVE_TERM_SI = 4.851e-05; // Small corrective term to make the function continuous at 0 C.
 
   if (isIP())
   {
@@ -666,10 +701,10 @@ double GetSatVapPres            // (o) Vapor Pressure of saturated air in Psi [I
     T = GetTKelvinFromTCelsius(TDryBulb);
     if (TDryBulb >= -100. && TDryBulb <= 0.)
       LnPws = -5.6745359E+03 / T + 6.3925247 - 9.677843E-03 * T + 6.2215701E-07 * T * T
-          + 2.0747825E-09 * pow(T, 3) - 9.484024E-13 * pow(T, 4) + 4.1635019 * log(T);
+          + 2.0747825E-09 * pow(T, 3) - 9.484024E-13 * pow(T, 4) + 4.1635019 * log(T) + CORRECTIVE_TERM_SI;
     else if (TDryBulb > 0. && TDryBulb <= 200.)
       LnPws = -5.8002206E+03 / T + 1.3914993 - 4.8640239E-02 * T + 4.1764768E-05 * T * T
-        - 1.4452093E-08 * pow(T, 3) + 6.5459673 * log(T);
+        - 1.4452093E-08 * pow(T, 3) + 6.5459673 * log(T) - CORRECTIVE_TERM_SI;
     else
       return INVALID;             // TDryBulb is out of range [-100, 200]
   }

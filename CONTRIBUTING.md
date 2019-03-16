@@ -53,7 +53,9 @@ cd tests/js && npm test
 
 
 #### VBA/Excel
-For VBA/Excel, navigate to `tests/vba` and launch the `test_psychrolib_ip.xlsm` and `test_psychrolib_si.xlsm` files. In Microsoft Excel, after enabling macros, from Visual Basic Editor (VBE) (Alt+F11 on Windows), select `test_psychrolib_<unit_system>` and run (F5 on Windows).
+For VBA/Excel, navigate to `tests/vba` and open `test_psychrolib_ip.xlsm` and `test_psychrolib_si.xlsm`. For each file, enable macros and launch the Visual Basic Editor (VBE) (Alt+F11 on Windows). Go to `Edit` and activate the 'Immediate Window' (Alt+F11 on Windows) and click on 'RunAllTests' from the right hand side drop down menu at the top next to '(General)'.   But in essence go in the VBA editor, click on RunAllTests, then press on the Run icon or go to 'Run' > 'Run' menu. The results will appear in the 'Immediate Window' at the bottom of the screen.
+
+![VBA/Excel Test](assets/excel_test.png)
 
 
 ## Coding conventions

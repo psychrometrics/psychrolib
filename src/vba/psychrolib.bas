@@ -932,7 +932,7 @@ Function GetSpecificHumFromHumRatio(ByVal HumRatio As Variant) As Variant
 '     ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 9b
 '
 '
-  Dim SpecificHum as Variant
+  Dim SpecificHum As Variant
 
   On Error GoTo ErrHandler
 
@@ -1080,6 +1080,77 @@ ErrHandler:
 
 End Function
 
+Function GetTDryBulbFromEnthalpyAndHumRatio(ByVal MoistAirEnthalpy As Variant, ByVal HumRatio As Variant) As Variant
+'
+' Return dry bulb temperature from enthalpy and humidity ratio.
+'
+'
+' Args:
+'     MoistAirEnthalpy : Moist air enthalpy in Btu lb⁻¹ [IP] or J kg⁻¹
+'     HumRatio : Humidity ratio in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]
+'
+' Returns:
+'     Dry-bulb temperature in °F [IP] or °C [SI]
+'
+' Reference:
+'     ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 30
+'
+' Notes:
+'     Based on the `GetMoistAirEnthalpy` function, rearranged for temperature.
+'
+
+  On Error GoTo ErrHandler
+
+  If HumRatio < 0 Then
+    MyMsgBox ("Humidity ratio is negative")
+    GoTo ErrHandler
+  End If
+
+  If (isIP()) Then
+    GetTDryBulbFromEnthalpyAndHumRatio = (MoistAirEnthalpy - 1061.0 * HumRatio) / (0.24 + 0.444 * HumRatio)
+  Else:
+    GetTDryBulbFromEnthalpyAndHumRatio = (MoistAirEnthalpy / 1000.0 - 2501.0 * HumRatio) / (1.006 + 1.86 * HumRatio)
+  End If
+  Exit Function
+
+ErrHandler:
+  GetTDryBulbFromEnthalpyAndHumRatio = CVErr(xlErrNA)
+
+End Function
+
+Function GetHumRatioFromEnthalpyAndTDryBulb(ByVal MoistAirEnthalpy As Variant, ByVal TDryBulb As Variant) As Variant
+'
+' Return humidity ratio from enthalpy and dry-bulb temperature.
+'
+'
+' Args:
+'     MoistAirEnthalpy : Moist air enthalpy in Btu lb⁻¹ [IP] or J kg⁻¹
+'     TDryBulb : Dry-bulb temperature in °F [IP] or °C [SI]
+'
+' Returns:
+'     Humidity ratio in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]
+'
+' Reference:
+'     ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 30
+'
+' Notes:
+'     Based on the `GetMoistAirEnthalpy` function, rearranged for humidity ratio.
+'
+
+  On Error GoTo ErrHandler
+
+  If (isIP()) Then
+    GetHumRatioFromEnthalpyAndTDryBulb = (MoistAirEnthalpy - 0.24 * TDryBulb) / (1061.0 + 0.444 * TDryBulb)
+  Else:
+    GetHumRatioFromEnthalpyAndTDryBulb = (MoistAirEnthalpy / 1000.0 - 1.006 * TDryBulb) / (2501.0 + 1.86 * TDryBulb)
+  End If
+  Exit Function
+
+ErrHandler:
+  GetHumRatioFromEnthalpyAndTDryBulb = CVErr(xlErrNA)
+
+End Function
+
 
 '******************************************************************************************************
 ' Saturated Air Calculations
@@ -1098,7 +1169,14 @@ Function GetSatVapPres(ByVal TDryBulb As Variant) As Variant
 ' Reference:
 '        ASHRAE Handbook - Fundamentals (2017) ch. 1  eqn 5 & 6
 '
+' Notes:
+'       The SI formulae show a discontinuity at 0 C. In rare cases this discontinuity creates issues
+'       in GetTDewPointFromVapPres. To avoid the problem, a small corrective term is added/subtracted
+'       to the ASHRAE formulae to make the formulae continuous at 0 C. The effect on the results is
+'       negligible (0.005%), well below the accuracy of the formulae
+'
   Dim LnPws As Variant, T As Variant
+  Const CORRECTIVE_TERM_SI = 4.851e-05 ' Small corrective term to make the function continuous at 0 C.
 
   On Error GoTo ErrHandler
 
@@ -1128,10 +1206,10 @@ Function GetSatVapPres(ByVal TDryBulb As Variant) As Variant
 
     If (TDryBulb <= 0) Then
         LnPws = -5674.5359 / T + 6.3925247 - 0.009677843 * T + 0.00000062215701 * T ^ 2 _
-              + 2.0747825E-09 * T ^ 3 - 9.484024E-13 * T ^ 4 + 4.1635019 * Log(T)
+              + 2.0747825E-09 * T ^ 3 - 9.484024E-13 * T ^ 4 + 4.1635019 * Log(T) + CORRECTIVE_TERM_SI
     Else
         LnPws = -5800.2206 / T + 1.3914993 - 0.048640239 * T + 0.000041764768 * T ^ 2 _
-              - 0.000000014452093 * T ^ 3 + 6.5459673 * Log(T)
+              - 0.000000014452093 * T ^ 3 + 6.5459673 * Log(T) - CORRECTIVE_TERM_SI
     End If
   End If
 
