@@ -871,7 +871,14 @@ def GetSatVapPres(TDryBulb: float) -> float:
     Reference:
         ASHRAE Handbook - Fundamentals (2017) ch. 1  eqn 5 & 6
 
+    Notes:
+        The SI formulae show a discontinuity at 0 C. In rare cases this discontinuity creates issues
+        in GetTDewPointFromVapPres. To avoid the problem, a small corrective term is added/subtracted
+        to the ASHRAE formulae to make the formulae continuous at 0 C. The effect on the results is
+        negligible (0.005%), well below the accuracy of the formulae
     """
+    CORRECTIVE_TERM_SI = 4.851e-05 # small corrective term to make the function continuous at 0 C.
+
     if isIP():
         if (TDryBulb < -148 or TDryBulb > 392):
             raise ValueError("Dry bulb temperature must be in range [-148, 392]°F")
@@ -892,10 +899,12 @@ def GetSatVapPres(TDryBulb: float) -> float:
 
         if (TDryBulb <= 0):
             LnPws = -5.6745359E+03 / T + 6.3925247 - 9.677843E-03 * T + 6.2215701E-07 * T**2 \
-                  + 2.0747825E-09 * math.pow(T, 3) - 9.484024E-13 * math.pow(T, 4) + 4.1635019 * math.log(T)
+                  + 2.0747825E-09 * math.pow(T, 3) - 9.484024E-13 * math.pow(T, 4) + 4.1635019 * math.log(T) \
+                  + CORRECTIVE_TERM_SI
         else:
             LnPws = -5.8002206E+03 / T + 1.3914993 - 4.8640239E-02 * T + 4.1764768E-05 * T**2 \
-                  - 1.4452093E-08 * math.pow(T, 3) + 6.5459673 * math.log(T)
+                  - 1.4452093E-08 * math.pow(T, 3) + 6.5459673 * math.log(T) \
+                  - CORRECTIVE_TERM_SI
 
     SatVapPres = math.exp(LnPws)
     return SatVapPres
