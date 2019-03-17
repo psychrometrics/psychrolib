@@ -451,7 +451,7 @@ def GetTDewPointFromVapPres(TDryBulb: float, VapPres: float) -> float:
             break
 
         if (index > MAX_ITER_COUNT):
-            raise ValueError("Convergence not reached. Stopping.")
+            raise ValueError("Convergence not reached in GetTDewPointFromVapPres. Stopping.")
 
         index = index + 1
     TDewPoint = min(TDewPoint, TDryBulb)
@@ -523,7 +523,7 @@ def GetTWetBulbFromHumRatio(TDryBulb: float, HumRatio: float, Pressure: float) -
         TWetBulb = (TWetBulbSup + TWetBulbInf) / 2
 
         if (index >= MAX_ITER_COUNT):
-            raise ValueError("Convergence not reached. Stopping.")
+            raise ValueError("Convergence not reached in GetTWetBulbFromHumRatio. Stopping.")
 
         index = index + 1
     return TWetBulb
@@ -725,8 +725,9 @@ def GetSpecificHumFromHumRatio(HumRatio: float) -> float:
     """
     if HumRatio < 0:
         raise ValueError("Humidity ratio cannot be negative")
+    BoundedHumRatio = max(HumRatio, MIN_HUM_RATIO)
 
-    SpecificHum = HumRatio / (1.0 + HumRatio)
+    SpecificHum = BoundedHumRatio / (1.0 + BoundedHumRatio)
     return SpecificHum
 
 def GetHumRatioFromSpecificHum(SpecificHum: float) -> float:
@@ -850,11 +851,12 @@ def GetTDryBulbFromEnthalpyAndHumRatio(MoistAirEnthalpy: float, HumRatio: float)
     """
     if HumRatio < 0:
         raise ValueError("Humidity ratio is negative")
+    BoundedHumRatio = max(HumRatio, MIN_HUM_RATIO)
 
     if isIP():
-        TDryBulb  = (MoistAirEnthalpy - 1061.0 * HumRatio) / (0.240 + 0.444 * HumRatio)
+        TDryBulb  = (MoistAirEnthalpy - 1061.0 * BoundedHumRatio) / (0.240 + 0.444 * BoundedHumRatio)
     else:
-        TDryBulb  = (MoistAirEnthalpy / 1000.0 - 2501.0 * HumRatio) / (1.006 + 1.86 * HumRatio)
+        TDryBulb  = (MoistAirEnthalpy / 1000.0 - 2501.0 * BoundedHumRatio) / (1.006 + 1.86 * BoundedHumRatio)
     return TDryBulb
 
 def GetHumRatioFromEnthalpyAndTDryBulb(MoistAirEnthalpy: float, TDryBulb: float) -> float:
@@ -880,7 +882,9 @@ def GetHumRatioFromEnthalpyAndTDryBulb(MoistAirEnthalpy: float, TDryBulb: float)
         HumRatio  = (MoistAirEnthalpy - 0.240 * TDryBulb) / (1061.0 + 0.444 * TDryBulb)
     else:
         HumRatio  = (MoistAirEnthalpy / 1000.0 - 1.006 * TDryBulb) / (2501.0 + 1.86 * TDryBulb)
-    return HumRatio
+
+    # Validity check.
+    return max(HumRatio, MIN_HUM_RATIO)
 
 
 #######################################################################################################

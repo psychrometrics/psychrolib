@@ -96,7 +96,7 @@ it('test_VapPres_TDewPoint', function () {
 it('test_GetTDewPointFromVapPres_convergence', function () {
     for (var TDryBulb = -148; TDryBulb <= 392; TDryBulb += 1)
         for (var RelHum = 0; RelHum <= 1; RelHum += 0.1)
-            for (var Pressure = 8; Pressure <= 17; Pressure += 1)
+            for (var Pressure = 8.6; Pressure <= 17.4; Pressure += 1)
                 psyjs.GetTWetBulbFromRelHum(TDryBulb, RelHum, Pressure)
 });
 

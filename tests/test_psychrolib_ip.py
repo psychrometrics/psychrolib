@@ -34,7 +34,7 @@ def test_GetSatVapPres(psy):
 def test_GetTDewPointFromVapPres_convergence(psy):
     TDryBulb = np.arange(-148, 392, 1)
     RelHum = np.arange(0, 1, 0.1)
-    Pressure = np.arange(8, 17, 1)
+    Pressure = np.arange(8.6, 17.4, 1)
     for T in TDryBulb:
         for RH in RelHum:
             for p in Pressure:
