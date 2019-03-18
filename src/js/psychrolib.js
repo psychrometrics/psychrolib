@@ -63,7 +63,7 @@ function Psychrometrics() {
                                 // Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1
   var INVALID = -99999;         // Invalid value (dimensionless)
 
-  var MAX_ITER_COUNT = 1000     // Maximum number of iterations before exiting while loops.
+  var MAX_ITER_COUNT = 100      // Maximum number of iterations before exiting while loops.
 
   var MIN_HUM_RATIO = 1e-7      // Minimum acceptable humidity ratio used/returned by any functions.
                                 // Any value above 0 or below the MIN_HUM_RATIO will be reset to this value.
@@ -315,9 +315,13 @@ function Psychrometrics() {
     Tdp = Tdp_c - (lnVP_c - lnVP) / d_lnVP;
     Tdp = max(Tdp, _BOUNDS[0]);
     Tdp = min(Tdp, _BOUNDS[1]);
+
+    if (index > MAX_ITER_COUNT)
+      throw new Error("Convergence not reached in GetTDewPointFromVapPres. Stopping.");
+
     index = index + 1;
   }
-  while ((abs(Tdp - Tdp_c) > PSYCHROLIB_TOLERANCE) || (index < MAX_ITER_COUNT));
+  while (abs(Tdp - Tdp_c) > PSYCHROLIB_TOLERANCE)
   return min(Tdp, TDryBulb);
   }
 
@@ -358,7 +362,7 @@ function Psychrometrics() {
     TWetBulb = (TWetBulbInf + TWetBulbSup) / 2.;
 
     // Bisection loop
-    while (((TWetBulbSup - TWetBulbInf) > PSYCHROLIB_TOLERANCE) || (index < MAX_ITER_COUNT)) {
+    while ((TWetBulbSup - TWetBulbInf) > PSYCHROLIB_TOLERANCE) {
       // Compute humidity ratio at temperature Tstar
       Wstar = this.GetHumRatioFromTWetBulb(TDryBulb, TWetBulb, Pressure);
 
@@ -370,6 +374,10 @@ function Psychrometrics() {
 
       // New guess of wet bulb temperature
       TWetBulb = (TWetBulbSup + TWetBulbInf) / 2.;
+
+      if (index > MAX_ITER_COUNT)
+        throw new Error("Convergence not reached in GetTWetBulbFromHumRatio. Stopping.");
+
       index = index + 1;
     }
 
@@ -521,10 +529,12 @@ function Psychrometrics() {
   this.GetSpecificHumFromHumRatio = function  // (o) Specific humidity ratio in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]
     ( HumRatio                                // (i) Humidity ratio in lb_H₂O lb_Dry_Air⁻¹ [IP] or kg_H₂O kg_Dry_Air⁻¹ [SI]
     ) {
+    var BoundedHumRatio;
     if (!(HumRatio >= 0.))
       throw new Error("Humidity ratio is negative");
+    BoundedHumRatio = max(HumRatio, MIN_HUM_RATIO);
 
-    return HumRatio / (1.0 + HumRatio);
+    return BoundedHumRatio / (1.0 + BoundedHumRatio);
   }
 
   // Return the humidity ratio (aka mixing ratio) from specific humidity
@@ -596,13 +606,15 @@ function Psychrometrics() {
     ( MoistAirEnthalpy                                 // (i) Moist air enthalpy in Btu lb⁻¹ [IP] or J kg⁻¹
     , HumRatio                                         // (i) Humidity ratio in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]
     ) {
+    var BoundedHumRatio;
     if (!(HumRatio >= 0.))
       throw new Error("Humidity ratio is negative");
+    BoundedHumRatio = max(HumRatio, MIN_HUM_RATIO);
 
     if (this.isIP())
-      return (MoistAirEnthalpy - 1061.0 * HumRatio) / (0.240 + 0.444 * HumRatio);
+      return (MoistAirEnthalpy - 1061.0 * BoundedHumRatio) / (0.240 + 0.444 * BoundedHumRatio);
     else
-      return (MoistAirEnthalpy / 1000.0 - 2501.0 * HumRatio) / (1.006 + 1.86 * HumRatio);
+      return (MoistAirEnthalpy / 1000.0 - 2501.0 * BoundedHumRatio) / (1.006 + 1.86 * BoundedHumRatio);
     }
 
   // Return humidity ratio from enthalpy and dry-bulb temperature.
@@ -612,10 +624,14 @@ function Psychrometrics() {
     ( MoistAirEnthalpy                                 // (i) Moist air enthalpy in Btu lb⁻¹ [IP] or J kg⁻¹
     , TDryBulb                                         // (i) Dry-bulb temperature in °F [IP] or °C [SI]
     ) {
+    var HumRatio;
     if (this.isIP())
-      return (MoistAirEnthalpy - 0.240 * TDryBulb) / (1061.0 + 0.444 * TDryBulb);
+      HumRatio = (MoistAirEnthalpy - 0.240 * TDryBulb) / (1061.0 + 0.444 * TDryBulb);
     else
-      return (MoistAirEnthalpy / 1000.0 - 1.006 * TDryBulb) / (2501.0 + 1.86 * TDryBulb);
+      HumRatio = (MoistAirEnthalpy / 1000.0 - 1.006 * TDryBulb) / (2501.0 + 1.86 * TDryBulb);
+
+    // Validity check.
+    return max(HumRatio, MIN_HUM_RATIO);
     }
 
 

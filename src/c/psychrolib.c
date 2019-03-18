@@ -59,7 +59,7 @@
                                   // Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1
 #define INVALID -99999            // Invalid value
 
-#define MAX_ITER_COUNT 100       // Maximum number of iterations before exiting while loops.
+#define MAX_ITER_COUNT 100        // Maximum number of iterations before exiting while loops.
 
 #define MIN_HUM_RATIO 1e-7        // Minimum acceptable humidity ratio used/returned by any functions.
                                   // Any value above 0 or below the MIN_HUM_RATIO will be reset to this value.

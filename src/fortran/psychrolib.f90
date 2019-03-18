@@ -113,7 +113,7 @@ module psychrolib
   real ::  PSYCHROLIB_TOLERANCE = 1.0
     !+ Tolerance of temperature calculations.
 
-  integer, parameter  :: MAX_ITER_COUNT = 1000
+  integer, parameter  :: MAX_ITER_COUNT = 100
     !+ Maximum number of iterations before exiting while loops.
 
   real, parameter  :: MIN_HUM_RATIO = 1e-7
@@ -442,7 +442,7 @@ module psychrolib
         STEPSIZE  =  0.01
     end if
 
-    TMidPoint = (BOUNDS(2) + BOUNDS(2)) / 2.0
+    TMidPoint = (BOUNDS(1) + BOUNDS(2)) / 2.0
 
     ! Bounds outside which a solution cannot be found
     if (VapPres < GetSatVapPres(BOUNDS(1)) .or. VapPres > GetSatVapPres(BOUNDS(2))) then
@@ -455,7 +455,7 @@ module psychrolib
     Tdp_c = Tdp
     index = 0
 
-    do while ((abs(Tdp - Tdp_c) > PSYCHROLIB_TOLERANCE) .or. (index < MAX_ITER_COUNT))
+    do while (abs(Tdp - Tdp_c) > PSYCHROLIB_TOLERANCE)
       ! Current point
       Tdp_c = Tdp
       lnVP_c = log(GetSatVapPres(Tdp_c))
@@ -473,6 +473,11 @@ module psychrolib
       Tdp = Tdp_c - (lnVP_c - lnVP) / d_lnVP
       Tdp = max(Tdp, BOUNDS(1))
       Tdp = min(Tdp, BOUNDS(2))
+
+      if (index > MAX_ITER_COUNT) then
+        error stop "Convergence not reached in GetTDewPointFromVapPres. Stopping."
+      end if
+
       index = index + 1
     end do
 
@@ -537,7 +542,7 @@ module psychrolib
 
     index = 0
     ! Bisection loop
-    do while (((TWetBulbSup - TWetBulbInf) > PSYCHROLIB_TOLERANCE) .or. (index < MAX_ITER_COUNT))
+    do while ((TWetBulbSup - TWetBulbInf) > PSYCHROLIB_TOLERANCE)
 
     ! Compute humidity ratio at temperature Tstar
     Wstar = GetHumRatioFromTWetBulb(TDryBulb, TWetBulb, Pressure)
@@ -551,6 +556,11 @@ module psychrolib
 
     ! New guess of wet bulb temperature
     TWetBulb = (TWetBulbSup + TWetBulbInf) / 2.0
+
+      if (index > MAX_ITER_COUNT) then
+        error stop "Convergence not reached in GetTWetBulbFromHumRatio. Stopping."
+      end if
+
     index = index + 1
     end do
   end function GetTWetBulbFromHumRatio
@@ -753,12 +763,15 @@ module psychrolib
       !+ Humidity ratio in lb_H₂O lb_Dry_Air⁻¹ [IP] or kg_H₂O kg_Dry_Air⁻¹ [SI]
     real             :: SpecificHum
       !+ Specific humidity in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]
+    real              ::  BoundedHumRatio
+      !+ Humidity ratio bounded to MIN_HUM_RATIO
 
     if (HumRatio < 0.0) then
       error stop "Error: humidity ratio cannot be negative"
     end if
+    BoundedHumRatio = max(HumRatio, MIN_HUM_RATIO)
 
-    SpecificHum = HumRatio / (1.0 + HumRatio)
+    SpecificHum = BoundedHumRatio / (1.0 + BoundedHumRatio)
   end function GetSpecificHumFromHumRatio
 
   function GetHumRatioFromSpecificHum(SpecificHum) result(HumRatio)
@@ -862,15 +875,18 @@ module psychrolib
       !+ Humidity ratio in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]
     real              ::  TDryBulb
       !+ Dry-bulb temperature in °F [IP] or °C [SI]
+    real              ::  BoundedHumRatio
+      !+ Humidity ratio bounded to MIN_HUM_RATIO
 
     if (HumRatio < 0.0) then
       error stop "Error: humidity ratio is negative"
     end if
+    BoundedHumRatio = max(HumRatio, MIN_HUM_RATIO)
 
     if (isIP()) then
-      TDryBulb  = (MoistAirEnthalpy - 1061.0 * HumRatio) / (0.240 + 0.444 * HumRatio)
+      TDryBulb  = (MoistAirEnthalpy - 1061.0 * BoundedHumRatio) / (0.240 + 0.444 * BoundedHumRatio)
     else
-      TDryBulb  = (MoistAirEnthalpy / 1000.0 - 2501.0 * HumRatio) / (1.006 + 1.86 * HumRatio)
+      TDryBulb  = (MoistAirEnthalpy / 1000.0 - 2501.0 * BoundedHumRatio) / (1.006 + 1.86 * BoundedHumRatio)
     end if
   end function GetTDryBulbFromEnthalpyAndHumRatio
 
@@ -893,6 +909,9 @@ module psychrolib
     else
       HumRatio  = (MoistAirEnthalpy / 1000.0 - 1.006 * TDryBulb) / (2501.0 + 1.86 * TDryBulb)
     end if
+
+    ! Validity check.
+    HumRatio = max(HumRatio, MIN_HUM_RATIO)
   end function GetHumRatioFromEnthalpyAndTDryBulb
 
 

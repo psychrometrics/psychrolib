@@ -75,6 +75,8 @@ def test_GetSatAirEnthalpy(psy):
 # No need to test vapour pressure calculation as it is just the saturation vapour pressure tested above
 def test_VapPres_TDewPoint(psy):
     VapPres = psy.GetVapPresFromTDewPoint(-4.0)
+    print(VapPres)
+    print(psy.GetTDewPointFromVapPres(59.0, VapPres))
     assert psy.GetTDewPointFromVapPres(59.0, VapPres) == pytest.approx(-4.0, abs = 0.001)
     VapPres = psy.GetVapPresFromTDewPoint(41.0)
     assert psy.GetTDewPointFromVapPres(59.0, VapPres) == pytest.approx(41.0, abs = 0.001)
