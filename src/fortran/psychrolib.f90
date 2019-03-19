@@ -498,7 +498,8 @@ module psychrolib
     else if (VapPres > PWS_FREEZE_HIGH) then
         BOUNDS(1) = T_WATER_FREEZE_HIGH
     else
-        return T_WATER_FREEZE
+        TDewPoint = T_WATER_FREEZE
+        exit
     end if
 
     ! We use NR to approximate the solution.
