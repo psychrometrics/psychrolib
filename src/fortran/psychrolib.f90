@@ -499,7 +499,7 @@ module psychrolib
         BOUNDS(1) = T_WATER_FREEZE_HIGH
     else
         TDewPoint = T_WATER_FREEZE
-        exit
+        stop
     end if
 
     ! We use NR to approximate the solution.
@@ -518,7 +518,7 @@ module psychrolib
       Tdp = min(Tdp, BOUNDS(2))
 
       if ((abs(Tdp - Tdp_c) <= PSYCHROLIB_TOLERANCE)) then
-        exit
+        stop
       end if
 
       if (index > MAX_ITER_COUNT) then
