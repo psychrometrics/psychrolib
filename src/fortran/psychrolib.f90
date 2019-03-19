@@ -452,10 +452,9 @@ module psychrolib
     ! First guess
     Tdp = TDryBulb
     lnVP = log(VapPres)
-    Tdp_c = Tdp
     index = 0
 
-    do while (abs(Tdp - Tdp_c) > PSYCHROLIB_TOLERANCE)
+    do while (.true.)
       ! Current point
       Tdp_c = Tdp
       lnVP_c = log(GetSatVapPres(Tdp_c))
@@ -473,6 +472,10 @@ module psychrolib
       Tdp = Tdp_c - (lnVP_c - lnVP) / d_lnVP
       Tdp = max(Tdp, BOUNDS(1))
       Tdp = min(Tdp, BOUNDS(2))
+
+      if ((abs(Tdp - Tdp_c) <= PSYCHROLIB_TOLERANCE)) then
+        exit
+      end if
 
       if (index > MAX_ITER_COUNT) then
         error stop "Convergence not reached in GetTDewPointFromVapPres. Stopping."
