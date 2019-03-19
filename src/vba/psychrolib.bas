@@ -1154,14 +1154,7 @@ Function GetSatVapPres(ByVal TDryBulb As Variant) As Variant
 ' Reference:
 '        ASHRAE Handbook - Fundamentals (2017) ch. 1  eqn 5 & 6
 '
-' Notes:
-'       The SI formulae show a discontinuity at 0 C. In rare cases this discontinuity creates issues
-'       in GetTDewPointFromVapPres. To avoid the problem, a small corrective term is added/subtracted
-'       to the ASHRAE formulae to make the formulae continuous at 0 C. The effect on the results is
-'       negligible (0.005%), well below the accuracy of the formulae
-'
   Dim LnPws As Variant, T As Variant
-  Const CORRECTIVE_TERM_SI = 4.851e-05 ' Small corrective term to make the function continuous at 0 C.
 
   On Error GoTo ErrHandler
 
@@ -1191,10 +1184,10 @@ Function GetSatVapPres(ByVal TDryBulb As Variant) As Variant
 
     If (TDryBulb <= 0) Then
         LnPws = -5674.5359 / T + 6.3925247 - 0.009677843 * T + 0.00000062215701 * T ^ 2 _
-              + 2.0747825E-09 * T ^ 3 - 9.484024E-13 * T ^ 4 + 4.1635019 * Log(T) + CORRECTIVE_TERM_SI
+              + 2.0747825E-09 * T ^ 3 - 9.484024E-13 * T ^ 4 + 4.1635019 * Log(T)
     Else
         LnPws = -5800.2206 / T + 1.3914993 - 0.048640239 * T + 0.000041764768 * T ^ 2 _
-              - 0.000000014452093 * T ^ 3 + 6.5459673 * Log(T) - CORRECTIVE_TERM_SI
+              - 0.000000014452093 * T ^ 3 + 6.5459673 * Log(T)
     End If
   End If
 
