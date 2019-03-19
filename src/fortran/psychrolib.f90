@@ -926,11 +926,6 @@ module psychrolib
     !+ Return saturation vapor pressure given dry-bulb temperature.
     !+ Reference:
     !+ ASHRAE Handbook - Fundamentals (2017) ch. 1  eqn 5
-    !+ Notes:
-    !+ The SI formulae show a discontinuity at 0 C. In rare cases this discontinuity creates issues
-    !+ in GetTDewPointFromVapPres. To avoid the problem, a small corrective term is added/subtracted
-    !+ to the ASHRAE formulae to make the formulae continuous at 0 C. The effect on the results is
-    !+ negligible (0.005%), well below the accuracy of the formulae
 
     real, intent(in)  ::  TDryBulb
       !+ Dry-bulb temperature in °F [IP] or °C [SI]
@@ -940,8 +935,6 @@ module psychrolib
       !+ Log of Vapor Pressure of saturated air (dimensionless)
     real              ::  T
       !+ Dry bulb temperature in R [IP] or K [SI]
-    real, parameter   :: CORRECTIVE_TERM_SI = 4.851e-05
-      !+ Small corrective term to make the function continuous at 0 C.
 
     if (isIP()) then
       if (TDryBulb < -148.0 .or. TDryBulb > 392.0) then
@@ -967,10 +960,10 @@ module psychrolib
 
         if (TDryBulb <= 0) then
           LnPws = -5.6745359E+03 / T + 6.3925247 - 9.677843E-03 * T + 6.2215701E-07 * T**2    &
-                  + 2.0747825E-09 * T**3 - 9.484024E-13 * T**4 + 4.1635019 * log(T) + CORRECTIVE_TERM_SI
+                  + 2.0747825E-09 * T**3 - 9.484024E-13 * T**4 + 4.1635019 * log(T)
         else
           LnPws = -5.8002206E+03 / T + 1.3914993 - 4.8640239E-02 * T + 4.1764768E-05 * T**2   &
-                  - 1.4452093E-08 * T**3 + 6.5459673 * log(T) - CORRECTIVE_TERM_SI
+                  - 1.4452093E-08 * T**3 + 6.5459673 * log(T)
         end if
       end if
 
