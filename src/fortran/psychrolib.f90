@@ -400,7 +400,8 @@ module psychrolib
   end function GetRelHumFromVapPres
 
   function dLnPws_(TDryBulb) result(dLnPws)
-    !+ Return saturation vapor pressure given dry-bulb temperature.
+    !+ Helper function returning the derivative of the natural log of the saturation vapor pressure
+    !+ as a function of dry-bulb temperature.
     !+ Reference:
     !+ ASHRAE Handbook - Fundamentals (2017) ch. 1  eqn 5
 
@@ -435,7 +436,7 @@ module psychrolib
                  - 3 * 1.4452093E-08 * T**2 + 6.5459673 / T
       end if
     end if
-  end function GetSatVapPres
+  end function dLnPws_
 
   function GetTDewPointFromVapPres(TDryBulb, VapPres) result(TDewPoint)
     !+ Return dew-point temperature given dry-bulb temperature and vapor pressure.
