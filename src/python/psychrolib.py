@@ -118,6 +118,7 @@ def SetUnitSystem(Units: UnitSystem) -> None:
     """
     global PSYCHROLIB_UNITS
     global PSYCHROLIB_TOLERANCE
+    global T_WATER_FREEZE, T_WATER_FREEZE_LOW, T_WATER_FREEZE_HIGH, PWS_FREEZE_LOW, PWS_FREEZE_HIGH
 
     if not isinstance(Units, UnitSystem):
         raise ValueError("The system of units has to be either SI or IP.")
@@ -127,9 +128,17 @@ def SetUnitSystem(Units: UnitSystem) -> None:
     # Define tolerance on temperature calculations
     # The tolerance is the same in IP and SI
     if Units == IP:
-        PSYCHROLIB_TOLERANCE = 0.001 * 9 / 5
+        PSYCHROLIB_TOLERANCE = 0.001 * 9. / 5.
+        T_WATER_FREEZE = 32.
     else:
         PSYCHROLIB_TOLERANCE = 0.001
+        T_WATER_FREEZE = 0.
+
+    # Vapor pressure contained within the discontinuity of the Pws function: return temperature of freezing
+    T_WATER_FREEZE_LOW = T_WATER_FREEZE - PSYCHROLIB_TOLERANCE / 10.          # Temperature just below freezing
+    T_WATER_FREEZE_HIGH = T_WATER_FREEZE + PSYCHROLIB_TOLERANCE / 10.          # Temperature just above freezing
+    PWS_FREEZE_LOW= GetSatVapPres(T_WATER_FREEZE_LOW)
+    PWS_FREEZE_HIGH = GetSatVapPres(T_WATER_FREEZE_HIGH)
 
 def GetUnitSystem() -> Optional[UnitSystem]:
     """
@@ -386,6 +395,40 @@ def GetRelHumFromVapPres(TDryBulb: float, VapPres: float) -> float:
     RelHum = VapPres / GetSatVapPres(TDryBulb)
     return RelHum
 
+def dLnPws_(TDryBulb: float) -> float:
+    """
+    Helper function returning the derivative of the natural log of the saturation vapor pressure 
+    as a function of dry-bulb temperature.
+
+    Args:
+        TDryBulb : Dry-bulb temperature in °F [IP] or °C [SI]
+
+    Returns:
+        Derivative of natural log of vapor pressure of saturated air in Psi [IP] or Pa [SI]
+
+    Reference:
+        ASHRAE Handbook - Fundamentals (2017) ch. 1  eqn 5 & 6
+
+    """
+    if isIP():
+        T = GetTRankineFromTFahrenheit(TDryBulb)
+        if TDryBulb < 32.:
+            dLnPws = 1.0214165E+04 / math.pow(T, 2) - 5.3765794E-03 + 2 * 1.9202377E-07 * T \
+                  + 2 * 3.5575832E-10 * math.pow(T, 2) - 4 * 9.0344688E-14 * math.pow(T, 3) + 4.1635019 / T
+        else:
+            dLnPws = 1.0440397E+04 / math.pow(T, 2) - 2.7022355E-02 + 2 * 1.2890360E-05 * T \
+                  - 3 * 2.4780681E-09 * math.pow(T, 2) + 6.5459673 / T
+    else:
+        T = GetTKelvinFromTCelsius(TDryBulb)
+        if TDryBulb < 0.:
+            dLnPws = 5.6745359E+03 / math.pow(T, 2) - 9.677843E-03 + 2 * 6.2215701E-07 * T \
+                  + 3 * 2.0747825E-09 * math.pow(T, 2) - 4 * 9.484024E-13 * math.pow(T, 3) + 4.1635019 / T
+        else:
+            dLnPws = 5.8002206E+03 / math.pow(T, 2) - 4.8640239E-02 + 2 * 4.1764768E-05 * T \
+                  - 3 * 1.4452093E-08 * math.pow(T, 2) + 6.5459673 / T
+
+    return dLnPws
+
 def GetTDewPointFromVapPres(TDryBulb: float, VapPres: float) -> float:
     """
     Return dew-point temperature given dry-bulb temperature and vapor pressure.
@@ -412,37 +455,40 @@ def GetTDewPointFromVapPres(TDryBulb: float, VapPres: float) -> float:
 
     """
     if isIP():
-        _BOUNDS = -148, 392
-        _STEPSIZE = 0.01 * 9 / 5
+        _BOUNDS = [-148, 392]
     else:
-        _BOUNDS = -100, 200
-        _STEPSIZE = 0.01
+        _BOUNDS = [-100, 200]
 
-    TMidPoint = (_BOUNDS[0] + _BOUNDS[1]) / 2.     # Midpoint of domain of validity
-
+    # Validity check
     if VapPres < GetSatVapPres(_BOUNDS[0]) or VapPres > GetSatVapPres(_BOUNDS[1]):
         raise ValueError("Partial pressure of water vapor is outside range of validity of equations")
 
+    # Restrict iteration to either left or right part of the saturation vapor pressure curve
+    # to avoid iterating back and forth across the discontinuity of the curve at the freezing point
+    # When the partial pressure of water vapor is within the discontinuity of GetSatVapPres,
+    # simply return the freezing point of water.
+    if (VapPres < PWS_FREEZE_LOW):
+        _BOUNDS[1] = T_WATER_FREEZE_LOW
+    elif (VapPres > PWS_FREEZE_HIGH):
+        _BOUNDS[0] = T_WATER_FREEZE_HIGH
+    else:
+        return T_WATER_FREEZE
+
+    # We use NR to approximate the solution.
     # First guess
     TDewPoint = TDryBulb        # Calculated value of dew point temperatures, solved for iteratively
-
     lnVP = math.log(VapPres)    # Partial pressure of water vapor in moist air
 
     index = 0
-    while True:
-        TDewPoint_iter = TDewPoint   # Value of Tdp used in NR calculation
-        # Step - negative in the right part of the curve, positive in the left part
-		# to avoid going past the domain of validity of eqn. 5 and 6
-		# when TDewPoint_iter is close to its bounds
-        if TDewPoint_iter > TMidPoint:
-            StepSize = -_STEPSIZE
-        else:
-            StepSize = _STEPSIZE
 
+    while True:
+        TDewPoint_iter = TDewPoint   # TDewPoint used in NR calculation
         lnVP_iter = math.log(GetSatVapPres(TDewPoint_iter))
-        # Derivative of function, calculated numerically
-        d_lnVP = (math.log(GetSatVapPres(TDewPoint_iter + StepSize)) - lnVP_iter) / StepSize
-        # New estimate, bounded by domain of validity of eqn. 5 and 6
+
+        # Derivative of function, calculated analytically
+        d_lnVP = dLnPws_(TDewPoint_iter)
+
+        # New estimate, bounded by the search domain defined above
         TDewPoint = TDewPoint_iter - (lnVP_iter - lnVP) / d_lnVP
         TDewPoint = max(TDewPoint, _BOUNDS[0])
         TDewPoint = min(TDewPoint, _BOUNDS[1])
@@ -454,6 +500,7 @@ def GetTDewPointFromVapPres(TDryBulb: float, VapPres: float) -> float:
             raise ValueError("Convergence not reached in GetTDewPointFromVapPres. Stopping.")
 
         index = index + 1
+
     TDewPoint = min(TDewPoint, TDryBulb)
     return TDewPoint
 

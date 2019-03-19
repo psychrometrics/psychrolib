@@ -1,7 +1,7 @@
 {
   "name": "testing",
   "scripts": {
-    "test": "mocha test_*.js --timeout 40000"
+    "test": "mocha test_*.js"
   },
   "devDependencies": {
     "chai": "^4.1.1",

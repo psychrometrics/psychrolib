@@ -113,6 +113,8 @@ module psychrolib
   real ::  PSYCHROLIB_TOLERANCE = 1.0
     !+ Tolerance of temperature calculations.
 
+  real ::  T_WATER_FREEZE, T_WATER_FREEZE_LOW, T_WATER_FREEZE_HIGH, PWS_FREEZE_LOW, PWS_FREEZE_HIGH
+
   integer, parameter  :: MAX_ITER_COUNT = 100
     !+ Maximum number of iterations before exiting while loops.
 
@@ -145,9 +147,16 @@ module psychrolib
     ! The tolerance is the same in IP and SI
     if (UnitSystem == IP) then
       PSYCHROLIB_TOLERANCE = 0.001 * 9.0 / 5.0
+      T_WATER_FREEZE = 32.
     else
       PSYCHROLIB_TOLERANCE = 0.001
+      T_WATER_FREEZE = 0.
     end if
+    ! Vapor pressure contained within the discontinuity of the Pws function: return temperature of freezing
+    T_WATER_FREEZE_LOW = T_WATER_FREEZE - PSYCHROLIB_TOLERANCE / 10.          ! Temperature just below freezing
+    T_WATER_FREEZE_HIGH = T_WATER_FREEZE + PSYCHROLIB_TOLERANCE / 10.         ! Temperature just above freezing
+    PWS_FREEZE_LOW= GetSatVapPres(T_WATER_FREEZE_LOW)
+    PWS_FREEZE_HIGH = GetSatVapPres(T_WATER_FREEZE_HIGH)
   end subroutine SetUnitSystem
 
   function GetUnitSystem() result(UnitSystem)
@@ -390,6 +399,44 @@ module psychrolib
     RelHum = VapPres / GetSatVapPres(TDryBulb)
   end function GetRelHumFromVapPres
 
+  function dLnPws_(TDryBulb) result(dLnPws)
+    !+ Return saturation vapor pressure given dry-bulb temperature.
+    !+ Reference:
+    !+ ASHRAE Handbook - Fundamentals (2017) ch. 1  eqn 5
+
+    real, intent(in)  ::  TDryBulb
+      !+ Dry-bulb temperature in °F [IP] or °C [SI]
+    real              ::  dLnPws
+      !+ Derivative of natural log of vapor pressure of saturated air in Psi [IP] or Pa [SI]
+    real              ::  T
+      !+ Dry bulb temperature in R [IP] or K [SI]
+
+    if (isIP()) then
+
+      T = GetTRankineFromTFahrenheit(TDryBulb)
+
+      if (TDryBulb <= 32.) then
+        dLnPws = 1.0214165E+04 / T**2 - 5.3765794E-03 + 2 * 1.9202377E-07 * T &
+                 + 2 * 3.5575832E-10 * T**2 - 4 * 9.0344688E-14 * T**3 + 4.1635019 / T
+      else
+        dLnPws = 1.0440397E+04 / T**2 - 2.7022355E-02 + 2 * 1.2890360E-05 * T &
+                 - 3 * 2.4780681E-09 * T**2 + 6.5459673 / T
+      end if
+
+    else
+
+      T = GetTKelvinFromTCelsius(TDryBulb)
+
+      if (TDryBulb <= 0) then
+        dLnPws = 5.6745359E+03 / T**2 - 9.677843E-03 + 2 * 6.2215701E-07 * T &
+                 + 3 * 2.0747825E-09 * T**2 - 4 * 9.484024E-13 * T**3 + 4.1635019 / T
+      else
+        dLnPws = 5.8002206E+03 / T**2 - 4.8640239E-02 + 2 * 4.1764768E-05 * T &
+                 - 3 * 1.4452093E-08 * T**2 + 6.5459673 / T
+      end if
+    end if
+  end function GetSatVapPres
+
   function GetTDewPointFromVapPres(TDryBulb, VapPres) result(TDewPoint)
     !+ Return dew-point temperature given dry-bulb temperature and vapor pressure.
     !+ References:
@@ -422,10 +469,6 @@ module psychrolib
       !+ Value of Tdp used in NR calculation
     real                ::  d_Tdp
       !+ Value of temperature step used in NR calculation
-    real                ::  STEPSIZE
-      !+ Size of timestep (dimensionless)
-    real                :: TMidPoint
-      !+ Midpoint of domain of validity
     real, dimension(2)  ::  BOUNDS
       !+ Valid temperature range in °F [IP] or °C [SI]
     integer             :: index
@@ -435,40 +478,39 @@ module psychrolib
     if (isIP()) then
         BOUNDS(1) = -148.0
         BOUNDS(2) =  392.0
-        STEPSIZE  =  0.01 * 9.0 / 5.0
     else
         BOUNDS(1) = -100.0
         BOUNDS(2) =  200.0
-        STEPSIZE  =  0.01
     end if
-
-    TMidPoint = (BOUNDS(1) + BOUNDS(2)) / 2.0
 
     ! Bounds outside which a solution cannot be found
     if (VapPres < GetSatVapPres(BOUNDS(1)) .or. VapPres > GetSatVapPres(BOUNDS(2))) then
       error stop "Error: partial pressure of water vapor is outside range of validity of equations"
     end if
 
-    ! First guess
+    ! Restrict iteration to either left or right part of the saturation vapor pressure curve
+    ! to avoid iterating back and forth across the discontinuity of the curve at the freezing point
+    ! When the partial pressure of water vapor is within the discontinuity of GetSatVapPres,
+    ! simply return the freezing point of water.
+    if (VapPres < PWS_FREEZE_LOW) then
+        BOUNDS(2) = T_WATER_FREEZE_LOW
+    else if (VapPres > PWS_FREEZE_HIGH) then
+        BOUNDS(1) = T_WATER_FREEZE_HIGH
+    else:
+        return T_WATER_FREEZE
+    end if
+
+    ! We use NR to approximate the solution.
     Tdp = TDryBulb
     lnVP = log(VapPres)
     index = 0
 
     do while (.true.)
       ! Current point
-      Tdp_c = Tdp
+      Tdp_c = Tdp ! Tdp_c used in NR calculation
       lnVP_c = log(GetSatVapPres(Tdp_c))
-      ! Step - negative in the right part of the curve, positive in the left part
-      ! to avoid going past the domain of validity of eqn. 5 and 6
-      ! when Tdp_c is close to its bounds
-      if (Tdp_c > TMidPoint) then
-        d_Tdp = -STEPSIZE
-      else
-        d_Tdp = STEPSIZE
-      end if
-      ! Derivative of function, calculated numerically
-      d_lnVP = (log(GetSatVapPres(Tdp_c + d_Tdp)) - lnVP_c) / d_Tdp
-      ! New estimate, bounded by domain of validity of eqn. 5 and 6
+      ! Derivative of function, calculated analytically
+      d_lnVP = dLnPws_(Tdp_c)
       Tdp = Tdp_c - (lnVP_c - lnVP) / d_lnVP
       Tdp = max(Tdp, BOUNDS(1))
       Tdp = min(Tdp, BOUNDS(2))
