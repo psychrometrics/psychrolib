@@ -88,6 +88,7 @@ module psychrolib
   public :: CalcPsychrometricsFromTWetBulb
   public :: CalcPsychrometricsFromTDewPoint
   public :: CalcPsychrometricsFromRelHum
+  public :: dLnPws_
 
 
   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -468,8 +469,6 @@ module psychrolib
       !+ Value of log of vapor water pressure used in NR calculation
     real                ::  Tdp_c
       !+ Value of Tdp used in NR calculation
-    real                ::  d_Tdp
-      !+ Value of temperature step used in NR calculation
     real, dimension(2)  ::  BOUNDS
       !+ Valid temperature range in °F [IP] or °C [SI]
     integer             :: index
