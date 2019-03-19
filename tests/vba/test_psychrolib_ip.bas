@@ -272,7 +272,7 @@ End Sub
 Sub test_GetTDewPointFromVapPres_convergence()
   For TDryBulb = -148 To 392 Step 2
     For RelHum = 0 To 1 Step 0.1
-      For p = 8.6 To 17.4 Step 0.8
+      For Pressure = 8.6 To 17.4 Step 0.8
         TWetBulb = GetTWetBulbFromRelHum(TDryBulb, rh, p)
       Next p
     Next rh
