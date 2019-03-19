@@ -274,7 +274,7 @@ Sub test_GetTDewPointFromVapPres_convergence()
       For Pressure = 60000 To 120000 Step 10000
         TWetBulb = GetTWetBulbFromRelHum(TDryBulb, RelHum, Pressure)
       Next Pressure
-    Next rh
+    Next RelHum
   Next TDryBulb
   Call TestExpression("GetTDewPointFromVapPres convergence test", 1, 1, abst:=0.1)
 End Sub
