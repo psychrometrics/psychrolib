@@ -256,6 +256,40 @@ function Psychrometrics() {
     return VapPres / this.GetSatVapPres(TDryBulb);
   }
 
+  // Helper function returning the derivative of the natural log of the saturation vapor pressure
+  // as a function of dry-bulb temperature.
+  // Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn. 5 & 6
+  this.dLnPws_ = function       // (o)  Derivative of natural log of vapor pressure of saturated air in Psi [IP] or Pa [SI]
+    ( TDryBulb                  // (i) Dry bulb temperature in °F [IP] or °C [SI]
+    ) {
+    var dLnPws, T;
+
+    if (this.isIP())
+    {
+      T = this.GetTRankineFromTFahrenheit(TDryBulb);
+
+      if (TDryBulb >= -148. && TDryBulb <= 32.)
+        dLnPws = 1.0214165E+04 / pow(T, 2) - 5.3765794E-03 + 2 * 1.9202377E-07 * T
+                 + 2 * 3.5575832E-10 * pow(T, 2) - 4 * 9.0344688E-14 * pow(T, 3) + 4.1635019 / T;
+      else if (TDryBulb > 32. && TDryBulb <= 392.)
+        dLnPws = 1.0440397E+04 / pow(T, 2) - 2.7022355E-02 + 2 * 1.2890360E-05 * T
+                 - 3 * 2.4780681E-09 * pow(T, 2) + 6.5459673 / T;
+    }
+    else
+    {
+      T = this.GetTKelvinFromTCelsius(TDryBulb);
+
+      if (TDryBulb >= -100. && TDryBulb <= 0.)
+        dLnPws = 5.6745359E+03 / pow(T, 2) - 9.677843E-03 + 2 * 6.2215701E-07 * T
+                 + 3 * 2.0747825E-09 * pow(T, 2) - 4 * 9.484024E-13 * pow(T, 3) + 4.1635019 / T;
+      else if (TDryBulb > 0. && TDryBulb <= 200.)
+        dLnPws = 5.8002206E+03 / pow(T, 2) - 4.8640239E-02 + 2 * 4.1764768E-05 * T
+                 - 3 * 1.4452093E-08 * pow(T, 2) + 6.5459673 / T;
+    }
+
+    return dLnPws;
+  }
+
   // Return dew-point temperature given dry-bulb temperature and vapor pressure.
   // Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn. 5 and 6
   // Notes: the dew point temperature is solved by inverting the equation giving water vapor pressure
@@ -270,59 +304,71 @@ function Psychrometrics() {
     ( TDryBulb                            // (i) Dry bulb temperature in °F [IP] or °C [SI]
     , VapPres                             // (i) Partial pressure of water vapor in moist air in Psi [IP] or Pa [SI]
     ) {
-  // Bounds and step size as a function of the system of units
-  var _STEPSIZE;                // Temperature step used for the calculation of numerical derivatives
+   // Bounds function of the system of units
+  var BOUNDS              // Domain of validity of the equations
+  var T_WATER_FREEZE, T_WATER_FREEZE_LOW, T_WATER_FREEZE_HIGH, PWS_FREEZE_LOW, PWS_FREEZE_HIGH;
+
   if (this.isIP())
   {
-    var _BOUNDS = [-148., 392.]   // Domain of validity of the equations
-    _STEPSIZE   = 0.01 * 9. / 5.
+    BOUNDS = [-148., 392.];   // Domain of validity of the equations
+    T_WATER_FREEZE = 32.;
   }
   else
   {
-    var _BOUNDS = [-100., 200.]   // Domain of validity of the equations
-    _STEPSIZE   = 0.01;
+    BOUNDS = [-100., 200.];   // Domain of validity of the equations
+    T_WATER_FREEZE = 0.;
   }
 
-  var TMidPoint = (_BOUNDS[0] + _BOUNDS[1]) / 2.;     // Midpoint of domain of validity
-
   // Bounds outside which a solution cannot be found
-  if (VapPres < this.GetSatVapPres(_BOUNDS[0]) || VapPres > this.GetSatVapPres(_BOUNDS[1]))
+  if (VapPres < this.GetSatVapPres(BOUNDS[0]) || VapPres > this.GetSatVapPres(BOUNDS[1]))
     throw new Error("Partial pressure of water vapor is outside range of validity of equations");
 
-  // First guess
-  var Tdp = TDryBulb;      // Calculated value of dew point temperatures, solved for iteratively in °F [IP] or °C [SI]
-  var lnVP = log(VapPres); // Natural logarithm of partial pressure of water vapor pressure in moist air
+  // Vapor pressure contained within the discontinuity of the Pws function: return temperature of freezing
+  T_WATER_FREEZE_LOW = T_WATER_FREEZE - PSYCHROLIB_TOLERANCE / 10.;          // Temperature just below freezing
+  T_WATER_FREEZE_HIGH = T_WATER_FREEZE + PSYCHROLIB_TOLERANCE / 10.;         // Temperature just above freezing
+  PWS_FREEZE_LOW= this.GetSatVapPres(T_WATER_FREEZE_LOW);
+  PWS_FREEZE_HIGH = this.GetSatVapPres(T_WATER_FREEZE_HIGH);
 
-  var Tdp_c;               // Value of Tdp used in NR calculation
-  var lnVP_c;              // Value of log of vapor water pressure used in NR calculation
-  var d_Tdp;               // Value of temperature step used in NR calculation
-  var index = 0;
+  // Restrict iteration to either left or right part of the saturation vapor pressure curve
+  // to avoid iterating back and forth across the discontinuity of the curve at the freezing point
+  // When the partial pressure of water vapor is within the discontinuity of GetSatVapPres,
+  // simply return the freezing point of water.
+  if (VapPres < PWS_FREEZE_LOW)
+    BOUNDS[1] = T_WATER_FREEZE_LOW;
+  else if (VapPres > PWS_FREEZE_HIGH)
+    BOUNDS[0] = T_WATER_FREEZE_HIGH;
+  else
+    return T_WATER_FREEZE;
+
+  // We use NR to approximate the solution.
+  // First guess
+  var TDewPoint = TDryBulb;      // Calculated value of dew point temperatures, solved for iteratively in °F [IP] or °C [SI]
+  var lnVP = log(VapPres);       // Natural logarithm of partial pressure of water vapor pressure in moist air
+
+  var TDewPoint_iter;            // Value of TDewPoint used in NR calculation
+  var lnVP_iter;                 // Value of log of vapor water pressure used in NR calculation
+  var index = 1;
   do
   {
     // Current point
-    Tdp_c = Tdp;
-    lnVP_c = log(this.GetSatVapPres(Tdp_c));
-    // Step - negative in the right part of the curve, positive in the left part
-    // to avoid going past the domain of validity of eqn. 5 and 6
-    // when Tdp_c is close to its bounds
-    if (Tdp_c > TMidPoint)
-      d_Tdp = -_STEPSIZE;
-    else
-      d_Tdp = _STEPSIZE;
-    // Derivative of function, calculated numerically
-    var d_lnVP = (log(this.GetSatVapPres(Tdp_c + d_Tdp)) - lnVP_c) / d_Tdp;
+    TDewPoint_iter = TDewPoint;
+    lnVP_iter = log(this.GetSatVapPres(TDewPoint_iter));
+
+    // Derivative of function, calculated analytically
+    var d_lnVP = this.dLnPws_(TDewPoint_iter);
+
     // New estimate, bounded by domain of validity of eqn. 5 and 6
-    Tdp = Tdp_c - (lnVP_c - lnVP) / d_lnVP;
-    Tdp = max(Tdp, _BOUNDS[0]);
-    Tdp = min(Tdp, _BOUNDS[1]);
+    TDewPoint = TDewPoint_iter - (lnVP_iter - lnVP) / d_lnVP;
+    TDewPoint = max(TDewPoint, BOUNDS[0]);
+    TDewPoint = min(TDewPoint, BOUNDS[1]);
 
     if (index > MAX_ITER_COUNT)
       throw new Error("Convergence not reached in GetTDewPointFromVapPres. Stopping.");
 
     index = index + 1;
   }
-  while (abs(Tdp - Tdp_c) > PSYCHROLIB_TOLERANCE)
-  return min(Tdp, TDryBulb);
+  while (abs(TDewPoint - TDewPoint_iter) > PSYCHROLIB_TOLERANCE);
+  return min(TDewPoint, TDryBulb);
   }
 
   // Return vapor pressure given dew point temperature.
@@ -348,7 +394,7 @@ function Psychrometrics() {
     // Declarations
     var Wstar;
     var TDewPoint, TWetBulb, TWetBulbSup, TWetBulbInf, BoundedHumRatio;
-    var index = 0;
+    var index = 1;
 
     if (!(HumRatio >= 0.))
       throw new Error("Humidity ratio is negative");
