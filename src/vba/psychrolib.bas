@@ -580,7 +580,7 @@ Function GetTDewPointFromVapPres(ByVal TDryBulb As Variant, ByVal VapPres As Var
   ' simply return the freezing point of water.
   If (VapPres < PWS_FREEZE_LOW) Then
     BOUNDS(2) = T_WATER_FREEZE_LOW
-  ElseIf (VapPres < PWS_FREEZE_LOW) Then
+  ElseIf (VapPres > PWS_FREEZE_HIGH) Then
     BOUNDS(1) = T_WATER_FREEZE_HIGH
   Else
     GetTDewPointFromVapPres = T_WATER_FREEZE

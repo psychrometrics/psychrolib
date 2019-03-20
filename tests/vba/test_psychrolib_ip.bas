@@ -262,7 +262,7 @@ Sub test_AllPsychrometrics()
   Call TestExpression("CalcPsychrometricsFromRelHum", TWetBulb, 65, abst:=0.1)
 End Sub
 
-  
+
 '##############################################################################
 ' Test of the convergence of the NR method in GetTDewPointFromVapPres
 ' over a wide range of inputs
