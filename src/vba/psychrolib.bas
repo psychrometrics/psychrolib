@@ -484,6 +484,43 @@ ErrHandler:
 
 End Function
 
+
+Private Function dLnPws(TDryBulb As Variant) As Variant
+'
+'    Helper function returning the derivative of the natural log of the saturation vapor pressure
+'    as a function of dry-bulb temperature.
+'
+' Args:
+'        TDryBulb : Dry-bulb temperature in °F [IP] or °C [SI]
+'
+' Returns:
+'        Derivative of natural log of vapor pressure of saturated air in Psi [IP] or Pa [SI]
+'
+' Reference:
+'        ASHRAE Handbook - Fundamentals (2017) ch. 1  eqn 5 & 6
+'
+  Dim T As Variant
+  If (isIP()) Then
+    T = GetTRankineFromTFahrenheit(TDryBulb)
+    If (TDryBulb < 32#) Then
+      dLnPws = 10214.165 / T ^ 2 - 0.0053765794 + 2 * 0.00000019202377 * T _
+             + 2 * 3.5575832E-10 * T ^ 2 - 4 * 9.0344688E-14 * T ^ 3 + 4.1635019 / T
+    Else
+      dLnPws = 10440.397 / T ^ 2 - 0.027022355 + 2 * 0.00001289036 * T _
+             - 3 * 2.4780681E-09 * T ^ 2 + 6.5459673 / T
+    End If
+  Else
+    T = GetTKelvinFromTCelsius(TDryBulb)
+    If (TDryBulb < 0#) Then
+      dLnPws = 5674.5359 / T ^ 2 - 0.009677843 + 2 * 0.00000062215701 * T _
+             + 3 * 2.0747825E-09 * T ^ 2 - 4 * 9.484024E-13 * T ^ 3 + 4.1635019 / T
+    Else
+      dLnPws = 5800.2206 / T ^ 2 - 0.048640239 + 2 * 0.000041764768 * T _
+             - 3 * 0.000000014452093 * T ^ 2 + 6.5459673 / T
+    End If
+  End If
+End Function
+
 Function GetTDewPointFromVapPres(ByVal TDryBulb As Variant, ByVal VapPres As Variant) As Variant
 '
 ' Return dew-point temperature given dry-bulb temperature and vapor pressure.
@@ -509,19 +546,17 @@ Function GetTDewPointFromVapPres(ByVal TDryBulb As Variant, ByVal VapPres As Var
 '        TDryBulb is not really needed here, just used for convenience.
 '
   Dim BOUNDS_(2) As Variant
-  Dim STEPSIZE_ As Variant
+  Dim TFreeze As Variant, TFreezeLo As Variant, TFreezeHi As Variant
+  Dim SatVapPresFreezeLo As Variant, SatVapPresFreezeHi As Variant
+  Dim Tol As Variant
+
   If (isIP()) Then
     BOUNDS_(1) = -148
     BOUNDS_(2) = 392
-    STEPSIZE_ = 0.01 * 9 / 5
   Else
     BOUNDS_(1) = -100
     BOUNDS_(2) = 200
-    STEPSIZE_ = 0.01
   End If
-
-  Dim TMidPoint As Variant
-  TMidPoint = (BOUNDS_(1) + BOUNDS_(2)) / 2#      ' Midpoint of domain of validity
 
   On Error GoTo ErrHandler
 
@@ -530,15 +565,29 @@ Function GetTDewPointFromVapPres(ByVal TDryBulb As Variant, ByVal VapPres As Var
     GoTo ErrHandler
   End If
 
+  ' Vapor pressure contained within the discontinuity of the Pws function: return temperature of freezing
+  If (isIP()) Then
+    TFreeze = 32
+  Else
+    TFreeze = 0
+  End If
+  Tol = GetTol()
+  TFreezeLo = TFreeze - Tol / 10#        ' Temperature just below freezing
+  TFreezeHi = TFreeze + Tol / 10#        ' Temperature just above freezing
+  SatVapPresFreezeLo = GetSatVapPres(TFreezeLo)
+  SatVapPresFreezeHi = GetSatVapPres(TFreezeHi)
+  If (VapPres >= SatVapPresFreezeLo And VapPres <= SatVapPresFreezeHi) Then
+    GetTDewPointFromVapPres = TFreeze
+    Exit Function
+  End If
+
   ' First guess
   Dim TDewPoint As Variant
   Dim lnVP As Variant
   Dim d_lnVP As Variant
   Dim TDewPoint_iter As Variant
-  Dim StepSize As Variant
   Dim lnVP_iter
   TDewPoint = TDryBulb        ' Calculated value of dew point temperatures, solved for iteratively
-  Dim Tol As Variant
   Dim index As Variant
 
   lnVP = Log(VapPres)          ' Partial pressure of water vapor in moist air
@@ -548,25 +597,25 @@ Function GetTDewPointFromVapPres(ByVal TDryBulb As Variant, ByVal VapPres As Var
   Do
     TDewPoint_iter = TDewPoint   ' Value of Tdp used in NR calculation
 
-    ' Step - negative in the right part of the curve, positive in the left part
-    ' to avoid going past the domain of validity of eqn. 5 and 6
-    ' when TDewPoint_iter is close to its bounds
-    If (TDewPoint_iter > TMidPoint) Then
-        StepSize = -STEPSIZE_
-      Else
-        StepSize = STEPSIZE_
-    End If
-
     lnVP_iter = Log(GetSatVapPres(TDewPoint_iter))
-    ' Derivative of function, calculated numerically
-    d_lnVP = (Log(GetSatVapPres(TDewPoint_iter + StepSize)) - lnVP_iter) / StepSize
-    ' New estimate, bounded by domain of validity of eqn. 5 and 6
+    ' Derivative of function, calculated analytically
+    d_lnVP = dLnPws(TDewPoint_iter)
+    ' New estimate, bounded by domain of validity of eqn. 5 and 6 and by the freezing point
     TDewPoint = TDewPoint_iter - (lnVP_iter - lnVP) / d_lnVP
     TDewPoint = Max(TDewPoint, BOUNDS_(1))
     TDewPoint = Min(TDewPoint, BOUNDS_(2))
+    If (VapPres < SatVapPresFreezeLo) Then
+      TDewPoint = Min(TDewPoint, TFreezeLo)
+    End If
+    If (VapPres > SatVapPresFreezeHi) Then
+      TDewPoint = Max(TDewPoint, TFreezeHi)
+    End If
     index = index + 1
+    If (index > MAX_ITER_COUNT) Then
+      GoTo ErrHandler
+    End If
 
-  Loop While ((Abs(TDewPoint - TDewPoint_iter) > Tol) Or (index < MAX_ITER_COUNT))
+  Loop While (Abs(TDewPoint - TDewPoint_iter) > Tol)
 
   TDewPoint = Min(TDewPoint, TDryBulb)
   GetTDewPointFromVapPres = TDewPoint
