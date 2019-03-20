@@ -341,26 +341,24 @@ double GetTDewPointFromVapPres  // (o) Dew Point temperature in °F [IP] or °C 
   )
 {
   // Bounds and step size as a function of the system of units
-  double _BOUNDS[2];              // Domain of validity of the equations
-  double _STEPSIZE;               // Temperature step used for the calculation of numerical derivatives
+  double BOUNDS[2];              // Domain of validity of the equations
   double T_WATER_FREEZE, T_WATER_FREEZE_LOW, T_WATER_FREEZE_HIGH, PWS_FREEZE_LOW, PWS_FREEZE_HIGH;
 
   if (isIP())
   {
-    _BOUNDS[0] = -148.;
-    _BOUNDS[1] = 392.;
+    BOUNDS[0] = -148.;
+    BOUNDS[1] = 392.;
     T_WATER_FREEZE = 32.;
   }
   else
   {
-    _BOUNDS[0] = -100.;
-    _BOUNDS[1] = 200.;
+    BOUNDS[0] = -100.;
+    BOUNDS[1] = 200.;
     T_WATER_FREEZE = 0.;
   }
 
-
   // Bounds outside which a solution cannot be found
-  ASSERT (VapPres >= GetSatVapPres(_BOUNDS[0]) && VapPres <= GetSatVapPres(_BOUNDS[1]), "Partial pressure of water vapor is outside range of validity of equations")
+  ASSERT (VapPres >= GetSatVapPres(BOUNDS[0]) && VapPres <= GetSatVapPres(BOUNDS[1]), "Partial pressure of water vapor is outside range of validity of equations")
 
   // Vapor pressure contained within the discontinuity of the Pws function: return temperature of freezing
   T_WATER_FREEZE_LOW = T_WATER_FREEZE - PSYCHROLIB_TOLERANCE / 10.;          // Temperature just below freezing
@@ -372,40 +370,41 @@ double GetTDewPointFromVapPres  // (o) Dew Point temperature in °F [IP] or °C 
   // to avoid iterating back and forth across the discontinuity of the curve at the freezing point
   // When the partial pressure of water vapor is within the discontinuity of GetSatVapPres,
   // simply return the freezing point of water.
-
   if (VapPres < PWS_FREEZE_LOW)
-    _BOUNDS[1] = T_WATER_FREEZE_LOW;
+    BOUNDS[1] = T_WATER_FREEZE_LOW;
   else if (PSYCHROLIB_UNITS == SI)
-    _BOUNDS[0] = T_WATER_FREEZE_HIGH;
+    BOUNDS[0] = T_WATER_FREEZE_HIGH;
   else
     return T_WATER_FREEZE;
 
+  // We use NR to approximate the solution.
   // First guess
-  double Tdp = TDryBulb;      // Calculated value of dew point temperatures, solved for iteratively in °F [IP] or °C [SI]
-  double lnVP = log(VapPres); // Natural logarithm of partial pressure of water vapor pressure in moist air
+  double TDewPoint = TDryBulb;      // Calculated value of dew point temperatures, solved for iteratively in °F [IP] or °C [SI]
+  double lnVP = log(VapPres);       // Natural logarithm of partial pressure of water vapor pressure in moist air
 
-  double Tdp_c;               // Value of Tdp used in NR calculation
-  double lnVP_c;              // Value of log of vapor water pressure used in NR calculation
-  int index = 0;
+  double TDewPoint_iter;            // Value of TDewPoint used in NR calculation
+  double lnVP_iter;                 // Value of log of vapor water pressure used in NR calculation
+  int index = 1;
 
   do
   {
-    // Current point
-    Tdp_c = Tdp;
-    lnVP_c = log(GetSatVapPres(Tdp_c));
+    TDewPoint_iter = TDewPoint; // TDewPoint used in NR calculation
+    lnVP_iter = log(GetSatVapPres(TDewPoint_iter));
+
     // Derivative of function, calculated analytically
-    double d_lnVP = dLnPws_(Tdp_c);
+    double d_lnVP = dLnPws_(TDewPoint_iter);
+
     // New estimate, bounded by domain of validity of eqn. 5 and 6
-    Tdp = Tdp_c - (lnVP_c - lnVP) / d_lnVP;
-    Tdp = max(Tdp, _BOUNDS[0]);
-    Tdp = min(Tdp, _BOUNDS[1]);
+    TDewPoint = TDewPoint_iter - (lnVP_iter - lnVP) / d_lnVP;
+    TDewPoint = max(TDewPoint, BOUNDS[0]);
+    TDewPoint = min(TDewPoint, BOUNDS[1]);
 
     ASSERT (index <= MAX_ITER_COUNT, "Convergence not reached in GetTDewPointFromVapPres. Stopping.")
 
     index = index + 1;
   }
-  while (fabs(Tdp - Tdp_c) > PSYCHROLIB_TOLERANCE);
-  return min(Tdp, TDryBulb);
+  while (fabs(TDewPoint - TDewPoint_iter) > PSYCHROLIB_TOLERANCE);
+  return min(TDewPoint, TDryBulb);
 }
 
 // Return vapor pressure given dew point temperature.
@@ -433,7 +432,7 @@ double GetTWetBulbFromHumRatio  // (o) Wet bulb temperature in °F [IP] or °C [
   // Declarations
   double Wstar;
   double TDewPoint, TWetBulb, TWetBulbSup, TWetBulbInf, BoundedHumRatio;
-  int index = 0;
+  int index = 1;
 
   ASSERT (HumRatio >= 0., "Humidity ratio is negative")
   BoundedHumRatio = max(HumRatio, MIN_HUM_RATIO);

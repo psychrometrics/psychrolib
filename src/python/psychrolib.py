@@ -446,29 +446,30 @@ def GetTDewPointFromVapPres(TDryBulb: float, VapPres: float) -> float:
 
     """
     if isIP():
-        BOUNDS_ = [-148, 392]
+        BOUNDS = [-148, 392]
         T_WATER_FREEZE = 32.
     else:
-        BOUNDS_ = [-100, 200]
+        BOUNDS = [-100, 200]
         T_WATER_FREEZE = 0.
+
+    # Validity check -- bounds outside which a solution cannot be found
+    if VapPres < GetSatVapPres(BOUNDS[0]) or VapPres > GetSatVapPres(BOUNDS[1]):
+        raise ValueError("Partial pressure of water vapor is outside range of validity of equations")
+
     # Vapor pressure contained within the discontinuity of the Pws function: return temperature of freezing
     T_WATER_FREEZE_LOW = T_WATER_FREEZE - PSYCHROLIB_TOLERANCE / 10.          # Temperature just below freezing
     T_WATER_FREEZE_HIGH = T_WATER_FREEZE + PSYCHROLIB_TOLERANCE / 10.         # Temperature just above freezing
     PWS_FREEZE_LOW= GetSatVapPres(T_WATER_FREEZE_LOW)
     PWS_FREEZE_HIGH = GetSatVapPres(T_WATER_FREEZE_HIGH)
 
-    # Validity check
-    if VapPres < GetSatVapPres(BOUNDS_[0]) or VapPres > GetSatVapPres(BOUNDS_[1]):
-        raise ValueError("Partial pressure of water vapor is outside range of validity of equations")
-
     # Restrict iteration to either left or right part of the saturation vapor pressure curve
     # to avoid iterating back and forth across the discontinuity of the curve at the freezing point
     # When the partial pressure of water vapor is within the discontinuity of GetSatVapPres,
     # simply return the freezing point of water.
     if (VapPres < PWS_FREEZE_LOW):
-        BOUNDS_[1] = T_WATER_FREEZE_LOW
+        BOUNDS[1] = T_WATER_FREEZE_LOW
     elif (VapPres > PWS_FREEZE_HIGH):
-        BOUNDS_[0] = T_WATER_FREEZE_HIGH
+        BOUNDS[0] = T_WATER_FREEZE_HIGH
     else:
         return T_WATER_FREEZE
 
@@ -477,7 +478,7 @@ def GetTDewPointFromVapPres(TDryBulb: float, VapPres: float) -> float:
     TDewPoint = TDryBulb        # Calculated value of dew point temperatures, solved for iteratively
     lnVP = math.log(VapPres)    # Partial pressure of water vapor in moist air
 
-    index = 0
+    index = 1
 
     while True:
         TDewPoint_iter = TDewPoint   # TDewPoint used in NR calculation
@@ -488,8 +489,8 @@ def GetTDewPointFromVapPres(TDryBulb: float, VapPres: float) -> float:
 
         # New estimate, bounded by the search domain defined above
         TDewPoint = TDewPoint_iter - (lnVP_iter - lnVP) / d_lnVP
-        TDewPoint = max(TDewPoint, BOUNDS_[0])
-        TDewPoint = min(TDewPoint, BOUNDS_[1])
+        TDewPoint = max(TDewPoint, BOUNDS[0])
+        TDewPoint = min(TDewPoint, BOUNDS[1])
 
         if ((math.fabs(TDewPoint - TDewPoint_iter) <= PSYCHROLIB_TOLERANCE)):
             break
@@ -551,7 +552,7 @@ def GetTWetBulbFromHumRatio(TDryBulb: float, HumRatio: float, Pressure: float) -
     TWetBulbInf = TDewPoint
     TWetBulb = (TWetBulbInf + TWetBulbSup) / 2
 
-    index = 0
+    index = 1
     # Bisection loop
     while ((TWetBulbSup - TWetBulbInf) > PSYCHROLIB_TOLERANCE):
 

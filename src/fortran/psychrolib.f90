@@ -450,16 +450,14 @@ module psychrolib
       !+ Partial pressure of water vapor in moist air in Psi [IP] or Pa [SI]
     real                ::  TDewPoint
       !+ Dew-point temperature in °F [IP] or °C [SI]
-    real                ::  Tdp
-      !+ Calculated value of dew point temperatures, solved for iteratively in °F [IP] or °C [SI]
     real                ::  lnVP
       !+ Natural logarithm of partial pressure of water vapor pressure in moist air
     real                ::  d_lnVP
       !+ Derivative of function, calculated numerically
-    real                ::  lnVP_c
+    real                ::  lnVP_iter
       !+ Value of log of vapor water pressure used in NR calculation
-    real                ::  Tdp_c
-      !+ Value of Tdp used in NR calculation
+    real                ::  TDewPoint_iter
+      !+ Value of TDewPoint used in NR calculation
     real, dimension(2)  ::  BOUNDS
       !+ Valid temperature range in °F [IP] or °C [SI]
     integer             :: index
@@ -477,14 +475,15 @@ module psychrolib
         T_WATER_FREEZE = 0.
     end if
 
-    ! Bounds outside which a solution cannot be found
+    ! Validity check -- bounds outside which a solution cannot be found
     if (VapPres < GetSatVapPres(BOUNDS(1)) .or. VapPres > GetSatVapPres(BOUNDS(2))) then
       error stop "Error: partial pressure of water vapor is outside range of validity of equations"
     end if
 
     ! Vapor pressure contained within the discontinuity of the Pws function: return temperature of freezing
-    T_WATER_FREEZE_LOW = T_WATER_FREEZE - PSYCHROLIB_TOLERANCE / 10.          ! Temperature just below freezing
-    T_WATER_FREEZE_HIGH = T_WATER_FREEZE + PSYCHROLIB_TOLERANCE / 10.         ! Temperature just above freezing
+    T_WATER_FREEZE_LOW = T_WATER_FREEZE - PSYCHROLIB_TOLERANCE / 10.        ! Temperature just below freezing
+    T_WATER_FREEZE_LOW = T_WATER_FREEZE - PSYCHROLIB_TOLERANCE / 10.        ! Temperature just below freezing
+    T_WATER_FREEZE_HIGH = T_WATER_FREEZE + PSYCHROLIB_TOLERANCE             ! Temperature just above freezing
     PWS_FREEZE_LOW= GetSatVapPres(T_WATER_FREEZE_LOW)
     PWS_FREEZE_HIGH = GetSatVapPres(T_WATER_FREEZE_HIGH)
 
@@ -502,21 +501,23 @@ module psychrolib
     end if
 
     ! We use NR to approximate the solution.
-    Tdp = TDryBulb
+    TDewPoint = TDryBulb
     lnVP = log(VapPres)
-    index = 0
+    index = 1
 
     do while (.true.)
-      ! Current point
-      Tdp_c = Tdp ! Tdp_c used in NR calculation
-      lnVP_c = log(GetSatVapPres(Tdp_c))
-      ! Derivative of function, calculated analytically
-      d_lnVP = dLnPws_(Tdp_c)
-      Tdp = Tdp_c - (lnVP_c - lnVP) / d_lnVP
-      Tdp = max(Tdp, BOUNDS(1))
-      Tdp = min(Tdp, BOUNDS(2))
+      TDewPoint_iter = TDewPoint ! TDewPoint_iter used in NR calculation
+      lnVP_iter = log(GetSatVapPres(TDewPoint_iter))
 
-      if ((abs(Tdp - Tdp_c) <= PSYCHROLIB_TOLERANCE)) then
+      ! Derivative of function, calculated analytically
+      d_lnVP = dLnPws_(TDewPoint_iter)
+
+      ! New estimate, bounded by the search domain defined above
+      TDewPoint = TDewPoint_iter - (lnVP_iter - lnVP) / d_lnVP
+      TDewPoint = max(TDewPoint, BOUNDS(1))
+      TDewPoint = min(TDewPoint, BOUNDS(2))
+
+      if ((abs(TDewPoint - TDewPoint_iter) <= PSYCHROLIB_TOLERANCE)) then
         return
       end if
 
@@ -527,7 +528,7 @@ module psychrolib
       index = index + 1
     end do
 
-  TDewPoint = min(Tdp, TDryBulb)
+  TDewPoint = min(TDewPoint, TDryBulb)
   end function GetTDewPointFromVapPres
 
   function GetVapPresFromTDewPoint(TDewPoint) result(VapPres)
@@ -586,7 +587,7 @@ module psychrolib
     TWetBulbInf = TDewPoint
     TWetBulb = (TWetBulbInf + TWetBulbSup) / 2.0
 
-    index = 0
+    index = 1
     ! Bisection loop
     do while ((TWetBulbSup - TWetBulbInf) > PSYCHROLIB_TOLERANCE)
 
