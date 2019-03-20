@@ -118,7 +118,6 @@ def SetUnitSystem(Units: UnitSystem) -> None:
     """
     global PSYCHROLIB_UNITS
     global PSYCHROLIB_TOLERANCE
-    global T_WATER_FREEZE, T_WATER_FREEZE_LOW, T_WATER_FREEZE_HIGH, PWS_FREEZE_LOW, PWS_FREEZE_HIGH
 
     if not isinstance(Units, UnitSystem):
         raise ValueError("The system of units has to be either SI or IP.")
@@ -129,16 +128,8 @@ def SetUnitSystem(Units: UnitSystem) -> None:
     # The tolerance is the same in IP and SI
     if Units == IP:
         PSYCHROLIB_TOLERANCE = 0.001 * 9. / 5.
-        T_WATER_FREEZE = 32.
     else:
         PSYCHROLIB_TOLERANCE = 0.001
-        T_WATER_FREEZE = 0.
-
-    # Vapor pressure contained within the discontinuity of the Pws function: return temperature of freezing
-    T_WATER_FREEZE_LOW = T_WATER_FREEZE - PSYCHROLIB_TOLERANCE / 10.          # Temperature just below freezing
-    T_WATER_FREEZE_HIGH = T_WATER_FREEZE + PSYCHROLIB_TOLERANCE / 10.          # Temperature just above freezing
-    PWS_FREEZE_LOW= GetSatVapPres(T_WATER_FREEZE_LOW)
-    PWS_FREEZE_HIGH = GetSatVapPres(T_WATER_FREEZE_HIGH)
 
 def GetUnitSystem() -> Optional[UnitSystem]:
     """
@@ -455,12 +446,19 @@ def GetTDewPointFromVapPres(TDryBulb: float, VapPres: float) -> float:
 
     """
     if isIP():
-        _BOUNDS = [-148, 392]
+        BOUNDS_ = [-148, 392]
+        T_WATER_FREEZE = 32.
     else:
-        _BOUNDS = [-100, 200]
+        BOUNDS_ = [-100, 200]
+        T_WATER_FREEZE = 0.
+    # Vapor pressure contained within the discontinuity of the Pws function: return temperature of freezing
+    T_WATER_FREEZE_LOW = T_WATER_FREEZE - PSYCHROLIB_TOLERANCE / 10.          # Temperature just below freezing
+    T_WATER_FREEZE_HIGH = T_WATER_FREEZE + PSYCHROLIB_TOLERANCE / 10.         # Temperature just above freezing
+    PWS_FREEZE_LOW= GetSatVapPres(T_WATER_FREEZE_LOW)
+    PWS_FREEZE_HIGH = GetSatVapPres(T_WATER_FREEZE_HIGH)
 
     # Validity check
-    if VapPres < GetSatVapPres(_BOUNDS[0]) or VapPres > GetSatVapPres(_BOUNDS[1]):
+    if VapPres < GetSatVapPres(BOUNDS_[0]) or VapPres > GetSatVapPres(BOUNDS_[1]):
         raise ValueError("Partial pressure of water vapor is outside range of validity of equations")
 
     # Restrict iteration to either left or right part of the saturation vapor pressure curve
@@ -468,9 +466,9 @@ def GetTDewPointFromVapPres(TDryBulb: float, VapPres: float) -> float:
     # When the partial pressure of water vapor is within the discontinuity of GetSatVapPres,
     # simply return the freezing point of water.
     if (VapPres < PWS_FREEZE_LOW):
-        _BOUNDS[1] = T_WATER_FREEZE_LOW
+        BOUNDS_[1] = T_WATER_FREEZE_LOW
     elif (VapPres > PWS_FREEZE_HIGH):
-        _BOUNDS[0] = T_WATER_FREEZE_HIGH
+        BOUNDS_[0] = T_WATER_FREEZE_HIGH
     else:
         return T_WATER_FREEZE
 
@@ -490,8 +488,8 @@ def GetTDewPointFromVapPres(TDryBulb: float, VapPres: float) -> float:
 
         # New estimate, bounded by the search domain defined above
         TDewPoint = TDewPoint_iter - (lnVP_iter - lnVP) / d_lnVP
-        TDewPoint = max(TDewPoint, _BOUNDS[0])
-        TDewPoint = min(TDewPoint, _BOUNDS[1])
+        TDewPoint = max(TDewPoint, BOUNDS_[0])
+        TDewPoint = min(TDewPoint, BOUNDS_[1])
 
         if ((math.fabs(TDewPoint - TDewPoint_iter) <= PSYCHROLIB_TOLERANCE)):
             break

@@ -114,8 +114,6 @@ module psychrolib
   real ::  PSYCHROLIB_TOLERANCE = 1.0
     !+ Tolerance of temperature calculations.
 
-  real ::  T_WATER_FREEZE, T_WATER_FREEZE_LOW, T_WATER_FREEZE_HIGH, PWS_FREEZE_LOW, PWS_FREEZE_HIGH
-
   integer, parameter  :: MAX_ITER_COUNT = 100
     !+ Maximum number of iterations before exiting while loops.
 
@@ -148,16 +146,9 @@ module psychrolib
     ! The tolerance is the same in IP and SI
     if (UnitSystem == IP) then
       PSYCHROLIB_TOLERANCE = 0.001 * 9.0 / 5.0
-      T_WATER_FREEZE = 32.
     else
       PSYCHROLIB_TOLERANCE = 0.001
-      T_WATER_FREEZE = 0.
     end if
-    ! Vapor pressure contained within the discontinuity of the Pws function: return temperature of freezing
-    T_WATER_FREEZE_LOW = T_WATER_FREEZE - PSYCHROLIB_TOLERANCE / 10.          ! Temperature just below freezing
-    T_WATER_FREEZE_HIGH = T_WATER_FREEZE + PSYCHROLIB_TOLERANCE / 10.         ! Temperature just above freezing
-    PWS_FREEZE_LOW= GetSatVapPres(T_WATER_FREEZE_LOW)
-    PWS_FREEZE_HIGH = GetSatVapPres(T_WATER_FREEZE_HIGH)
   end subroutine SetUnitSystem
 
   function GetUnitSystem() result(UnitSystem)
@@ -473,20 +464,29 @@ module psychrolib
       !+ Valid temperature range in °F [IP] or °C [SI]
     integer             :: index
       !+ Index used in the calculation
+     real ::  T_WATER_FREEZE, T_WATER_FREEZE_LOW, T_WATER_FREEZE_HIGH, PWS_FREEZE_LOW, PWS_FREEZE_HIGH
 
     ! Bounds and step size as a function of the system of units
     if (isIP()) then
         BOUNDS(1) = -148.0
         BOUNDS(2) =  392.0
+        T_WATER_FREEZE = 32.
     else
         BOUNDS(1) = -100.0
         BOUNDS(2) =  200.0
+        T_WATER_FREEZE = 0.
     end if
 
     ! Bounds outside which a solution cannot be found
     if (VapPres < GetSatVapPres(BOUNDS(1)) .or. VapPres > GetSatVapPres(BOUNDS(2))) then
       error stop "Error: partial pressure of water vapor is outside range of validity of equations"
     end if
+
+    ! Vapor pressure contained within the discontinuity of the Pws function: return temperature of freezing
+    T_WATER_FREEZE_LOW = T_WATER_FREEZE - PSYCHROLIB_TOLERANCE / 10.          ! Temperature just below freezing
+    T_WATER_FREEZE_HIGH = T_WATER_FREEZE + PSYCHROLIB_TOLERANCE / 10.         ! Temperature just above freezing
+    PWS_FREEZE_LOW= GetSatVapPres(T_WATER_FREEZE_LOW)
+    PWS_FREEZE_HIGH = GetSatVapPres(T_WATER_FREEZE_HIGH)
 
     ! Restrict iteration to either left or right part of the saturation vapor pressure curve
     ! to avoid iterating back and forth across the discontinuity of the curve at the freezing point
@@ -498,7 +498,7 @@ module psychrolib
         BOUNDS(1) = T_WATER_FREEZE_HIGH
     else
         TDewPoint = T_WATER_FREEZE
-        stop
+        return
     end if
 
     ! We use NR to approximate the solution.
@@ -517,7 +517,7 @@ module psychrolib
       Tdp = min(Tdp, BOUNDS(2))
 
       if ((abs(Tdp - Tdp_c) <= PSYCHROLIB_TOLERANCE)) then
-        stop
+        return
       end if
 
       if (index > MAX_ITER_COUNT) then

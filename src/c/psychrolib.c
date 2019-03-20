@@ -290,6 +290,41 @@ double GetRelHumFromVapPres     // (o) Relative humidity [0-1]
   return VapPres/GetSatVapPres(TDryBulb);
 }
 
+// Helper function returning the derivative of the natural log of the saturation vapor pressure
+// as a function of dry-bulb temperature.
+// Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn. 5 & 6
+double dLnPws_        // (o) Derivative of natural log of vapor pressure of saturated air in Psi [IP] or Pa [SI]
+  ( double TDryBulb   // (i) Dry bulb temperature in °F [IP] or °C [SI]
+  )
+{
+  double dLnPws, T;
+
+  if (isIP())
+  {
+    T = GetTRankineFromTFahrenheit(TDryBulb);
+
+    if (TDryBulb >= -148. && TDryBulb <= 32.)
+            dLnPws = 1.0214165E+04 / pow(T, 2) - 5.3765794E-03 + 2 * 1.9202377E-07 * T
+                  + 2 * 3.5575832E-10 * pow(T, 2) - 4 * 9.0344688E-14 * pow(T, 3) + 4.1635019 / T;
+    else if (TDryBulb > 32. && TDryBulb <= 392.)
+            dLnPws = 1.0440397E+04 / pow(T, 2) - 2.7022355E-02 + 2 * 1.2890360E-05 * T
+                   - 3 * 2.4780681E-09 * pow(T, 2) + 6.5459673 / T;
+  }
+  else
+  {
+    T = GetTKelvinFromTCelsius(TDryBulb);
+
+    if (TDryBulb >= -100. && TDryBulb <= 0.)
+dLnPws = 5.6745359E+03 / pow(T, 2) - 9.677843E-03 + 2 * 6.2215701E-07 * T
+                  + 3 * 2.0747825E-09 * pow(T, 2) - 4 * 9.484024E-13 * pow(T, 3) + 4.1635019 / T;
+    else if (TDryBulb > 0. && TDryBulb <= 200.)
+            dLnPws = 5.8002206E+03 / pow(T, 2) - 4.8640239E-02 + 2 * 4.1764768E-05 * T
+                  - 3 * 1.4452093E-08 * pow(T, 2) + 6.5459673 / T;
+  }
+
+  return dLnPws;
+}
+
 // Return dew-point temperature given dry-bulb temperature and vapor pressure.
 // Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn. 5 and 6
 // Notes: the dew point temperature is solved by inverting the equation giving water vapor pressure
@@ -308,23 +343,42 @@ double GetTDewPointFromVapPres  // (o) Dew Point temperature in °F [IP] or °C 
   // Bounds and step size as a function of the system of units
   double _BOUNDS[2];              // Domain of validity of the equations
   double _STEPSIZE;               // Temperature step used for the calculation of numerical derivatives
+  double T_WATER_FREEZE, T_WATER_FREEZE_LOW, T_WATER_FREEZE_HIGH, PWS_FREEZE_LOW, PWS_FREEZE_HIGH;
+
   if (isIP())
   {
     _BOUNDS[0] = -148.;
     _BOUNDS[1] = 392.;
-    _STEPSIZE = 0.01 * 9. / 5.;
+    T_WATER_FREEZE = 32.;
   }
   else
   {
     _BOUNDS[0] = -100.;
     _BOUNDS[1] = 200.;
-    _STEPSIZE = 0.01;
+    T_WATER_FREEZE = 0.;
   }
 
-  double TMidPoint = (_BOUNDS[0] + _BOUNDS[1]) / 2.;     // Midpoint of domain of validity
 
   // Bounds outside which a solution cannot be found
   ASSERT (VapPres >= GetSatVapPres(_BOUNDS[0]) && VapPres <= GetSatVapPres(_BOUNDS[1]), "Partial pressure of water vapor is outside range of validity of equations")
+
+  // Vapor pressure contained within the discontinuity of the Pws function: return temperature of freezing
+  T_WATER_FREEZE_LOW = T_WATER_FREEZE - PSYCHROLIB_TOLERANCE / 10.;          // Temperature just below freezing
+  T_WATER_FREEZE_HIGH = T_WATER_FREEZE + PSYCHROLIB_TOLERANCE / 10.;         // Temperature just above freezing
+  PWS_FREEZE_LOW= GetSatVapPres(T_WATER_FREEZE_LOW);
+  PWS_FREEZE_HIGH = GetSatVapPres(T_WATER_FREEZE_HIGH);
+
+  // Restrict iteration to either left or right part of the saturation vapor pressure curve
+  // to avoid iterating back and forth across the discontinuity of the curve at the freezing point
+  // When the partial pressure of water vapor is within the discontinuity of GetSatVapPres,
+  // simply return the freezing point of water.
+
+  if (VapPres < PWS_FREEZE_LOW)
+    _BOUNDS[1] = T_WATER_FREEZE_LOW;
+  else if (PSYCHROLIB_UNITS == SI)
+    _BOUNDS[0] = T_WATER_FREEZE_HIGH;
+  else
+    return T_WATER_FREEZE;
 
   // First guess
   double Tdp = TDryBulb;      // Calculated value of dew point temperatures, solved for iteratively in °F [IP] or °C [SI]
@@ -332,7 +386,6 @@ double GetTDewPointFromVapPres  // (o) Dew Point temperature in °F [IP] or °C 
 
   double Tdp_c;               // Value of Tdp used in NR calculation
   double lnVP_c;              // Value of log of vapor water pressure used in NR calculation
-  double d_Tdp;               // Value of temperature step used in NR calculation
   int index = 0;
 
   do
@@ -340,15 +393,8 @@ double GetTDewPointFromVapPres  // (o) Dew Point temperature in °F [IP] or °C 
     // Current point
     Tdp_c = Tdp;
     lnVP_c = log(GetSatVapPres(Tdp_c));
-    // Step - negative in the right part of the curve, positive in the left part
-    // to avoid going past the domain of validity of eqn. 5 and 6
-    // when Tdp_c is close to its bounds
-    if (Tdp_c > TMidPoint)
-      d_Tdp = -_STEPSIZE;
-    else
-      d_Tdp = _STEPSIZE;
-    // Derivative of function, calculated numerically
-    double d_lnVP = (log(GetSatVapPres(Tdp_c + d_Tdp)) - lnVP_c) / d_Tdp;
+    // Derivative of function, calculated analytically
+    double d_lnVP = dLnPws_(Tdp_c);
     // New estimate, bounded by domain of validity of eqn. 5 and 6
     Tdp = Tdp_c - (lnVP_c - lnVP) / d_lnVP;
     Tdp = max(Tdp, _BOUNDS[0]);
