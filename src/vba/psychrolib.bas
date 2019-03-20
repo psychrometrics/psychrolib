@@ -587,11 +587,6 @@ Function GetTDewPointFromVapPres(ByVal TDryBulb As Variant, ByVal VapPres As Var
     Exit Function
   End If
 
-  ' We use NR to approximate the solution.
-  ' First guess
-  TDewPoint = TDryBulb        ' Calculated value of dew point temperatures, solved for iteratively
-  lnVP = Log(VapPres)         ' Partial pressure of water vapor in moist air
-
   Dim TDewPoint As Variant
   Dim lnVP As Variant
   Dim d_lnVP As Variant
@@ -599,6 +594,12 @@ Function GetTDewPointFromVapPres(ByVal TDryBulb As Variant, ByVal VapPres As Var
   Dim lnVP_iter
   Dim index As Variant
   index = 1
+
+  ' We use NR to approximate the solution.
+  ' First guess
+  TDewPoint = TDryBulb        ' Calculated value of dew point temperatures, solved for iteratively
+  lnVP = Log(VapPres)         ' Partial pressure of water vapor in moist air
+
 
   Do
     TDewPoint_iter = TDewPoint   ' Value of Tdp used in NR calculation
