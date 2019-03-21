@@ -268,10 +268,10 @@ function Psychrometrics() {
     {
       T = this.GetTRankineFromTFahrenheit(TDryBulb);
 
-      if (TDryBulb >= -148. && TDryBulb <= 32.)
+      if (TDryBulb <= 32.)
         dLnPws = 1.0214165E+04 / pow(T, 2) - 5.3765794E-03 + 2 * 1.9202377E-07 * T
                  + 2 * 3.5575832E-10 * pow(T, 2) - 4 * 9.0344688E-14 * pow(T, 3) + 4.1635019 / T;
-      else if (TDryBulb > 32. && TDryBulb <= 392.)
+      else
         dLnPws = 1.0440397E+04 / pow(T, 2) - 2.7022355E-02 + 2 * 1.2890360E-05 * T
                  - 3 * 2.4780681E-09 * pow(T, 2) + 6.5459673 / T;
     }
@@ -279,10 +279,10 @@ function Psychrometrics() {
     {
       T = this.GetTKelvinFromTCelsius(TDryBulb);
 
-      if (TDryBulb >= -100. && TDryBulb <= 0.)
+      if (TDryBulb <= 0.)
         dLnPws = 5.6745359E+03 / pow(T, 2) - 9.677843E-03 + 2 * 6.2215701E-07 * T
                  + 3 * 2.0747825E-09 * pow(T, 2) - 4 * 9.484024E-13 * pow(T, 3) + 4.1635019 / T;
-      else if (TDryBulb > 0. && TDryBulb <= 200.)
+      else
         dLnPws = 5.8002206E+03 / pow(T, 2) - 4.8640239E-02 + 2 * 4.1764768E-05 * T
                  - 3 * 1.4452093E-08 * pow(T, 2) + 6.5459673 / T;
     }
@@ -326,7 +326,7 @@ function Psychrometrics() {
   // Vapor pressure contained within the discontinuity of the Pws function: return temperature of freezing
   T_WATER_FREEZE_LOW = T_WATER_FREEZE - PSYCHROLIB_TOLERANCE / 10.;          // Temperature just below freezing
   T_WATER_FREEZE_HIGH = T_WATER_FREEZE + PSYCHROLIB_TOLERANCE / 10.;         // Temperature just above freezing
-  PWS_FREEZE_LOW= this.GetSatVapPres(T_WATER_FREEZE_LOW);
+  PWS_FREEZE_LOW = this.GetSatVapPres(T_WATER_FREEZE_LOW);
   PWS_FREEZE_HIGH = this.GetSatVapPres(T_WATER_FREEZE_HIGH);
 
   // Restrict iteration to either left or right part of the saturation vapor pressure curve
@@ -365,7 +365,7 @@ function Psychrometrics() {
     if (index > MAX_ITER_COUNT)
       throw new Error("Convergence not reached in GetTDewPointFromVapPres. Stopping.");
 
-    index = index + 1;
+    index++;
   }
   while (abs(TDewPoint - TDewPoint_iter) > PSYCHROLIB_TOLERANCE);
   return min(TDewPoint, TDryBulb);
@@ -424,7 +424,7 @@ function Psychrometrics() {
       if (index > MAX_ITER_COUNT)
         throw new Error("Convergence not reached in GetTWetBulbFromHumRatio. Stopping.");
 
-      index = index + 1;
+      index++;
     }
 
     return TWetBulb;

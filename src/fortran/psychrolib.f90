@@ -484,7 +484,7 @@ module psychrolib
     T_WATER_FREEZE_LOW = T_WATER_FREEZE - PSYCHROLIB_TOLERANCE / 10.        ! Temperature just below freezing
     T_WATER_FREEZE_LOW = T_WATER_FREEZE - PSYCHROLIB_TOLERANCE / 10.        ! Temperature just below freezing
     T_WATER_FREEZE_HIGH = T_WATER_FREEZE + PSYCHROLIB_TOLERANCE             ! Temperature just above freezing
-    PWS_FREEZE_LOW= GetSatVapPres(T_WATER_FREEZE_LOW)
+    PWS_FREEZE_LOW = GetSatVapPres(T_WATER_FREEZE_LOW)
     PWS_FREEZE_HIGH = GetSatVapPres(T_WATER_FREEZE_HIGH)
 
     ! Restrict iteration to either left or right part of the saturation vapor pressure curve
@@ -518,7 +518,7 @@ module psychrolib
       TDewPoint = min(TDewPoint, BOUNDS(2))
 
       if ((abs(TDewPoint - TDewPoint_iter) <= PSYCHROLIB_TOLERANCE)) then
-        return
+        exit
       end if
 
       if (index > MAX_ITER_COUNT) then

@@ -502,7 +502,7 @@ Private Function dLnPws_(TDryBulb As Variant) As Variant
   Dim T As Variant
   If (isIP()) Then
     T = GetTRankineFromTFahrenheit(TDryBulb)
-    If (TDryBulb < 32#) Then
+    If (TDryBulb < 32.) Then
       dLnPws_ = 10214.165 / T ^ 2 - 0.0053765794 + 2 * 0.00000019202377 * T _
              + 2 * 3.5575832E-10 * T ^ 2 - 4 * 9.0344688E-14 * T ^ 3 + 4.1635019 / T
     Else
@@ -511,7 +511,7 @@ Private Function dLnPws_(TDryBulb As Variant) As Variant
     End If
   Else
     T = GetTKelvinFromTCelsius(TDryBulb)
-    If (TDryBulb < 0#) Then
+    If (TDryBulb < 0.) Then
       dLnPws_ = 5674.5359 / T ^ 2 - 0.009677843 + 2 * 0.00000062215701 * T _
              + 3 * 2.0747825E-09 * T ^ 2 - 4 * 9.484024E-13 * T ^ 3 + 4.1635019 / T
     Else
@@ -696,21 +696,26 @@ Function GetTWetBulbFromHumRatio(ByVal TDryBulb As Variant, ByVal HumRatio As Va
   ' Bisection loop
   Tol = GetTol()
   index = 0
-  While (((TWetBulbSup - TWetBulbInf) > Tol) Or (index < MAX_ITER_COUNT))
+  While ((TWetBulbSup - TWetBulbInf) > Tol)
 
-   ' Compute humidity ratio at temperature Tstar
-   Wstar = GetHumRatioFromTWetBulb(TDryBulb, TWetBulb, Pressure)
+    ' Compute humidity ratio at temperature Tstar
+    Wstar = GetHumRatioFromTWetBulb(TDryBulb, TWetBulb, Pressure)
 
-   ' Get new bounds
-   If (Wstar > BoundedHumRatio) Then
-    TWetBulbSup = TWetBulb
-   Else
-    TWetBulbInf = TWetBulb
-   End If
+    ' Get new bounds
+    If (Wstar > BoundedHumRatio) Then
+      TWetBulbSup = TWetBulb
+    Else
+      TWetBulbInf = TWetBulb
+    End If
 
-   ' New guess of wet bulb temperature
-   TWetBulb = (TWetBulbSup + TWetBulbInf) / 2
-   index = index + 1
+    ' New guess of wet bulb temperature
+    TWetBulb = (TWetBulbSup + TWetBulbInf) / 2
+
+    If (index > MAX_ITER_COUNT) Then
+      GoTo ErrHandler
+    End If
+
+    index = index + 1
   Wend
 
   GetTWetBulbFromHumRatio = TWetBulb
@@ -756,7 +761,7 @@ Function GetHumRatioFromTWetBulb(ByVal TDryBulb As Variant, ByVal TWetBulb As Va
     If (TWetBulb >= 0) Then
       HumRatio = ((2501 - 2.326 * TWetBulb) * Wsstar - 1.006 * (TDryBulb - TWetBulb)) / (2501 + 1.86 * TDryBulb - 4.186 * TWetBulb)
     Else
-      HumRatio = ((2830# - 0.24 * TWetBulb) * Wsstar - 1.006 * (TDryBulb - TWetBulb)) / (2830# + 1.86 * TDryBulb - 2.1 * TWetBulb)
+      HumRatio = ((2830 - 0.24 * TWetBulb) * Wsstar - 1.006 * (TDryBulb - TWetBulb)) / (2830 + 1.86 * TDryBulb - 2.1 * TWetBulb)
     End If
   End If
   ' Validity check.

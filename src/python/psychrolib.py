@@ -459,7 +459,7 @@ def GetTDewPointFromVapPres(TDryBulb: float, VapPres: float) -> float:
     # Vapor pressure contained within the discontinuity of the Pws function: return temperature of freezing
     T_WATER_FREEZE_LOW = T_WATER_FREEZE - PSYCHROLIB_TOLERANCE / 10.          # Temperature just below freezing
     T_WATER_FREEZE_HIGH = T_WATER_FREEZE + PSYCHROLIB_TOLERANCE / 10.         # Temperature just above freezing
-    PWS_FREEZE_LOW= GetSatVapPres(T_WATER_FREEZE_LOW)
+    PWS_FREEZE_LOW = GetSatVapPres(T_WATER_FREEZE_LOW)
     PWS_FREEZE_HIGH = GetSatVapPres(T_WATER_FREEZE_HIGH)
 
     # Restrict iteration to either left or right part of the saturation vapor pressure curve
