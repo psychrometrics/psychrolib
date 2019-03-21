@@ -502,7 +502,7 @@ Private Function dLnPws_(TDryBulb As Variant) As Variant
   Dim T As Variant
   If (isIP()) Then
     T = GetTRankineFromTFahrenheit(TDryBulb)
-    If (TDryBulb < 32.) Then
+    If (TDryBulb <= 32.) Then
       dLnPws_ = 10214.165 / T ^ 2 - 0.0053765794 + 2 * 0.00000019202377 * T _
              + 2 * 3.5575832E-10 * T ^ 2 - 4 * 9.0344688E-14 * T ^ 3 + 4.1635019 / T
     Else
@@ -511,7 +511,7 @@ Private Function dLnPws_(TDryBulb As Variant) As Variant
     End If
   Else
     T = GetTKelvinFromTCelsius(TDryBulb)
-    If (TDryBulb < 0.) Then
+    If (TDryBulb <= 0.) Then
       dLnPws_ = 5674.5359 / T ^ 2 - 0.009677843 + 2 * 0.00000062215701 * T _
              + 3 * 2.0747825E-09 * T ^ 2 - 4 * 9.484024E-13 * T ^ 3 + 4.1635019 / T
     Else

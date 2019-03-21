@@ -517,7 +517,7 @@ module psychrolib
       TDewPoint = max(TDewPoint, BOUNDS(1))
       TDewPoint = min(TDewPoint, BOUNDS(2))
 
-      if ((abs(TDewPoint - TDewPoint_iter) <= PSYCHROLIB_TOLERANCE)) then
+      if (abs(TDewPoint - TDewPoint_iter) <= PSYCHROLIB_TOLERANCE) then
         exit
       end if
 

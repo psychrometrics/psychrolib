@@ -403,7 +403,7 @@ def dLnPws_(TDryBulb: float) -> float:
     """
     if isIP():
         T = GetTRankineFromTFahrenheit(TDryBulb)
-        if TDryBulb < 32.:
+        if TDryBulb <= 32.:
             dLnPws = 1.0214165E+04 / math.pow(T, 2) - 5.3765794E-03 + 2 * 1.9202377E-07 * T \
                   + 2 * 3.5575832E-10 * math.pow(T, 2) - 4 * 9.0344688E-14 * math.pow(T, 3) + 4.1635019 / T
         else:
@@ -411,7 +411,7 @@ def dLnPws_(TDryBulb: float) -> float:
                   - 3 * 2.4780681E-09 * math.pow(T, 2) + 6.5459673 / T
     else:
         T = GetTKelvinFromTCelsius(TDryBulb)
-        if TDryBulb < 0.:
+        if TDryBulb <= 0.:
             dLnPws = 5.6745359E+03 / math.pow(T, 2) - 9.677843E-03 + 2 * 6.2215701E-07 * T \
                   + 3 * 2.0747825E-09 * math.pow(T, 2) - 4 * 9.484024E-13 * math.pow(T, 3) + 4.1635019 / T
         else:
