@@ -1,6 +1,7 @@
 # Copyright (c) 2018 D. Thevenard and D. Meyer. Licensed under the MIT License.
 # Test of PsychroLib in IP units for Python, C, and Fortran.
 
+import numpy as np
 import pytest
 
 pytestmark = pytest.mark.usefixtures('SetUnitSystem_IP')
@@ -27,6 +28,18 @@ def test_GetSatVapPres(psy):
     assert psy.GetSatVapPres(122) == pytest.approx(1.79140, rel = 0.0003)
     assert psy.GetSatVapPres(212) == pytest.approx(14.7094, rel = 0.0003)
     assert psy.GetSatVapPres(300) == pytest.approx(67.0206, rel = 0.0003)
+
+# Test that the NR in GetTDewPointFromVapPres converges.
+# This test was known problem in versions of PsychroLib <= 2.0.0
+def test_GetTDewPointFromVapPres_convergence(psy):
+    TDryBulb = np.arange(-148, 392, 1)
+    RelHum = np.arange(0, 1, 0.1)
+    Pressure = np.arange(8.6, 17.4, 1)
+    for T in TDryBulb:
+        for RH in RelHum:
+            for p in Pressure:
+                psy.GetTWetBulbFromRelHum(T, RH, p)
+    print('GetTDewPointFromVapPres converged')
 
 # Test saturation humidity ratio
 # The values are tested against those published in Table 2 of ch. 1 of the 2017 ASHRAE Handbook - Fundamentals
@@ -97,6 +110,8 @@ def test_HumRatio_TWetBulb(psy):
     assert HumRatio == pytest.approx(0.00114657481090184, rel = 0.0003)
     TWetBulb = psy.GetTWetBulbFromHumRatio(30.2, HumRatio, 14.1751)
     assert TWetBulb == pytest.approx(23.0, abs = 0.001)
+    # Low HumRatio -- this should evaluate true as we clamp the HumRation to 1e-07.
+    assert psy.GetTWetBulbFromHumRatio(25,1e-09,95461) == psy.GetTWetBulbFromHumRatio(25,1e-07,95461)
 
 
 ###############################################################################

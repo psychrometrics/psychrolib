@@ -27,6 +27,7 @@ Sub RunAllTests()
   Call test_GetStandardAtmTemperature
   Call test_SeaLevel_Station_Pressure
   Call test_AllPsychrometrics
+  Call test_GetTDewPointFromVapPres_convergence
   Debug.Print "# of tests run   :", TestCount
   Debug.Print "# of issues found:", IssueCount
 End Sub
@@ -261,3 +262,20 @@ Sub test_AllPsychrometrics()
   Call TestExpression("CalcPsychrometricsFromRelHum", TWetBulb, 65, abst:=0.1)
 End Sub
 
+
+'##############################################################################
+' Test of the convergence of the NR method in GetTDewPointFromVapPres
+' over a wide range of inputs
+' This test was known problem in versions of PsychroLib <= 2.0.0
+'##############################################################################
+'
+Sub test_GetTDewPointFromVapPres_convergence()
+  For TDryBulb = -148 To 392 Step 2
+    For RelHum = 0 To 1 Step 0.1
+      For Pressure = 8.6 To 17.4 Step 0.8
+        TWetBulb = GetTWetBulbFromRelHum(TDryBulb, RelHum, Pressure)
+      Next Pressure
+    Next RelHum
+  Next TDryBulb
+  Call TestExpression("GetTDewPointFromVapPres convergence test", 1, 1, abst:=0.1)
+End Sub

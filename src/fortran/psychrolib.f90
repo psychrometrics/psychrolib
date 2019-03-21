@@ -88,6 +88,7 @@ module psychrolib
   public :: CalcPsychrometricsFromTWetBulb
   public :: CalcPsychrometricsFromTDewPoint
   public :: CalcPsychrometricsFromRelHum
+  public :: dLnPws_
 
 
   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -111,7 +112,14 @@ module psychrolib
     !+ Unit system to use.
 
   real ::  PSYCHROLIB_TOLERANCE = 1.0
-    !+ Tolerance of temperature calculations
+    !+ Tolerance of temperature calculations.
+
+  integer, parameter  :: MAX_ITER_COUNT = 100
+    !+ Maximum number of iterations before exiting while loops.
+
+  real, parameter  :: MIN_HUM_RATIO = 1e-7
+    !+ Minimum acceptable humidity ratio used/returned by any functions.
+    !+ Any value above 0 or below the MIN_HUM_RATIO will be reset to this value.
 
 
   contains
@@ -383,6 +391,45 @@ module psychrolib
     RelHum = VapPres / GetSatVapPres(TDryBulb)
   end function GetRelHumFromVapPres
 
+  function dLnPws_(TDryBulb) result(dLnPws)
+    !+ Helper function returning the derivative of the natural log of the saturation vapor pressure
+    !+ as a function of dry-bulb temperature.
+    !+ Reference:
+    !+ ASHRAE Handbook - Fundamentals (2017) ch. 1  eqn 5
+
+    real, intent(in)  ::  TDryBulb
+      !+ Dry-bulb temperature in °F [IP] or °C [SI]
+    real              ::  dLnPws
+      !+ Derivative of natural log of vapor pressure of saturated air in Psi [IP] or Pa [SI]
+    real              ::  T
+      !+ Dry bulb temperature in R [IP] or K [SI]
+
+    if (isIP()) then
+
+      T = GetTRankineFromTFahrenheit(TDryBulb)
+
+      if (TDryBulb <= 32.) then
+        dLnPws = 1.0214165E+04 / T**2 - 5.3765794E-03 + 2 * 1.9202377E-07 * T &
+                 + 2 * 3.5575832E-10 * T**2 - 4 * 9.0344688E-14 * T**3 + 4.1635019 / T
+      else
+        dLnPws = 1.0440397E+04 / T**2 - 2.7022355E-02 + 2 * 1.2890360E-05 * T &
+                 - 3 * 2.4780681E-09 * T**2 + 6.5459673 / T
+      end if
+
+    else
+
+      T = GetTKelvinFromTCelsius(TDryBulb)
+
+      if (TDryBulb <= 0) then
+        dLnPws = 5.6745359E+03 / T**2 - 9.677843E-03 + 2 * 6.2215701E-07 * T &
+                 + 3 * 2.0747825E-09 * T**2 - 4 * 9.484024E-13 * T**3 + 4.1635019 / T
+      else
+        dLnPws = 5.8002206E+03 / T**2 - 4.8640239E-02 + 2 * 4.1764768E-05 * T &
+                 - 3 * 1.4452093E-08 * T**2 + 6.5459673 / T
+      end if
+    end if
+  end function dLnPws_
+
   function GetTDewPointFromVapPres(TDryBulb, VapPres) result(TDewPoint)
     !+ Return dew-point temperature given dry-bulb temperature and vapor pressure.
     !+ References:
@@ -403,73 +450,85 @@ module psychrolib
       !+ Partial pressure of water vapor in moist air in Psi [IP] or Pa [SI]
     real                ::  TDewPoint
       !+ Dew-point temperature in °F [IP] or °C [SI]
-    real                ::  Tdp
-      !+ Calculated value of dew point temperatures, solved for iteratively in °F [IP] or °C [SI]
     real                ::  lnVP
       !+ Natural logarithm of partial pressure of water vapor pressure in moist air
     real                ::  d_lnVP
       !+ Derivative of function, calculated numerically
-    real                ::  lnVP_c
+    real                ::  lnVP_iter
       !+ Value of log of vapor water pressure used in NR calculation
-    real                ::  Tdp_c
-      !+ Value of Tdp used in NR calculation
-    real                ::  d_Tdp
-      !+ Value of temperature step used in NR calculation
-    real                ::  STEPSIZE
-      !+ Size of timestep (dimensionless)
-    real                :: TMidPoint
-      !+ Midpoint of domain of validity
+    real                ::  TDewPoint_iter
+      !+ Value of TDewPoint used in NR calculation
     real, dimension(2)  ::  BOUNDS
       !+ Valid temperature range in °F [IP] or °C [SI]
     integer             :: index
       !+ Index used in the calculation
+     real ::  T_WATER_FREEZE, T_WATER_FREEZE_LOW, T_WATER_FREEZE_HIGH, PWS_FREEZE_LOW, PWS_FREEZE_HIGH
 
     ! Bounds and step size as a function of the system of units
     if (isIP()) then
         BOUNDS(1) = -148.0
         BOUNDS(2) =  392.0
-        STEPSIZE  =  0.01 * 9.0 / 5.0
+        T_WATER_FREEZE = 32.
     else
         BOUNDS(1) = -100.0
         BOUNDS(2) =  200.0
-        STEPSIZE  =  0.01
+        T_WATER_FREEZE = 0.
     end if
 
-    TMidPoint = (BOUNDS(2) + BOUNDS(2)) / 2.0
-
-    ! Bounds outside which a solution cannot be found
+    ! Validity check -- bounds outside which a solution cannot be found
     if (VapPres < GetSatVapPres(BOUNDS(1)) .or. VapPres > GetSatVapPres(BOUNDS(2))) then
       error stop "Error: partial pressure of water vapor is outside range of validity of equations"
     end if
 
-    ! First guess
-    Tdp = TDryBulb
+    ! Vapor pressure contained within the discontinuity of the Pws function: return temperature of freezing
+    T_WATER_FREEZE_LOW = T_WATER_FREEZE - PSYCHROLIB_TOLERANCE / 10.        ! Temperature just below freezing
+    T_WATER_FREEZE_LOW = T_WATER_FREEZE - PSYCHROLIB_TOLERANCE / 10.        ! Temperature just below freezing
+    T_WATER_FREEZE_HIGH = T_WATER_FREEZE + PSYCHROLIB_TOLERANCE             ! Temperature just above freezing
+    PWS_FREEZE_LOW = GetSatVapPres(T_WATER_FREEZE_LOW)
+    PWS_FREEZE_HIGH = GetSatVapPres(T_WATER_FREEZE_HIGH)
+
+    ! Restrict iteration to either left or right part of the saturation vapor pressure curve
+    ! to avoid iterating back and forth across the discontinuity of the curve at the freezing point
+    ! When the partial pressure of water vapor is within the discontinuity of GetSatVapPres,
+    ! simply return the freezing point of water.
+    if (VapPres < PWS_FREEZE_LOW) then
+        BOUNDS(2) = T_WATER_FREEZE_LOW
+    else if (VapPres > PWS_FREEZE_HIGH) then
+        BOUNDS(1) = T_WATER_FREEZE_HIGH
+    else
+        TDewPoint = T_WATER_FREEZE
+        return
+    end if
+
+    ! We use NR to approximate the solution.
+    TDewPoint = TDryBulb
     lnVP = log(VapPres)
-    Tdp_c = Tdp
     index = 1
 
-    do while ((abs(Tdp - Tdp_c) > PSYCHROLIB_TOLERANCE) .or. (index < 2))
-      ! Current point
-      Tdp_c = Tdp
-      lnVP_c = log(GetSatVapPres(Tdp_c))
-      ! Step - negative in the right part of the curve, positive in the left part
-      ! to avoid going past the domain of validity of eqn. 5 and 6
-      ! when Tdp_c is close to its bounds
-      if (Tdp_c > TMidPoint) then
-        d_Tdp = -STEPSIZE
-      else
-        d_Tdp = STEPSIZE
+    do while (.true.)
+      TDewPoint_iter = TDewPoint ! TDewPoint_iter used in NR calculation
+      lnVP_iter = log(GetSatVapPres(TDewPoint_iter))
+
+      ! Derivative of function, calculated analytically
+      d_lnVP = dLnPws_(TDewPoint_iter)
+
+      ! New estimate, bounded by the search domain defined above
+      TDewPoint = TDewPoint_iter - (lnVP_iter - lnVP) / d_lnVP
+      TDewPoint = max(TDewPoint, BOUNDS(1))
+      TDewPoint = min(TDewPoint, BOUNDS(2))
+
+      if (abs(TDewPoint - TDewPoint_iter) <= PSYCHROLIB_TOLERANCE) then
+        exit
       end if
-      ! Derivative of function, calculated numerically
-      d_lnVP = (log(GetSatVapPres(Tdp_c + d_Tdp)) - lnVP_c) / d_Tdp
-      ! New estimate, bounded by domain of validity of eqn. 5 and 6
-      Tdp = Tdp_c - (lnVP_c - lnVP) / d_lnVP
-      Tdp = max(Tdp, BOUNDS(1))
-      Tdp = min(Tdp, BOUNDS(2))
+
+      if (index > MAX_ITER_COUNT) then
+        error stop "Convergence not reached in GetTDewPointFromVapPres. Stopping."
+      end if
+
       index = index + 1
     end do
 
-  TDewPoint = min(Tdp, TDryBulb)
+  TDewPoint = min(TDewPoint, TDryBulb)
   end function GetTDewPointFromVapPres
 
   function GetVapPresFromTDewPoint(TDewPoint) result(VapPres)
@@ -511,26 +570,32 @@ module psychrolib
       !+ Lower value of wet bulb temperature in bissection method (initial guess is from dew point temperature) in °F [IP] or °C [SI]
     real              ::  Wstar
       !+ Humidity ratio at temperature Tstar in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]
+    real              ::  BoundedHumRatio
+      !+ Humidity ratio bounded to MIN_HUM_RATIO
+    integer           ::  index
+      !+ index used in iteration
 
     if (HumRatio < 0.0) then
       error stop "Error: humidity ratio cannot be negative"
     end if
+    BoundedHumRatio = max(HumRatio, MIN_HUM_RATIO)
 
-    TDewPoint = GetTDewPointFromHumRatio(TDryBulb, HumRatio, Pressure)
+    TDewPoint = GetTDewPointFromHumRatio(TDryBulb, BoundedHumRatio, Pressure)
 
     ! Initial guesses
     TWetBulbSup = TDryBulb
     TWetBulbInf = TDewPoint
     TWetBulb = (TWetBulbInf + TWetBulbSup) / 2.0
 
+    index = 1
     ! Bisection loop
-    do while(TWetBulbSup - TWetBulbInf > PSYCHROLIB_TOLERANCE)
+    do while ((TWetBulbSup - TWetBulbInf) > PSYCHROLIB_TOLERANCE)
 
     ! Compute humidity ratio at temperature Tstar
     Wstar = GetHumRatioFromTWetBulb(TDryBulb, TWetBulb, Pressure)
 
     ! Get new bounds
-    if (Wstar > HumRatio) then
+    if (Wstar > BoundedHumRatio) then
       TWetBulbSup = TWetBulb
     else
       TWetBulbInf = TWetBulb
@@ -538,6 +603,12 @@ module psychrolib
 
     ! New guess of wet bulb temperature
     TWetBulb = (TWetBulbSup + TWetBulbInf) / 2.0
+
+      if (index > MAX_ITER_COUNT) then
+        error stop "Convergence not reached in GetTWetBulbFromHumRatio. Stopping."
+      end if
+
+    index = index + 1
     end do
   end function GetTWetBulbFromHumRatio
 
@@ -580,6 +651,9 @@ module psychrolib
                       / (2830.0 + 1.86 * TDryBulb - 2.1 * TWetBulb)
       end if
     end if
+
+    ! Validity check.
+    HumRatio = max(HumRatio, MIN_HUM_RATIO)
   end function GetHumRatioFromTWetBulb
 
   function GetHumRatioFromRelHum(TDryBulb, RelHum, Pressure) result(HumRatio)
@@ -695,6 +769,9 @@ module psychrolib
     end if
 
     HumRatio = 0.621945 * VapPres / (Pressure-VapPres)
+
+    ! Validity check.
+    HumRatio = max(HumRatio, MIN_HUM_RATIO)
   end function GetHumRatioFromVapPres
 
   function GetVapPresFromHumRatio(HumRatio, Pressure) result(VapPres)
@@ -708,12 +785,15 @@ module psychrolib
       !+ Atmospheric pressure in Psi [IP] or Pa [SI]
     real              ::  VapPres
       !+ Partial pressure of water vapor in moist air in Psi [IP] or Pa [SI]
+    real              ::  BoundedHumRatio
+      !+ Humidity ratio bounded to MIN_HUM_RATIO
 
     if (HumRatio < 0.0) then
       error stop "Error: humidity ratio is negative"
     end if
+    BoundedHumRatio = max(HumRatio, MIN_HUM_RATIO)
 
-    VapPres = Pressure * HumRatio / (0.621945 + HumRatio)
+    VapPres = Pressure * BoundedHumRatio / (0.621945 + BoundedHumRatio)
   end function GetVapPresFromHumRatio
 
 
@@ -730,12 +810,15 @@ module psychrolib
       !+ Humidity ratio in lb_H₂O lb_Dry_Air⁻¹ [IP] or kg_H₂O kg_Dry_Air⁻¹ [SI]
     real             :: SpecificHum
       !+ Specific humidity in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]
+    real              ::  BoundedHumRatio
+      !+ Humidity ratio bounded to MIN_HUM_RATIO
 
     if (HumRatio < 0.0) then
       error stop "Error: humidity ratio cannot be negative"
     end if
+    BoundedHumRatio = max(HumRatio, MIN_HUM_RATIO)
 
-    SpecificHum = HumRatio / (1.0 + HumRatio)
+    SpecificHum = BoundedHumRatio / (1.0 + BoundedHumRatio)
   end function GetSpecificHumFromHumRatio
 
   function GetHumRatioFromSpecificHum(SpecificHum) result(HumRatio)
@@ -753,6 +836,9 @@ module psychrolib
     end if
 
     HumRatio = SpecificHum / (1.0 - SpecificHum)
+
+    ! Validity check.
+    HumRatio = max(HumRatio, MIN_HUM_RATIO)
   end function GetHumRatioFromSpecificHum
 
 
@@ -836,15 +922,18 @@ module psychrolib
       !+ Humidity ratio in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]
     real              ::  TDryBulb
       !+ Dry-bulb temperature in °F [IP] or °C [SI]
+    real              ::  BoundedHumRatio
+      !+ Humidity ratio bounded to MIN_HUM_RATIO
 
     if (HumRatio < 0.0) then
       error stop "Error: humidity ratio is negative"
     end if
+    BoundedHumRatio = max(HumRatio, MIN_HUM_RATIO)
 
     if (isIP()) then
-      TDryBulb  = (MoistAirEnthalpy - 1061.0 * HumRatio) / (0.240 + 0.444 * HumRatio)
+      TDryBulb  = (MoistAirEnthalpy - 1061.0 * BoundedHumRatio) / (0.240 + 0.444 * BoundedHumRatio)
     else
-      TDryBulb  = (MoistAirEnthalpy / 1000.0 - 2501.0 * HumRatio) / (1.006 + 1.86 * HumRatio)
+      TDryBulb  = (MoistAirEnthalpy / 1000.0 - 2501.0 * BoundedHumRatio) / (1.006 + 1.86 * BoundedHumRatio)
     end if
   end function GetTDryBulbFromEnthalpyAndHumRatio
 
@@ -867,6 +956,9 @@ module psychrolib
     else
       HumRatio  = (MoistAirEnthalpy / 1000.0 - 1.006 * TDryBulb) / (2501.0 + 1.86 * TDryBulb)
     end if
+
+    ! Validity check.
+    HumRatio = max(HumRatio, MIN_HUM_RATIO)
   end function GetHumRatioFromEnthalpyAndTDryBulb
 
 
@@ -938,6 +1030,9 @@ module psychrolib
 
     SatVaporPres  = GetSatVapPres(TDryBulb)
     SatHumRatio   = 0.621945 * SatVaporPres / (Pressure-SatVaporPres)
+
+    ! Validity check.
+    SatHumRatio = max(SatHumRatio, MIN_HUM_RATIO)
   end function GetSatHumRatio
 
   function GetSatAirEnthalpy(TDryBulb, Pressure) result(SatAirEnthalpy)
@@ -1000,12 +1095,15 @@ module psychrolib
       !+ Atmospheric pressure in Psi [IP] or Pa [SI]
     real              ::  DegreeOfSaturation
       !+ Degree of saturation in arbitrary unit
+    real              ::  BoundedHumRatio
+      !+ Humidity ratio bounded to MIN_HUM_RATIO
 
     if (HumRatio < 0.0) then
       error stop "Error: humidity ratio is negative"
     end if
+    BoundedHumRatio = max(HumRatio, MIN_HUM_RATIO)
 
-    DegreeOfSaturation = HumRatio/GetSatHumRatio(TDryBulb, Pressure)
+    DegreeOfSaturation = BoundedHumRatio / GetSatHumRatio(TDryBulb, Pressure)
   end function GetDegreeOfSaturation
 
   function GetMoistAirEnthalpy(TDryBulb, HumRatio) result(MoistAirEnthalpy)
@@ -1019,15 +1117,18 @@ module psychrolib
       !+ Humidity ratio in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]
     real              ::  MoistAirEnthalpy
       !+ Moist air enthalpy in Btu lb⁻¹ [IP] or J kg⁻¹
+    real              ::  BoundedHumRatio
+      !+ Humidity ratio bounded to MIN_HUM_RATIO
 
     if (HumRatio < 0.0) then
       error stop "Error: humidity ratio is negative"
     end if
+    BoundedHumRatio = max(HumRatio, MIN_HUM_RATIO)
 
     if (isIP()) then
-        MoistAirEnthalpy = 0.240 * TDryBulb + HumRatio * (1061.0 + 0.444 * TDryBulb)
+        MoistAirEnthalpy = 0.240 * TDryBulb + BoundedHumRatio * (1061.0 + 0.444 * TDryBulb)
     else
-        MoistAirEnthalpy = (1.006 * TDryBulb + HumRatio * (2501.0 + 1.86 * TDryBulb)) * 1000.0
+        MoistAirEnthalpy = (1.006 * TDryBulb + BoundedHumRatio * (2501.0 + 1.86 * TDryBulb)) * 1000.0
     end if
   end function GetMoistAirEnthalpy
 
@@ -1047,15 +1148,18 @@ module psychrolib
       !+ Atmospheric pressure in Psi [IP] or Pa [SI]
     real              ::  MoistAirVolume
       !+ Specific volume of moist air in ft³ lb⁻¹ of dry air [IP] or in m³ kg⁻¹ of dry air [SI]
+    real              ::  BoundedHumRatio
+      !+ Humidity ratio bounded to MIN_HUM_RATIO
 
     if (HumRatio < 0.0) then
       error stop "Error: humidity ratio is negative"
     end if
+    BoundedHumRatio = max(HumRatio, MIN_HUM_RATIO)
 
     if (isIP()) then
-        MoistAirVolume = R_DA_IP * GetTRankineFromTFahrenheit(TDryBulb) * (1.0 + 1.607858 * HumRatio) / (144.0 * Pressure)
+        MoistAirVolume = R_DA_IP * GetTRankineFromTFahrenheit(TDryBulb) * (1.0 + 1.607858 * BoundedHumRatio) / (144.0 * Pressure)
     else
-        MoistAirVolume = R_DA_SI * GetTKelvinFromTCelsius(TDryBulb) * (1.0 + 1.607858 * HumRatio) / Pressure
+        MoistAirVolume = R_DA_SI * GetTKelvinFromTCelsius(TDryBulb) * (1.0 + 1.607858 * BoundedHumRatio) / Pressure
     end if
   end function GetMoistAirVolume
 
@@ -1072,12 +1176,15 @@ module psychrolib
       !+ Atmospheric pressure in Psi [IP] or Pa [SI]
     real              ::  MoistAirDensity
       !+ Moist air density in lb ft⁻³ [IP] or kg m⁻³ [SI]
+    real              ::  BoundedHumRatio
+      !+ Humidity ratio bounded to MIN_HUM_RATIO
 
     if (HumRatio < 0.0) then
       error stop "Error: humidity ratio is negative"
     end if
+    BoundedHumRatio = max(HumRatio, MIN_HUM_RATIO)
 
-    MoistAirDensity = (1.0 + HumRatio) / GetMoistAirVolume(TDryBulb, HumRatio, Pressure)
+    MoistAirDensity = (1.0 + BoundedHumRatio) / GetMoistAirVolume(TDryBulb, BoundedHumRatio, Pressure)
   end function GetMoistAirDensity
 
 

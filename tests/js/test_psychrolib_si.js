@@ -91,6 +91,23 @@ it('test_VapPres_TDewPoint', function () {
     expect(psyjs.GetTDewPointFromVapPres(60.0, VapPres)).to.be.closeTo(50.0, 0.001)
 });
 
+// Test of relationships between wet bulb temperature and relative humidity
+// This test was known to cause a convergence issue in GetTDewPointFromVapPres
+// in versions of PsychroLib <= 2.0.0
+it('test_TWetBulb_RelHum', function () {
+    var TWetBulb = psyjs.GetTWetBulbFromRelHum(7, 0.61, 100000)
+    checkRelDiff(TWetBulb, 3.92667433781955, 0.001)
+});
+
+// Test that the NR in GetTDewPointFromVapPres converges.
+// This test was known problem in versions of PsychroLib <= 2.0.0
+it('test_GetTDewPointFromVapPres_convergence', function () {
+    for (var TDryBulb = -100; TDryBulb <= 200; TDryBulb += 1)
+        for (var RelHum = 0; RelHum <= 1; RelHum += 0.1)
+            for (var Pressure = 60000; Pressure <= 120000; Pressure += 10000)
+                psyjs.GetTWetBulbFromRelHum(TDryBulb, RelHum, Pressure)
+});
+
 // Test of relationships between humidity ratio and vapour pressure
 it('test_HumRatio_VapPres', function () {
         var HumRatio = psyjs.GetHumRatioFromVapPres(3169.7, 95461)          // conditions at 25 C, std atm pressure at 500 m
@@ -121,6 +138,9 @@ it('test_HumRatio_TWetBulb', function () {
         checkRelDiff(HumRatio, 0.00120399819933844, 0.0003)
         var TWetBulb = psyjs.GetTWetBulbFromHumRatio(-1, HumRatio, 95461)
         expect(TWetBulb).to.be.closeTo(-5, 0.001)
+
+        // Low HumRatio -- this should evaluate true as we clamp the HumRation to 1e-07.
+        expect(psyjs.GetTWetBulbFromHumRatio(-5,1e-09,95461)).to.equal(psyjs.GetTWetBulbFromHumRatio(-5,1e-07,95461))
 });
 
 /**

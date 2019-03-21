@@ -1,6 +1,7 @@
 # Copyright (c) 2018 D. Thevenard and D. Meyer. Licensed under the MIT License.
 # Test of PsychroLib in SI units for Python, C, and Fortran.
 
+import numpy as np
 import pytest
 
 pytestmark = pytest.mark.usefixtures('SetUnitSystem_SI')
@@ -68,6 +69,25 @@ def test_VapPres_TDewPoint(psy):
     VapPres = psy.GetVapPresFromTDewPoint(50.0)
     assert psy.GetTDewPointFromVapPres(60.0, VapPres) == pytest.approx(50.0, abs = 0.001)
 
+# Test of relationships between wet bulb temperature and relative humidity
+# This test was known to cause a convergence issue in GetTDewPointFromVapPres
+# in versions of PsychroLib <= 2.0.0
+def test_TWetBulb_RelHum(psy):
+    TWetBulb = psy.GetTWetBulbFromRelHum(7, 0.61, 100000)
+    assert TWetBulb == pytest.approx(3.92667433781955, rel = 0.001)
+
+# Test that the NR in GetTDewPointFromVapPres converges.
+# This test was known problem in versions of PsychroLib <= 2.0.0
+def test_GetTDewPointFromVapPres_convergence(psy):
+    TDryBulb = np.arange(-100, 200, 1)
+    RelHum = np.arange(0, 1, 0.1)
+    Pressure = np.arange(60000, 120000, 10000)
+    for T in TDryBulb:
+        for RH in RelHum:
+            for p in Pressure:
+                psy.GetTWetBulbFromRelHum(T, RH, p)
+    print('GetTDewPointFromVapPres converged')
+
 # Test of relationships between humidity ratio and vapour pressure
 # Humidity ratio values to test against are calculated with Excel
 def test_HumRatio_VapPres(psy):
@@ -97,6 +117,8 @@ def test_HumRatio_TWetBulb(psy):
     assert HumRatio == pytest.approx(0.00120399819933844, rel = 0.0003)
     TWetBulb = psy.GetTWetBulbFromHumRatio(-1, HumRatio, 95461)
     assert TWetBulb == pytest.approx(-5, abs = 0.001)
+    # Low HumRatio -- this should evaluate true as we clamp the HumRation to 1e-07.
+    assert psy.GetTWetBulbFromHumRatio(-5,1e-09,95461) == psy.GetTWetBulbFromHumRatio(-5,1e-07,95461)
 
 
 ###############################################################################

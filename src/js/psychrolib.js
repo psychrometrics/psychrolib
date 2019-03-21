@@ -57,12 +57,16 @@ function Psychrometrics() {
    * Global constants
    *****************************************************************************************************/
 
-  var R_DA_IP = 53.350;   // Universal gas constant for dry air (IP version) in ft lb_Force lb_DryAir⁻¹ R⁻¹
-                          // Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1
-  var R_DA_SI = 287.042;  // Universal gas constant for dry air (SI version) in J kg_DryAir⁻¹ K⁻¹
-                          // Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1
+  var R_DA_IP = 53.350;         // Universal gas constant for dry air (IP version) in ft lb_Force lb_DryAir⁻¹ R⁻¹
+                                // Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1
+  var R_DA_SI = 287.042;        // Universal gas constant for dry air (SI version) in J kg_DryAir⁻¹ K⁻¹
+                                // Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1
+  var INVALID = -99999;         // Invalid value (dimensionless)
 
-  var INVALID = -99999;   // Invalid value (dimensionless)
+  var MAX_ITER_COUNT = 100      // Maximum number of iterations before exiting while loops.
+
+  var MIN_HUM_RATIO = 1e-7      // Minimum acceptable humidity ratio used/returned by any functions.
+                                // Any value above 0 or below the MIN_HUM_RATIO will be reset to this value.
 
 
   /******************************************************************************************************
@@ -252,6 +256,40 @@ function Psychrometrics() {
     return VapPres / this.GetSatVapPres(TDryBulb);
   }
 
+  // Helper function returning the derivative of the natural log of the saturation vapor pressure
+  // as a function of dry-bulb temperature.
+  // Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn. 5 & 6
+  this.dLnPws_ = function       // (o)  Derivative of natural log of vapor pressure of saturated air in Psi [IP] or Pa [SI]
+    ( TDryBulb                  // (i) Dry bulb temperature in °F [IP] or °C [SI]
+    ) {
+    var dLnPws, T;
+
+    if (this.isIP())
+    {
+      T = this.GetTRankineFromTFahrenheit(TDryBulb);
+
+      if (TDryBulb <= 32.)
+        dLnPws = 1.0214165E+04 / pow(T, 2) - 5.3765794E-03 + 2 * 1.9202377E-07 * T
+                 + 2 * 3.5575832E-10 * pow(T, 2) - 4 * 9.0344688E-14 * pow(T, 3) + 4.1635019 / T;
+      else
+        dLnPws = 1.0440397E+04 / pow(T, 2) - 2.7022355E-02 + 2 * 1.2890360E-05 * T
+                 - 3 * 2.4780681E-09 * pow(T, 2) + 6.5459673 / T;
+    }
+    else
+    {
+      T = this.GetTKelvinFromTCelsius(TDryBulb);
+
+      if (TDryBulb <= 0.)
+        dLnPws = 5.6745359E+03 / pow(T, 2) - 9.677843E-03 + 2 * 6.2215701E-07 * T
+                 + 3 * 2.0747825E-09 * pow(T, 2) - 4 * 9.484024E-13 * pow(T, 3) + 4.1635019 / T;
+      else
+        dLnPws = 5.8002206E+03 / pow(T, 2) - 4.8640239E-02 + 2 * 4.1764768E-05 * T
+                 - 3 * 1.4452093E-08 * pow(T, 2) + 6.5459673 / T;
+    }
+
+    return dLnPws;
+  }
+
   // Return dew-point temperature given dry-bulb temperature and vapor pressure.
   // Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn. 5 and 6
   // Notes: the dew point temperature is solved by inverting the equation giving water vapor pressure
@@ -266,53 +304,71 @@ function Psychrometrics() {
     ( TDryBulb                            // (i) Dry bulb temperature in °F [IP] or °C [SI]
     , VapPres                             // (i) Partial pressure of water vapor in moist air in Psi [IP] or Pa [SI]
     ) {
-  // Bounds and step size as a function of the system of units
-  var _STEPSIZE;                // Temperature step used for the calculation of numerical derivatives
+   // Bounds function of the system of units
+  var BOUNDS              // Domain of validity of the equations
+  var T_WATER_FREEZE, T_WATER_FREEZE_LOW, T_WATER_FREEZE_HIGH, PWS_FREEZE_LOW, PWS_FREEZE_HIGH;
+
   if (this.isIP())
   {
-    var _BOUNDS = [-148., 392.]   // Domain of validity of the equations
-    _STEPSIZE   = 0.01 * 9. / 5.
+    BOUNDS = [-148., 392.];   // Domain of validity of the equations
+    T_WATER_FREEZE = 32.;
   }
   else
   {
-    var _BOUNDS = [-100., 200.]   // Domain of validity of the equations
-    _STEPSIZE   = 0.01;
+    BOUNDS = [-100., 200.];   // Domain of validity of the equations
+    T_WATER_FREEZE = 0.;
   }
 
-  var TMidPoint = (_BOUNDS[0] + _BOUNDS[1]) / 2.;     // Midpoint of domain of validity
-
   // Bounds outside which a solution cannot be found
-  if (VapPres < this.GetSatVapPres(_BOUNDS[0]) || VapPres > this.GetSatVapPres(_BOUNDS[1]))
+  if (VapPres < this.GetSatVapPres(BOUNDS[0]) || VapPres > this.GetSatVapPres(BOUNDS[1]))
     throw new Error("Partial pressure of water vapor is outside range of validity of equations");
 
-  // First guess
-  var Tdp = TDryBulb;      // Calculated value of dew point temperatures, solved for iteratively in °F [IP] or °C [SI]
-  var lnVP = log(VapPres); // Natural logarithm of partial pressure of water vapor pressure in moist air
+  // Vapor pressure contained within the discontinuity of the Pws function: return temperature of freezing
+  T_WATER_FREEZE_LOW = T_WATER_FREEZE - PSYCHROLIB_TOLERANCE / 10.;          // Temperature just below freezing
+  T_WATER_FREEZE_HIGH = T_WATER_FREEZE + PSYCHROLIB_TOLERANCE / 10.;         // Temperature just above freezing
+  PWS_FREEZE_LOW = this.GetSatVapPres(T_WATER_FREEZE_LOW);
+  PWS_FREEZE_HIGH = this.GetSatVapPres(T_WATER_FREEZE_HIGH);
 
-  var Tdp_c;               // Value of Tdp used in NR calculation
-  var lnVP_c;              // Value of log of vapor water pressure used in NR calculation
-  var d_Tdp;               // Value of temperature step used in NR calculation
+  // Restrict iteration to either left or right part of the saturation vapor pressure curve
+  // to avoid iterating back and forth across the discontinuity of the curve at the freezing point
+  // When the partial pressure of water vapor is within the discontinuity of GetSatVapPres,
+  // simply return the freezing point of water.
+  if (VapPres < PWS_FREEZE_LOW)
+    BOUNDS[1] = T_WATER_FREEZE_LOW;
+  else if (VapPres > PWS_FREEZE_HIGH)
+    BOUNDS[0] = T_WATER_FREEZE_HIGH;
+  else
+    return T_WATER_FREEZE;
+
+  // We use NR to approximate the solution.
+  // First guess
+  var TDewPoint = TDryBulb;      // Calculated value of dew point temperatures, solved for iteratively in °F [IP] or °C [SI]
+  var lnVP = log(VapPres);       // Natural logarithm of partial pressure of water vapor pressure in moist air
+
+  var TDewPoint_iter;            // Value of TDewPoint used in NR calculation
+  var lnVP_iter;                 // Value of log of vapor water pressure used in NR calculation
+  var index = 1;
   do
   {
     // Current point
-    Tdp_c = Tdp;
-    lnVP_c = log(this.GetSatVapPres(Tdp_c));
-    // Step - negative in the right part of the curve, positive in the left part
-    // to avoid going past the domain of validity of eqn. 5 and 6
-    // when Tdp_c is close to its bounds
-    if (Tdp_c > TMidPoint)
-      d_Tdp = -_STEPSIZE;
-    else
-      d_Tdp = _STEPSIZE;
-    // Derivative of function, calculated numerically
-    var d_lnVP = (log(this.GetSatVapPres(Tdp_c + d_Tdp)) - lnVP_c) / d_Tdp;
+    TDewPoint_iter = TDewPoint;
+    lnVP_iter = log(this.GetSatVapPres(TDewPoint_iter));
+
+    // Derivative of function, calculated analytically
+    var d_lnVP = this.dLnPws_(TDewPoint_iter);
+
     // New estimate, bounded by domain of validity of eqn. 5 and 6
-    Tdp = Tdp_c - (lnVP_c - lnVP) / d_lnVP;
-    Tdp = max(Tdp, _BOUNDS[0]);
-    Tdp = min(Tdp, _BOUNDS[1]);
+    TDewPoint = TDewPoint_iter - (lnVP_iter - lnVP) / d_lnVP;
+    TDewPoint = max(TDewPoint, BOUNDS[0]);
+    TDewPoint = min(TDewPoint, BOUNDS[1]);
+
+    if (index > MAX_ITER_COUNT)
+      throw new Error("Convergence not reached in GetTDewPointFromVapPres. Stopping.");
+
+    index++;
   }
-  while (abs(Tdp - Tdp_c) > PSYCHROLIB_TOLERANCE);
-  return min(Tdp, TDryBulb);
+  while (abs(TDewPoint - TDewPoint_iter) > PSYCHROLIB_TOLERANCE);
+  return min(TDewPoint, TDryBulb);
   }
 
   // Return vapor pressure given dew point temperature.
@@ -337,12 +393,14 @@ function Psychrometrics() {
     ) {
     // Declarations
     var Wstar;
-    var TDewPoint, TWetBulb, TWetBulbSup, TWetBulbInf;
+    var TDewPoint, TWetBulb, TWetBulbSup, TWetBulbInf, BoundedHumRatio;
+    var index = 1;
 
     if (!(HumRatio >= 0.))
       throw new Error("Humidity ratio is negative");
+    BoundedHumRatio = max(HumRatio, MIN_HUM_RATIO);
 
-    TDewPoint = this.GetTDewPointFromHumRatio(TDryBulb, HumRatio, Pressure);
+    TDewPoint = this.GetTDewPointFromHumRatio(TDryBulb, BoundedHumRatio, Pressure);
 
     // Initial guesses
     TWetBulbSup = TDryBulb;
@@ -350,18 +408,23 @@ function Psychrometrics() {
     TWetBulb = (TWetBulbInf + TWetBulbSup) / 2.;
 
     // Bisection loop
-    while (TWetBulbSup - TWetBulbInf > PSYCHROLIB_TOLERANCE) {
+    while ((TWetBulbSup - TWetBulbInf) > PSYCHROLIB_TOLERANCE) {
       // Compute humidity ratio at temperature Tstar
       Wstar = this.GetHumRatioFromTWetBulb(TDryBulb, TWetBulb, Pressure);
 
       // Get new bounds
-      if (Wstar > HumRatio)
+      if (Wstar > BoundedHumRatio)
         TWetBulbSup = TWetBulb;
       else
         TWetBulbInf = TWetBulb;
 
       // New guess of wet bulb temperature
       TWetBulb = (TWetBulbSup + TWetBulbInf) / 2.;
+
+      if (index > MAX_ITER_COUNT)
+        throw new Error("Convergence not reached in GetTWetBulbFromHumRatio. Stopping.");
+
+      index++;
     }
 
     return TWetBulb;
@@ -400,8 +463,8 @@ function Psychrometrics() {
           HumRatio = ((2830. - 0.24 * TWetBulb) * Wsstar - 1.006 * (TDryBulb - TWetBulb))
              / (2830. + 1.86 * TDryBulb - 2.1 * TWetBulb);
       }
-
-      return HumRatio;
+      // Validity check.
+      return max(HumRatio, MIN_HUM_RATIO);
     }
 
   // Return humidity ratio given dry-bulb temperature, relative humidity, and pressure.
@@ -475,10 +538,15 @@ function Psychrometrics() {
     ( VapPres                             // (i) Partial pressure of water vapor in moist air in Psi [IP] or Pa [SI]
     , Pressure                            // (i) Atmospheric pressure in Psi [IP] or Pa [SI]
     ) {
+    var HumRatio;
+
     if (!(VapPres >= 0.))
       throw new Error("Partial pressure of water vapor in moist air is negative");
 
-    return 0.621945 * VapPres / (Pressure - VapPres);
+    HumRatio = 0.621945 * VapPres / (Pressure - VapPres);
+
+    // Validity check.
+    return max(HumRatio, MIN_HUM_RATIO);
   }
 
   // Return vapor pressure given humidity ratio and pressure.
@@ -487,12 +555,13 @@ function Psychrometrics() {
     ( HumRatio                            // (i) Humidity ratio in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]
     , Pressure                            // (i) Atmospheric pressure in Psi [IP] or Pa [SI]
     ) {
-    var VapPres;
+    var VapPres, BoundedHumRatio;
 
     if (!(HumRatio >= 0.))
       throw new Error("Humidity ratio is negative");
+    BoundedHumRatio = max(HumRatio, MIN_HUM_RATIO);
 
-    VapPres = Pressure * HumRatio / (0.621945 + HumRatio);
+    VapPres = Pressure * BoundedHumRatio / (0.621945 + BoundedHumRatio);
     return VapPres;
   }
 
@@ -506,10 +575,12 @@ function Psychrometrics() {
   this.GetSpecificHumFromHumRatio = function  // (o) Specific humidity ratio in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]
     ( HumRatio                                // (i) Humidity ratio in lb_H₂O lb_Dry_Air⁻¹ [IP] or kg_H₂O kg_Dry_Air⁻¹ [SI]
     ) {
+    var BoundedHumRatio;
     if (!(HumRatio >= 0.))
       throw new Error("Humidity ratio is negative");
+    BoundedHumRatio = max(HumRatio, MIN_HUM_RATIO);
 
-    return HumRatio / (1.0 + HumRatio);
+    return BoundedHumRatio / (1.0 + BoundedHumRatio);
   }
 
   // Return the humidity ratio (aka mixing ratio) from specific humidity
@@ -517,10 +588,15 @@ function Psychrometrics() {
   this.GetHumRatioFromSpecificHum = function  // (o) Humidity ratio in lb_H₂O lb_Dry_Air⁻¹ [IP] or kg_H₂O kg_Dry_Air⁻¹ [SI]
     ( SpecificHum                             // (i) Specific humidity ratio in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]
     ) {
+    var HumRatio;
+
     if (!(SpecificHum >= 0.0 && SpecificHum < 1.0))
       throw new Error("Specific humidity is outside range [0, 1[");
 
-    return SpecificHum / (1.0 - SpecificHum);
+    HumRatio = SpecificHum / (1.0 - SpecificHum);
+
+    // Validity check
+    return max(HumRatio, MIN_HUM_RATIO);
   }
 
 
@@ -576,13 +652,15 @@ function Psychrometrics() {
     ( MoistAirEnthalpy                                 // (i) Moist air enthalpy in Btu lb⁻¹ [IP] or J kg⁻¹
     , HumRatio                                         // (i) Humidity ratio in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]
     ) {
+    var BoundedHumRatio;
     if (!(HumRatio >= 0.))
       throw new Error("Humidity ratio is negative");
+    BoundedHumRatio = max(HumRatio, MIN_HUM_RATIO);
 
     if (this.isIP())
-      return (MoistAirEnthalpy - 1061.0 * HumRatio) / (0.240 + 0.444 * HumRatio);
+      return (MoistAirEnthalpy - 1061.0 * BoundedHumRatio) / (0.240 + 0.444 * BoundedHumRatio);
     else
-      return (MoistAirEnthalpy / 1000.0 - 2501.0 * HumRatio) / (1.006 + 1.86 * HumRatio);
+      return (MoistAirEnthalpy / 1000.0 - 2501.0 * BoundedHumRatio) / (1.006 + 1.86 * BoundedHumRatio);
     }
 
   // Return humidity ratio from enthalpy and dry-bulb temperature.
@@ -592,10 +670,14 @@ function Psychrometrics() {
     ( MoistAirEnthalpy                                 // (i) Moist air enthalpy in Btu lb⁻¹ [IP] or J kg⁻¹
     , TDryBulb                                         // (i) Dry-bulb temperature in °F [IP] or °C [SI]
     ) {
+    var HumRatio;
     if (this.isIP())
-      return (MoistAirEnthalpy - 0.240 * TDryBulb) / (1061.0 + 0.444 * TDryBulb);
+      HumRatio = (MoistAirEnthalpy - 0.240 * TDryBulb) / (1061.0 + 0.444 * TDryBulb);
     else
-      return (MoistAirEnthalpy / 1000.0 - 1.006 * TDryBulb) / (2501.0 + 1.86 * TDryBulb);
+      HumRatio = (MoistAirEnthalpy / 1000.0 - 1.006 * TDryBulb) / (2501.0 + 1.86 * TDryBulb);
+
+    // Validity check.
+    return max(HumRatio, MIN_HUM_RATIO);
     }
 
 
@@ -650,10 +732,13 @@ function Psychrometrics() {
     ( TDryBulb                    // (i) Dry bulb temperature in °F [IP] or °C [SI]
     , Pressure                    // (i) Atmospheric pressure in Psi [IP] or Pa [SI]
     ) {
-    var SatVaporPres;
+    var SatVaporPres, SatHumRatio;
 
     SatVaporPres = this.GetSatVapPres(TDryBulb);
-    return 0.621945 * SatVaporPres / (Pressure - SatVaporPres);
+    SatHumRatio = 0.621945 * SatVaporPres / (Pressure - SatVaporPres);
+
+    // Validity check.
+    return max(SatHumRatio, MIN_HUM_RATIO);
   }
 
   // Return saturated air enthalpy given dry-bulb temperature and pressure.
@@ -695,11 +780,13 @@ function Psychrometrics() {
     , HumRatio                          // (i) Humidity ratio in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]
     , Pressure                          // (i) Atmospheric pressure in Psi [IP] or Pa [SI]
     ) {
+    var BoundedHumRatio;
 
     if (!(HumRatio >= 0.))
       throw new Error("Humidity ratio is negative");
+    BoundedHumRatio = max(HumRatio, MIN_HUM_RATIO);
 
-    return HumRatio / this.GetSatHumRatio(TDryBulb, Pressure);
+    return BoundedHumRatio / this.GetSatHumRatio(TDryBulb, Pressure);
   }
 
   // Return moist air enthalpy given dry-bulb temperature and humidity ratio.
@@ -708,11 +795,16 @@ function Psychrometrics() {
     ( TDryBulb                        // (i) Dry bulb temperature in °F [IP] or °C [SI]
     , HumRatio                        // (i) Humidity ratio in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]
     ) {
+    var BoundedHumRatio;
+
+    if (!(HumRatio >= 0.))
+      throw new Error("Humidity ratio is negative");
+    BoundedHumRatio = max(HumRatio, MIN_HUM_RATIO);
 
     if (this.isIP())
-      return 0.240 * TDryBulb + HumRatio * (1061. + 0.444 * TDryBulb);
+      return 0.240 * TDryBulb + BoundedHumRatio * (1061. + 0.444 * TDryBulb);
     else
-      return (1.006 * TDryBulb + HumRatio * (2501. + 1.86 * TDryBulb)) * 1000.;
+      return (1.006 * TDryBulb + BoundedHumRatio * (2501. + 1.86 * TDryBulb)) * 1000.;
   }
 
   // Return moist air specific volume given dry-bulb temperature, humidity ratio, and pressure.
@@ -724,14 +816,16 @@ function Psychrometrics() {
     , HumRatio                      // (i) Humidity ratio in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]
     , Pressure                      // (i) Atmospheric pressure in Psi [IP] or Pa [SI]
     ) {
+    var BoundedHumRatio;
 
     if (!(HumRatio >= 0.))
       throw new Error("Humidity ratio is negative");
+    BoundedHumRatio = max(HumRatio, MIN_HUM_RATIO);
 
     if (this.isIP())
-      return R_DA_IP * this.GetTRankineFromTFahrenheit(TDryBulb) * (1. + 1.607858 * HumRatio) / (144. * Pressure);
+      return R_DA_IP * this.GetTRankineFromTFahrenheit(TDryBulb) * (1. + 1.607858 * BoundedHumRatio) / (144. * Pressure);
     else
-      return R_DA_SI * this.GetTKelvinFromTCelsius(TDryBulb) * (1. + 1.607858 * HumRatio) / Pressure;
+      return R_DA_SI * this.GetTKelvinFromTCelsius(TDryBulb) * (1. + 1.607858 * BoundedHumRatio) / Pressure;
   }
 
   // Return moist air density given humidity ratio, dry bulb temperature, and pressure.
@@ -741,11 +835,13 @@ function Psychrometrics() {
     , HumRatio                        // (i) Humidity ratio in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]
     , Pressure                        // (i) Atmospheric pressure in Psi [IP] or Pa [SI]
     ) {
+    var BoundedHumRatio;
 
     if (!(HumRatio >= 0.))
       throw new Error("Humidity ratio is negative");
+    BoundedHumRatio = max(HumRatio, MIN_HUM_RATIO);
 
-    return (1. + HumRatio) / this.GetMoistAirVolume(TDryBulb, HumRatio, Pressure);
+    return (1. + BoundedHumRatio) / this.GetMoistAirVolume(TDryBulb, BoundedHumRatio, Pressure);
   }
 
 
