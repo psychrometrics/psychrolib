@@ -1,0 +1,6 @@
+2.1.0
+- Add functions to convert between specific humidity and humidity ratio (aka mixing ratio).
+- Add functions to convert to dry bulb temperature or humidity ratio from enthalpy.
+- Restrict minimum value of humidity ratio to `1e-7`
+- Fix bug with `GetTDewPointFromVapPres` not always converging due to discontinuity about the freezing point of water in `GetSatVapPres` formulae.
+- General `README.md`/docs improvements.
