@@ -84,6 +84,16 @@ MIN_HUM_RATIO = 1e-7
 
 """
 
+TRIPLE_POINT_WATER_SI = 0.01
+"""float: Triple point of water in Celsius.
+
+"""
+
+TRIPLE_POINT_WATER_IP = 32.018
+"""float: Triple point of water in Fahrenheit.
+
+"""
+
 
 #######################################################################################################
 # Helper functions
@@ -403,7 +413,7 @@ def dLnPws_(TDryBulb: float) -> float:
     """
     if isIP():
         T = GetTRankineFromTFahrenheit(TDryBulb)
-        if TDryBulb <= 32.:
+        if TDryBulb <= TRIPLE_POINT_WATER_IP:
             dLnPws = 1.0214165E+04 / math.pow(T, 2) - 5.3765794E-03 + 2 * 1.9202377E-07 * T \
                   + 2 * 3.5575832E-10 * math.pow(T, 2) - 4 * 9.0344688E-14 * math.pow(T, 3) + 4.1635019 / T
         else:
@@ -411,7 +421,7 @@ def dLnPws_(TDryBulb: float) -> float:
                   - 3 * 2.4780681E-09 * math.pow(T, 2) + 6.5459673 / T
     else:
         T = GetTKelvinFromTCelsius(TDryBulb)
-        if TDryBulb <= 0.:
+        if TDryBulb <= TRIPLE_POINT_WATER_SI:
             dLnPws = 5.6745359E+03 / math.pow(T, 2) - 9.677843E-03 + 2 * 6.2215701E-07 * T \
                   + 3 * 2.0747825E-09 * math.pow(T, 2) - 4 * 9.484024E-13 * math.pow(T, 3) + 4.1635019 / T
         else:
@@ -441,37 +451,18 @@ def GetTDewPointFromVapPres(TDryBulb: float, VapPres: float) -> float:
         narrower range of validity.
         The Newton-Raphson (NR) method is used on the logarithm of water vapour
         pressure as a function of temperature, which is a very smooth function
-        Convergence is usually achieved in 3 to 5 iterations.
+        Convergence is usually achieved in 3 to 5 iterations. 
         TDryBulb is not really needed here, just used for convenience.
 
     """
     if isIP():
         BOUNDS = [-148, 392]
-        T_WATER_FREEZE = 32.
     else:
         BOUNDS = [-100, 200]
-        T_WATER_FREEZE = 0.
 
     # Validity check -- bounds outside which a solution cannot be found
     if VapPres < GetSatVapPres(BOUNDS[0]) or VapPres > GetSatVapPres(BOUNDS[1]):
         raise ValueError("Partial pressure of water vapor is outside range of validity of equations")
-
-    # Vapor pressure contained within the discontinuity of the Pws function: return temperature of freezing
-    T_WATER_FREEZE_LOW = T_WATER_FREEZE - PSYCHROLIB_TOLERANCE / 10.          # Temperature just below freezing
-    T_WATER_FREEZE_HIGH = T_WATER_FREEZE + PSYCHROLIB_TOLERANCE / 10.         # Temperature just above freezing
-    PWS_FREEZE_LOW = GetSatVapPres(T_WATER_FREEZE_LOW)
-    PWS_FREEZE_HIGH = GetSatVapPres(T_WATER_FREEZE_HIGH)
-
-    # Restrict iteration to either left or right part of the saturation vapor pressure curve
-    # to avoid iterating back and forth across the discontinuity of the curve at the freezing point
-    # When the partial pressure of water vapor is within the discontinuity of GetSatVapPres,
-    # simply return the freezing point of water.
-    if (VapPres < PWS_FREEZE_LOW):
-        BOUNDS[1] = T_WATER_FREEZE_LOW
-    elif (VapPres > PWS_FREEZE_HIGH):
-        BOUNDS[0] = T_WATER_FREEZE_HIGH
-    else:
-        return T_WATER_FREEZE
 
     # We use NR to approximate the solution.
     # First guess
@@ -949,6 +940,12 @@ def GetSatVapPres(TDryBulb: float) -> float:
 
     Reference:
         ASHRAE Handbook - Fundamentals (2017) ch. 1  eqn 5 & 6
+        Important note: the ASHRAE formulae are defined above and below the freezing point but have
+        a discontinuity at the freezing point. This is a small inaccuracy on ASHRAE's part: the formulae
+        should be define above and below the triple point of water (not the feezing point) in which case 
+        the discontinuity vanishes. It is essential to use the triple point of water otherwise function
+        GetTDewPointFromVapPres, which inverts the present function, does not converge properly around
+        the freezing point.
 
     """
     if isIP():
@@ -957,7 +954,7 @@ def GetSatVapPres(TDryBulb: float) -> float:
 
         T = GetTRankineFromTFahrenheit(TDryBulb)
 
-        if (TDryBulb <= 32.):
+        if (TDryBulb <= TRIPLE_POINT_WATER_IP):
             LnPws = (-1.0214165E+04 / T - 4.8932428 - 5.3765794E-03 * T + 1.9202377E-07 * T**2 \
                   + 3.5575832E-10 * math.pow(T, 3) - 9.0344688E-14 * math.pow(T, 4) + 4.1635019 * math.log(T))
         else:
@@ -969,7 +966,7 @@ def GetSatVapPres(TDryBulb: float) -> float:
 
         T = GetTKelvinFromTCelsius(TDryBulb)
 
-        if (TDryBulb <= 0):
+        if (TDryBulb <= TRIPLE_POINT_WATER_SI):
             LnPws = -5.6745359E+03 / T + 6.3925247 - 9.677843E-03 * T + 6.2215701E-07 * T**2 \
                   + 2.0747825E-09 * math.pow(T, 3) - 9.484024E-13 * math.pow(T, 4) + 4.1635019 * math.log(T)
         else:
