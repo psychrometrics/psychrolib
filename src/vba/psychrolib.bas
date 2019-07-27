@@ -64,10 +64,11 @@ End Enum
 
 Private Const R_DA_IP = 53.35               ' Universal gas constant for dry air (IP version) in ft lbf/lb_DryAir/R
 Private Const R_DA_SI = 287.042             ' Universal gas constant for dry air (SI version) in J/kg_DryAir/K
-Private Const MAX_ITER_COUNT = 100         ' Maximum number of iterations before exiting while loops.
+Private Const MAX_ITER_COUNT = 100          ' Maximum number of iterations before exiting while loops.
 Private Const MIN_HUM_RATIO = 1e-7          ' Minimum acceptable humidity ratio used/returned by any functions.
                                             ' Any value above 0 or below the MIN_HUM_RATIO will be reset to this value.
-
+Private Const TRIPLE_POINT_WATER_SI = 0.01  ' Triple point of water, in °C
+Private Const TRIPLE_POINT_WATER_IP = 32.018  ' Triple point of water, in °F
 
 '******************************************************************************************************
 ' Helper functions
@@ -502,7 +503,7 @@ Private Function dLnPws_(TDryBulb As Variant) As Variant
   Dim T As Variant
   If (isIP()) Then
     T = GetTRankineFromTFahrenheit(TDryBulb)
-    If (TDryBulb <= 32.) Then
+    If (TDryBulb <= TRIPLE_POINT_WATER_IP) Then
       dLnPws_ = 10214.165 / T ^ 2 - 0.0053765794 + 2 * 0.00000019202377 * T _
              + 2 * 3.5575832E-10 * T ^ 2 - 4 * 9.0344688E-14 * T ^ 3 + 4.1635019 / T
     Else
@@ -511,7 +512,7 @@ Private Function dLnPws_(TDryBulb As Variant) As Variant
     End If
   Else
     T = GetTKelvinFromTCelsius(TDryBulb)
-    If (TDryBulb <= 0.) Then
+    If (TDryBulb <= TRIPLE_POINT_WATER_SI) Then
       dLnPws_ = 5674.5359 / T ^ 2 - 0.009677843 + 2 * 0.00000062215701 * T _
              + 3 * 2.0747825E-09 * T ^ 2 - 4 * 9.484024E-13 * T ^ 3 + 4.1635019 / T
     Else
@@ -546,18 +547,14 @@ Function GetTDewPointFromVapPres(ByVal TDryBulb As Variant, ByVal VapPres As Var
 '        TDryBulb is not really needed here, just used for convenience.
 '
   Dim BOUNDS(2) As Variant
-  Dim T_WATER_FREEZE As Variant, T_WATER_FREEZE_LOW As Variant, T_WATER_FREEZE_HIGH As Variant
-  Dim PWS_FREEZE_LOW As Variant, PWS_FREEZE_HIGH As Variant
   Dim PSYCHROLIB_TOLERANCE As Variant
 
   If (isIP()) Then
     BOUNDS(1) = -148.
     BOUNDS(2) = 392.
-    T_WATER_FREEZE = 32.
   Else
     BOUNDS(1) = -100.
     BOUNDS(2) = 200.
-    T_WATER_FREEZE = 0.
   End If
 
   On Error GoTo ErrHandler
@@ -568,24 +565,6 @@ Function GetTDewPointFromVapPres(ByVal TDryBulb As Variant, ByVal VapPres As Var
   End If
 
   PSYCHROLIB_TOLERANCE = GetTol()
-  ' Vapor pressure contained within the discontinuity of the Pws function: return temperature of freezing
-  T_WATER_FREEZE_LOW = T_WATER_FREEZE - PSYCHROLIB_TOLERANCE / 10.        ' Temperature just below freezing
-  T_WATER_FREEZE_HIGH = T_WATER_FREEZE + PSYCHROLIB_TOLERANCE / 10.        ' Temperature just above freezing
-  PWS_FREEZE_LOW = GetSatVapPres(T_WATER_FREEZE_LOW)
-  PWS_FREEZE_HIGH = GetSatVapPres(T_WATER_FREEZE_HIGH)
-
-  ' Restrict iteration to either left or right part of the saturation vapor pressure curve
-  ' to avoid iterating back and forth across the discontinuity of the curve at the freezing point
-  ' When the partial pressure of water vapor is within the discontinuity of GetSatVapPres,
-  ' simply return the freezing point of water.
-  If (VapPres < PWS_FREEZE_LOW) Then
-    BOUNDS(2) = T_WATER_FREEZE_LOW
-  ElseIf (VapPres > PWS_FREEZE_HIGH) Then
-    BOUNDS(1) = T_WATER_FREEZE_HIGH
-  Else
-    GetTDewPointFromVapPres = T_WATER_FREEZE
-    Exit Function
-  End If
 
   Dim TDewPoint As Variant
   Dim lnVP As Variant
@@ -600,7 +579,7 @@ Function GetTDewPointFromVapPres(ByVal TDryBulb As Variant, ByVal VapPres As Var
   TDewPoint = TDryBulb        ' Calculated value of dew point temperatures, solved for iteratively
   lnVP = Log(VapPres)         ' Partial pressure of water vapor in moist air
 
-
+  ' Iteration
   Do
     TDewPoint_iter = TDewPoint   ' Value of Tdp used in NR calculation
     lnVP_iter = Log(GetSatVapPres(TDewPoint_iter))
@@ -1226,6 +1205,12 @@ Function GetSatVapPres(ByVal TDryBulb As Variant) As Variant
 '
 ' Reference:
 '        ASHRAE Handbook - Fundamentals (2017) ch. 1  eqn 5 & 6
+'        Important note: the ASHRAE formulae are defined above and below the freezing point but have
+'        a discontinuity at the freezing point. This is a small inaccuracy on ASHRAE's part: the formulae
+'        should be define above and below the triple point of water (not the feezing point) in which case 
+'        the discontinuity vanishes. It is essential to use the triple point of water otherwise function
+'        GetTDewPointFromVapPres, which inverts the present function, does not converge properly around
+'        the freezing point.
 '
   Dim LnPws As Variant, T As Variant
 
@@ -1239,7 +1224,7 @@ Function GetSatVapPres(ByVal TDryBulb As Variant) As Variant
 
     T = GetTRankineFromTFahrenheit(TDryBulb)
 
-    If (TDryBulb <= 32) Then
+    If (TDryBulb <= TRIPLE_POINT_WATER_IP) Then
       LnPws = (-10214.165 / T - 4.8932428 - 0.0053765794 * T + 0.00000019202377 * T ^ 2 _
             + 3.5575832E-10 * T ^ 3 - 9.0344688E-14 * T ^ 4 + 4.1635019 * Log(T))
     Else
@@ -1255,7 +1240,7 @@ Function GetSatVapPres(ByVal TDryBulb As Variant) As Variant
 
     T = GetTKelvinFromTCelsius(TDryBulb)
 
-    If (TDryBulb <= 0) Then
+    If (TDryBulb <= TRIPLE_POINT_WATER_SI) Then
         LnPws = -5674.5359 / T + 6.3925247 - 0.009677843 * T + 0.00000062215701 * T ^ 2 _
               + 2.0747825E-09 * T ^ 3 - 9.484024E-13 * T ^ 4 + 4.1635019 * Log(T)
     Else
