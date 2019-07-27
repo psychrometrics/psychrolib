@@ -61,7 +61,7 @@ End Sub
 
 ' Test of helper functions
 Sub test_GetTKelvinFromTCelsius()
-  Call TestExpression("", GetTKelvinFromTCelsius(20), 293.15, 0.000001)
+  Call TestExpression("GetTKelvinFromTCelsius", GetTKelvinFromTCelsius(20), 293.15, 0.000001)
 End Sub
 
 
@@ -286,5 +286,4 @@ Sub test_GetTDewPointFromVapPres_convergence()
   Next TDryBulb
   Call TestExpression("GetTDewPointFromVapPres convergence test", 1, 1, abst:=0.1)
 End Sub
-
 
