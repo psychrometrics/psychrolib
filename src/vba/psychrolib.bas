@@ -1207,7 +1207,7 @@ Function GetSatVapPres(ByVal TDryBulb As Variant) As Variant
 '        ASHRAE Handbook - Fundamentals (2017) ch. 1  eqn 5 & 6
 '        Important note: the ASHRAE formulae are defined above and below the freezing point but have
 '        a discontinuity at the freezing point. This is a small inaccuracy on ASHRAE's part: the formulae
-'        should be define above and below the triple point of water (not the feezing point) in which case 
+'        should be defined above and below the triple point of water (not the feezing point) in which case 
 '        the discontinuity vanishes. It is essential to use the triple point of water otherwise function
 '        GetTDewPointFromVapPres, which inverts the present function, does not converge properly around
 '        the freezing point.
