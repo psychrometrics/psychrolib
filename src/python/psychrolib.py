@@ -84,16 +84,16 @@ MIN_HUM_RATIO = 1e-7
 
 """
 
-TRIPLE_POINT_WATER_SI = 0.01
-"""float: Triple point of water in Celsius.
-
-"""
 
 TRIPLE_POINT_WATER_IP = 32.018
 """float: Triple point of water in Fahrenheit.
 
 """
 
+TRIPLE_POINT_WATER_SI = 0.01
+"""float: Triple point of water in Celsius.
+
+"""
 
 #######################################################################################################
 # Helper functions

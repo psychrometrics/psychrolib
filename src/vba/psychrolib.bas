@@ -62,13 +62,13 @@ End Enum
 ' Global constants
 '******************************************************************************************************
 
-Private Const R_DA_IP = 53.35               ' Universal gas constant for dry air (IP version) in ft lbf/lb_DryAir/R
-Private Const R_DA_SI = 287.042             ' Universal gas constant for dry air (SI version) in J/kg_DryAir/K
-Private Const MAX_ITER_COUNT = 100          ' Maximum number of iterations before exiting while loops.
-Private Const MIN_HUM_RATIO = 1e-7          ' Minimum acceptable humidity ratio used/returned by any functions.
-                                            ' Any value above 0 or below the MIN_HUM_RATIO will be reset to this value.
-Private Const TRIPLE_POINT_WATER_SI = 0.01  ' Triple point of water, in °C
+Private Const R_DA_IP = 53.35                 ' Universal gas constant for dry air (IP version) in ft lbf/lb_DryAir/R.
+Private Const R_DA_SI = 287.042               ' Universal gas constant for dry air (SI version) in J/kg_DryAir/K.
+Private Const MAX_ITER_COUNT = 100            ' Maximum number of iterations before exiting while loops.
+Private Const MIN_HUM_RATIO = 1e-7            ' Minimum acceptable humidity ratio used/returned by any functions.
+                                              ' Any value above 0 or below the MIN_HUM_RATIO will be reset to this value.
 Private Const TRIPLE_POINT_WATER_IP = 32.018  ' Triple point of water, in °F
+Private Const TRIPLE_POINT_WATER_SI = 0.01    ' Triple point of water, in °C
 
 '******************************************************************************************************
 ' Helper functions
@@ -1205,12 +1205,6 @@ Function GetSatVapPres(ByVal TDryBulb As Variant) As Variant
 '
 ' Reference:
 '        ASHRAE Handbook - Fundamentals (2017) ch. 1  eqn 5 & 6
-'        Important note: the ASHRAE formulae are defined above and below the freezing point but have
-'        a discontinuity at the freezing point. This is a small inaccuracy on ASHRAE's part: the formulae
-'        should be defined above and below the triple point of water (not the feezing point) in which case 
-'        the discontinuity vanishes. It is essential to use the triple point of water otherwise function
-'        GetTDewPointFromVapPres, which inverts the present function, does not converge properly around
-'        the freezing point.
 '
   Dim LnPws As Variant, T As Variant
 
