@@ -63,11 +63,20 @@ End Enum
 '******************************************************************************************************
 
 Private Const R_DA_IP = 53.35                 ' Universal gas constant for dry air (IP version) in ft lbf/lb_DryAir/R.
+
 Private Const R_DA_SI = 287.042               ' Universal gas constant for dry air (SI version) in J/kg_DryAir/K.
+
 Private Const MAX_ITER_COUNT = 100            ' Maximum number of iterations before exiting while loops.
+
 Private Const MIN_HUM_RATIO = 1e-7            ' Minimum acceptable humidity ratio used/returned by any functions.
                                               ' Any value above 0 or below the MIN_HUM_RATIO will be reset to this value.
+
+Private Const FREEZING_POINT_WATER_IP = 32.0  ' Freezing point of water, in °F
+
+Private Const FREEZING_POINT_WATER_SI = 0.0   ' Freezing point of water, in °C
+
 Private Const TRIPLE_POINT_WATER_IP = 32.018  ' Triple point of water, in °F
+
 Private Const TRIPLE_POINT_WATER_SI = 0.01    ' Triple point of water, in °C
 
 '******************************************************************************************************
@@ -731,13 +740,13 @@ Function GetHumRatioFromTWetBulb(ByVal TDryBulb As Variant, ByVal TWetBulb As Va
   End If
 
   If isIP() Then
-    If (TWetBulb >= 32) Then
+    If (TWetBulb >= FREEZING_POINT_WATER_IP) Then
       HumRatio = ((1093 - 0.556 * TWetBulb) * Wsstar - 0.24 * (TDryBulb - TWetBulb)) / (1093 + 0.444 * TDryBulb - TWetBulb)
     Else
       HumRatio = ((1220 - 0.04 * TWetBulb) * Wsstar - 0.24 * (TDryBulb - TWetBulb)) / (1220 + 0.444 * TDryBulb - 0.48 * TWetBulb)
     End If
   Else
-    If (TWetBulb >= 0) Then
+    If (TWetBulb >= FREEZING_POINT_WATER_SI) Then
       HumRatio = ((2501 - 2.326 * TWetBulb) * Wsstar - 1.006 * (TDryBulb - TWetBulb)) / (2501 + 1.86 * TDryBulb - 4.186 * TWetBulb)
     Else
       HumRatio = ((2830 - 0.24 * TWetBulb) * Wsstar - 1.006 * (TDryBulb - TWetBulb)) / (2830 + 1.86 * TDryBulb - 2.1 * TWetBulb)
@@ -1205,6 +1214,12 @@ Function GetSatVapPres(ByVal TDryBulb As Variant) As Variant
 '
 ' Reference:
 '        ASHRAE Handbook - Fundamentals (2017) ch. 1  eqn 5 & 6
+'        Important note: the ASHRAE formulae are defined above and below the freezing point but have
+'        a discontinuity at the freezing point. This is a small inaccuracy on ASHRAE's part: the formulae
+'        should be defined above and below the triple point of water (not the feezing point) in which case
+'        the discontinuity vanishes. It is essential to use the triple point of water otherwise function
+'        GetTDewPointFromVapPres, which inverts the present function, does not converge properly around
+'        the freezing point.
 '
   Dim LnPws As Variant, T As Variant
 

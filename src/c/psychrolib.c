@@ -64,10 +64,13 @@
 #define MIN_HUM_RATIO 1e-7              // Minimum acceptable humidity ratio used/returned by any functions.
                                         // Any value above 0 or below the MIN_HUM_RATIO will be reset to this value.
 
+#define FREEZING_POINT_WATER_IP 32.0    // Freezing point of water in Fahrenheit.
+
+#define FREEZING_POINT_WATER_SI 0.0     // Freezing point of water in Celsius.
+
 #define TRIPLE_POINT_WATER_IP 32.018    // Triple point of water in Fahrenheit.
 
 #define TRIPLE_POINT_WATER_SI 0.01      // Triple point of water in Celsius.
-
 
 
 /******************************************************************************************************
@@ -470,7 +473,7 @@ double GetHumRatioFromTWetBulb  // (o) Humidity Ratio in lb_H₂O lb_Air⁻¹ [I
 
   if (isIP())
   {
-    if (TWetBulb >= 32.)
+    if (TWetBulb >= FREEZING_POINT_WATER_IP)
       HumRatio = ((1093. - 0.556 * TWetBulb) * Wsstar - 0.240 * (TDryBulb - TWetBulb))
       / (1093. + 0.444 * TDryBulb - TWetBulb);
     else
@@ -479,7 +482,7 @@ double GetHumRatioFromTWetBulb  // (o) Humidity Ratio in lb_H₂O lb_Air⁻¹ [I
   }
   else
   {
-    if (TWetBulb >= 0.)
+    if (TWetBulb >= FREEZING_POINT_WATER_SI)
       HumRatio = ((2501. - 2.326 * TWetBulb) * Wsstar - 1.006 * (TDryBulb - TWetBulb))
          / (2501. + 1.86 * TDryBulb - 4.186 * TWetBulb);
     else
@@ -717,6 +720,12 @@ double GetHumRatioFromEnthalpyAndTDryBulb  // (o) Humidity ratio in lb_H₂O lb_
 
 // Return saturation vapor pressure given dry-bulb temperature.
 // Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn. 5 & 6
+// Important note: the ASHRAE formulae are defined above and below the freezing point but have
+// a discontinuity at the freezing point. This is a small inaccuracy on ASHRAE's part: the formulae
+// should be defined above and below the triple point of water (not the feezing point) in which case
+// the discontinuity vanishes. It is essential to use the triple point of water otherwise function
+// GetTDewPointFromVapPres, which inverts the present function, does not converge properly around
+// the freezing point.
 double GetSatVapPres            // (o) Vapor Pressure of saturated air in Psi [IP] or Pa [SI]
   ( double TDryBulb             // (i) Dry bulb temperature in °F [IP] or °C [SI]
   )
