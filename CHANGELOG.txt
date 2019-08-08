@@ -1,3 +1,6 @@
+2.1.1
+- Use of triple point of water in GetSatVapPres (#36).
+
 2.1.0
 - Add functions to convert between specific humidity and humidity ratio (aka mixing ratio).
 - Add functions to convert to dry bulb temperature or humidity ratio from enthalpy.

@@ -3,7 +3,7 @@
 from distutils.core import setup
 
 setup(name='PsychroLib',
-      version='2.1.0',
+      version='2.1.1',
       maintainer = 'The PsychroLib Developers',
       description='Library of psychrometric functions to calculate thermodynamic properties of air',
       author='D. Thevenard and D. Meyer',
