@@ -53,16 +53,24 @@
  * Global constants
  *****************************************************************************************************/
 
-#define R_DA_IP 53.350            // Universal gas constant for dry air (IP version) in ft∙lbf/lb_da/R
-                                  // Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1
-#define R_DA_SI 287.042           // Universal gas constant for dry air (SI version) in J/kg_da/K
-                                  // Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1
-#define INVALID -99999            // Invalid value
+#define R_DA_IP 53.350                  // Universal gas constant for dry air (IP version) in ft∙lbf/lb_da/R.
+                                        // Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1.
+#define R_DA_SI 287.042                 // Universal gas constant for dry air (SI version) in J/kg_da/K.
+                                        // Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1.
+#define INVALID -99999                  // Invalid value.
 
-#define MAX_ITER_COUNT 100        // Maximum number of iterations before exiting while loops.
+#define MAX_ITER_COUNT 100              // Maximum number of iterations before exiting while loops.
 
-#define MIN_HUM_RATIO 1e-7        // Minimum acceptable humidity ratio used/returned by any functions.
-                                  // Any value above 0 or below the MIN_HUM_RATIO will be reset to this value.
+#define MIN_HUM_RATIO 1e-7              // Minimum acceptable humidity ratio used/returned by any functions.
+                                        // Any value above 0 or below the MIN_HUM_RATIO will be reset to this value.
+
+#define FREEZING_POINT_WATER_IP 32.0    // Freezing point of water in Fahrenheit.
+
+#define FREEZING_POINT_WATER_SI 0.0     // Freezing point of water in Celsius.
+
+#define TRIPLE_POINT_WATER_IP 32.018    // Triple point of water in Fahrenheit.
+
+#define TRIPLE_POINT_WATER_SI 0.01      // Triple point of water in Celsius.
 
 
 /******************************************************************************************************
@@ -303,7 +311,7 @@ double dLnPws_        // (o) Derivative of natural log of vapor pressure of satu
   {
     T = GetTRankineFromTFahrenheit(TDryBulb);
 
-    if (TDryBulb <= 32.)
+    if (TDryBulb <= TRIPLE_POINT_WATER_IP)
       dLnPws = 1.0214165E+04 / pow(T, 2) - 5.3765794E-03 + 2 * 1.9202377E-07 * T
                + 2 * 3.5575832E-10 * pow(T, 2) - 4 * 9.0344688E-14 * pow(T, 3) + 4.1635019 / T;
     else
@@ -314,7 +322,7 @@ double dLnPws_        // (o) Derivative of natural log of vapor pressure of satu
   {
     T = GetTKelvinFromTCelsius(TDryBulb);
 
-    if (TDryBulb <= 0.)
+    if (TDryBulb <= TRIPLE_POINT_WATER_SI)
       dLnPws = 5.6745359E+03 / pow(T, 2) - 9.677843E-03 + 2 * 6.2215701E-07 * T
                + 3 * 2.0747825E-09 * pow(T, 2) - 4 * 9.484024E-13 * pow(T, 3) + 4.1635019 / T;
     else
@@ -342,40 +350,21 @@ double GetTDewPointFromVapPres  // (o) Dew Point temperature in °F [IP] or °C 
 {
   // Bounds function of the system of units
   double BOUNDS[2];              // Domain of validity of the equations
-  double T_WATER_FREEZE, T_WATER_FREEZE_LOW, T_WATER_FREEZE_HIGH, PWS_FREEZE_LOW, PWS_FREEZE_HIGH;
 
   if (isIP())
   {
     BOUNDS[0] = -148.;
     BOUNDS[1] = 392.;
-    T_WATER_FREEZE = 32.;
   }
   else
   {
     BOUNDS[0] = -100.;
     BOUNDS[1] = 200.;
-    T_WATER_FREEZE = 0.;
   }
 
   // Bounds outside which a solution cannot be found
-  ASSERT (VapPres >= GetSatVapPres(BOUNDS[0]) && VapPres <= GetSatVapPres(BOUNDS[1]), "Partial pressure of water vapor is outside range of validity of equations")
-
-  // Vapor pressure contained within the discontinuity of the Pws function: return temperature of freezing
-  T_WATER_FREEZE_LOW = T_WATER_FREEZE - PSYCHROLIB_TOLERANCE / 10.;          // Temperature just below freezing
-  T_WATER_FREEZE_HIGH = T_WATER_FREEZE + PSYCHROLIB_TOLERANCE / 10.;         // Temperature just above freezing
-  PWS_FREEZE_LOW = GetSatVapPres(T_WATER_FREEZE_LOW);
-  PWS_FREEZE_HIGH = GetSatVapPres(T_WATER_FREEZE_HIGH);
-
-  // Restrict iteration to either left or right part of the saturation vapor pressure curve
-  // to avoid iterating back and forth across the discontinuity of the curve at the freezing point
-  // When the partial pressure of water vapor is within the discontinuity of GetSatVapPres,
-  // simply return the freezing point of water.
-  if (VapPres < PWS_FREEZE_LOW)
-    BOUNDS[1] = T_WATER_FREEZE_LOW;
-  else if (VapPres > PWS_FREEZE_LOW)
-    BOUNDS[0] = T_WATER_FREEZE_HIGH;
-  else
-    return T_WATER_FREEZE;
+  ASSERT (VapPres >= GetSatVapPres(BOUNDS[0]) && VapPres <= GetSatVapPres(BOUNDS[1]),
+          "Partial pressure of water vapor is outside range of validity of equations")
 
   // We use NR to approximate the solution.
   // First guess
@@ -484,7 +473,7 @@ double GetHumRatioFromTWetBulb  // (o) Humidity Ratio in lb_H₂O lb_Air⁻¹ [I
 
   if (isIP())
   {
-    if (TWetBulb >= 32.)
+    if (TWetBulb >= FREEZING_POINT_WATER_IP)
       HumRatio = ((1093. - 0.556 * TWetBulb) * Wsstar - 0.240 * (TDryBulb - TWetBulb))
       / (1093. + 0.444 * TDryBulb - TWetBulb);
     else
@@ -493,7 +482,7 @@ double GetHumRatioFromTWetBulb  // (o) Humidity Ratio in lb_H₂O lb_Air⁻¹ [I
   }
   else
   {
-    if (TWetBulb >= 0.)
+    if (TWetBulb >= FREEZING_POINT_WATER_SI)
       HumRatio = ((2501. - 2.326 * TWetBulb) * Wsstar - 1.006 * (TDryBulb - TWetBulb))
          / (2501. + 1.86 * TDryBulb - 4.186 * TWetBulb);
     else
@@ -731,6 +720,12 @@ double GetHumRatioFromEnthalpyAndTDryBulb  // (o) Humidity ratio in lb_H₂O lb_
 
 // Return saturation vapor pressure given dry-bulb temperature.
 // Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn. 5 & 6
+// Important note: the ASHRAE formulae are defined above and below the freezing point but have
+// a discontinuity at the freezing point. This is a small inaccuracy on ASHRAE's part: the formulae
+// should be defined above and below the triple point of water (not the feezing point) in which case
+// the discontinuity vanishes. It is essential to use the triple point of water otherwise function
+// GetTDewPointFromVapPres, which inverts the present function, does not converge properly around
+// the freezing point.
 double GetSatVapPres            // (o) Vapor Pressure of saturated air in Psi [IP] or Pa [SI]
   ( double TDryBulb             // (i) Dry bulb temperature in °F [IP] or °C [SI]
   )
@@ -742,28 +737,26 @@ double GetSatVapPres            // (o) Vapor Pressure of saturated air in Psi [I
     ASSERT(TDryBulb >= -148. && TDryBulb <= 392., "Dry bulb temperature is outside range [-148, 392]")
 
     T = GetTRankineFromTFahrenheit(TDryBulb);
-    if (TDryBulb >= -148. && TDryBulb <= 32.)
+
+    if (TDryBulb <= TRIPLE_POINT_WATER_IP)
       LnPws = (-1.0214165E+04 / T - 4.8932428 - 5.3765794E-03 * T + 1.9202377E-07 * T * T
         + 3.5575832E-10 * pow(T, 3) - 9.0344688E-14 * pow(T, 4) + 4.1635019 * log(T));
-    else if (TDryBulb > 32. && TDryBulb <= 392.)
+    else
       LnPws = -1.0440397E+04 / T - 1.1294650E+01 - 2.7022355E-02 * T + 1.2890360E-05 * T * T
       - 2.4780681E-09 * pow(T, 3) + 6.5459673 * log(T);
-    else
-      return INVALID;             // TDryBulb is out of range [-148, 392]
   }
   else
   {
     ASSERT(TDryBulb >= -100. && TDryBulb <= 200., "Dry bulb temperature is outside range [-100, 200]")
 
     T = GetTKelvinFromTCelsius(TDryBulb);
-    if (TDryBulb >= -100. && TDryBulb <= 0.)
+
+    if (TDryBulb <= TRIPLE_POINT_WATER_SI)
       LnPws = -5.6745359E+03 / T + 6.3925247 - 9.677843E-03 * T + 6.2215701E-07 * T * T
           + 2.0747825E-09 * pow(T, 3) - 9.484024E-13 * pow(T, 4) + 4.1635019 * log(T);
-    else if (TDryBulb > 0. && TDryBulb <= 200.)
+    else
       LnPws = -5.8002206E+03 / T + 1.3914993 - 4.8640239E-02 * T + 4.1764768E-05 * T * T
         - 1.4452093E-08 * pow(T, 3) + 6.5459673 * log(T);
-    else
-      return INVALID;             // TDryBulb is out of range [-100, 200]
   }
 
   return exp(LnPws);

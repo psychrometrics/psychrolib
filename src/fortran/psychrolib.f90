@@ -96,19 +96,19 @@ module psychrolib
   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   real, parameter ::  R_DA_IP = 53.350
-    !+ Universal gas constant for dry air (IP version) in ft lb_Force lb_DryAir⁻¹ R⁻¹
+    !+ Universal gas constant for dry air (IP version) in ft lb_Force lb_DryAir⁻¹ R⁻¹.
     !+ Reference:
-    !+ ASHRAE Handbook - Fundamentals (2017) ch. 1
+    !+ ASHRAE Handbook - Fundamentals (2017) ch. 1.
 
   real, parameter ::  R_DA_SI = 287.042
-    !+ Universal gas constant for dry air (SI version) in J kg_DryAir⁻¹ K⁻¹
+    !+ Universal gas constant for dry air (SI version) in J kg_DryAir⁻¹ K⁻¹.
     !+ Reference:
-    !+ ASHRAE Handbook - Fundamentals (2017) ch. 1
+    !+ ASHRAE Handbook - Fundamentals (2017) ch. 1.
 
   integer, parameter :: IP = 1
   integer, parameter :: SI = 2
 
-  integer  :: PSYCHROLIB_UNITS = 0 ! 0 = undefined
+  integer  :: PSYCHROLIB_UNITS = 0 ! 0 = undefined.
     !+ Unit system to use.
 
   real ::  PSYCHROLIB_TOLERANCE = 1.0
@@ -120,6 +120,18 @@ module psychrolib
   real, parameter  :: MIN_HUM_RATIO = 1e-7
     !+ Minimum acceptable humidity ratio used/returned by any functions.
     !+ Any value above 0 or below the MIN_HUM_RATIO will be reset to this value.
+
+  real, parameter  :: FREEZING_POINT_WATER_IP = 32.0
+    !+ float: Freezing point of water in Fahrenheit.
+
+  real, parameter  :: FREEZING_POINT_WATER_SI = 0.0
+    !+ float: Freezing point of water in Celsius.
+
+  real, parameter  :: TRIPLE_POINT_WATER_IP = 32.018
+    !+ float: Triple point of water in Fahrenheit.
+
+  real, parameter  :: TRIPLE_POINT_WATER_SI = 0.01
+    !+ float: Triple point of water in Celsius.
 
 
   contains
@@ -408,7 +420,7 @@ module psychrolib
 
       T = GetTRankineFromTFahrenheit(TDryBulb)
 
-      if (TDryBulb <= 32.) then
+      if (TDryBulb <= TRIPLE_POINT_WATER_IP) then
         dLnPws = 1.0214165E+04 / T**2 - 5.3765794E-03 + 2 * 1.9202377E-07 * T &
                  + 2 * 3.5575832E-10 * T**2 - 4 * 9.0344688E-14 * T**3 + 4.1635019 / T
       else
@@ -420,7 +432,7 @@ module psychrolib
 
       T = GetTKelvinFromTCelsius(TDryBulb)
 
-      if (TDryBulb <= 0) then
+      if (TDryBulb <= TRIPLE_POINT_WATER_SI) then
         dLnPws = 5.6745359E+03 / T**2 - 9.677843E-03 + 2 * 6.2215701E-07 * T &
                  + 3 * 2.0747825E-09 * T**2 - 4 * 9.484024E-13 * T**3 + 4.1635019 / T
       else
@@ -462,42 +474,19 @@ module psychrolib
       !+ Valid temperature range in °F [IP] or °C [SI]
     integer             :: index
       !+ Index used in the calculation
-     real ::  T_WATER_FREEZE, T_WATER_FREEZE_LOW, T_WATER_FREEZE_HIGH, PWS_FREEZE_LOW, PWS_FREEZE_HIGH
 
     ! Bounds and step size as a function of the system of units
     if (isIP()) then
         BOUNDS(1) = -148.0
         BOUNDS(2) =  392.0
-        T_WATER_FREEZE = 32.
     else
         BOUNDS(1) = -100.0
         BOUNDS(2) =  200.0
-        T_WATER_FREEZE = 0.
     end if
 
     ! Validity check -- bounds outside which a solution cannot be found
     if (VapPres < GetSatVapPres(BOUNDS(1)) .or. VapPres > GetSatVapPres(BOUNDS(2))) then
       error stop "Error: partial pressure of water vapor is outside range of validity of equations"
-    end if
-
-    ! Vapor pressure contained within the discontinuity of the Pws function: return temperature of freezing
-    T_WATER_FREEZE_LOW = T_WATER_FREEZE - PSYCHROLIB_TOLERANCE / 10.        ! Temperature just below freezing
-    T_WATER_FREEZE_LOW = T_WATER_FREEZE - PSYCHROLIB_TOLERANCE / 10.        ! Temperature just below freezing
-    T_WATER_FREEZE_HIGH = T_WATER_FREEZE + PSYCHROLIB_TOLERANCE             ! Temperature just above freezing
-    PWS_FREEZE_LOW = GetSatVapPres(T_WATER_FREEZE_LOW)
-    PWS_FREEZE_HIGH = GetSatVapPres(T_WATER_FREEZE_HIGH)
-
-    ! Restrict iteration to either left or right part of the saturation vapor pressure curve
-    ! to avoid iterating back and forth across the discontinuity of the curve at the freezing point
-    ! When the partial pressure of water vapor is within the discontinuity of GetSatVapPres,
-    ! simply return the freezing point of water.
-    if (VapPres < PWS_FREEZE_LOW) then
-        BOUNDS(2) = T_WATER_FREEZE_LOW
-    else if (VapPres > PWS_FREEZE_HIGH) then
-        BOUNDS(1) = T_WATER_FREEZE_HIGH
-    else
-        TDewPoint = T_WATER_FREEZE
-        return
     end if
 
     ! We use NR to approximate the solution.
@@ -635,7 +624,7 @@ module psychrolib
     Wsstar = GetSatHumRatio(TWetBulb, Pressure)
 
     if (isIP()) then
-      if (TWetBulb >= 32.0) then
+      if (TWetBulb >= FREEZING_POINT_WATER_IP) then
         HumRatio = ((1093.0 - 0.556 * TWetBulb) * Wsstar - 0.240 * (TDryBulb - TWetBulb))   &
                    / (1093.0 + 0.444 * TDryBulb - TWetBulb)
       else
@@ -643,7 +632,7 @@ module psychrolib
                    / (1220.0 + 0.444 * TDryBulb - 0.48 * TWetBulb)
       end if
     else
-      if (TWetBulb >= 0.0) then
+      if (TWetBulb >= FREEZING_POINT_WATER_SI) then
         HumRatio = ((2501.0 - 2.326 * TWetBulb) * Wsstar - 1.006 * (TDryBulb - TWetBulb))   &
                    / (2501.0 + 1.86 * TDryBulb - 4.186 * TWetBulb)
       else
@@ -970,6 +959,12 @@ module psychrolib
     !+ Return saturation vapor pressure given dry-bulb temperature.
     !+ Reference:
     !+ ASHRAE Handbook - Fundamentals (2017) ch. 1  eqn 5
+    !+ Important note: the ASHRAE formulae are defined above and below the freezing point but have
+    !+ a discontinuity at the freezing point. This is a small inaccuracy on ASHRAE's part: the formulae
+    !+ should be defined above and below the triple point of water (not the feezing point) in which case 
+    !+ the discontinuity vanishes. It is essential to use the triple point of water otherwise function
+    !+ GetTDewPointFromVapPres, which inverts the present function, does not converge properly around
+    !+ the freezing point.
 
     real, intent(in)  ::  TDryBulb
       !+ Dry-bulb temperature in °F [IP] or °C [SI]
@@ -987,7 +982,7 @@ module psychrolib
 
       T = GetTRankineFromTFahrenheit(TDryBulb)
 
-      if (TDryBulb <= 32.) then
+      if (TDryBulb <= TRIPLE_POINT_WATER_IP) then
         LnPws = (-1.0214165E+04 / T - 4.8932428 - 5.3765794E-03 * T + 1.9202377E-07 * T**2    &
                 + 3.5575832E-10 * T**3 - 9.0344688E-14 * T**4 + 4.1635019 * log(T))
       else
@@ -1002,7 +997,7 @@ module psychrolib
 
         T = GetTKelvinFromTCelsius(TDryBulb)
 
-        if (TDryBulb <= 0) then
+        if (TDryBulb <= TRIPLE_POINT_WATER_SI) then
           LnPws = -5.6745359E+03 / T + 6.3925247 - 9.677843E-03 * T + 6.2215701E-07 * T**2    &
                   + 2.0747825E-09 * T**3 - 9.484024E-13 * T**4 + 4.1635019 * log(T)
         else
