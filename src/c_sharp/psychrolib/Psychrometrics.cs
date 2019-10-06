@@ -89,7 +89,7 @@ namespace PsychroLib
         /// </summary>
         /// <param name="tF">Temperature in Fahrenheit (°F)</param>
         /// <returns>Rankine (°R)</returns>
-        private double GetTRankineFromTFahrenheit(double tF)
+        public double GetTRankineFromTFahrenheit(double tF)
         {
             return tF + 459.67; /* exact */
         }
@@ -101,7 +101,7 @@ namespace PsychroLib
         /// </summary>
         /// <param name="tC">Temperature in Celsius (°C)</param>
         /// <returns>Rankine (°R)</returns>
-        private double GetTKelvinFromTCelsius(double tC)
+        public double GetTKelvinFromTCelsius(double tC)
         {
             return tC + 273.15; /* exact */
         }
@@ -119,7 +119,7 @@ namespace PsychroLib
         /// <param name="tDewPoint">Dew point temperature in °F [IP] or °C [SI]</param>
         /// <param name="pressure">Atmospheric pressure in Psi [IP] or Pa [SI]</param>
         /// <returns>Wet bulb temperature in °F [IP] or °C [SI]</returns>
-        private double GetTWetBulbFromTDewPoint(double tDryBulb, double tDewPoint, double pressure)
+        public double GetTWetBulbFromTDewPoint(double tDryBulb, double tDewPoint, double pressure)
         {
             if (!(tDewPoint <= tDryBulb))
                 throw new InvalidOperationException("Dew point temperature is above dry bulb temperature");
@@ -137,7 +137,7 @@ namespace PsychroLib
         /// <param name="relHum">Relative humidity [0-1]</param>
         /// <param name="pressure">Atmospheric pressure in Psi [IP] or Pa [SI]</param>
         /// <returns>Wet bulb temperature in °F [IP] or °C [SI]</returns>
-        private double GetTWetBulbFromRelHum(double tDryBulb, double relHum, double pressure)
+        public double GetTWetBulbFromRelHum(double tDryBulb, double relHum, double pressure)
         {
             if (!(relHum >= 0.0 && relHum <= 1.0))
                 throw new InvalidOperationException("Relative humidity is outside range [0,1]");
@@ -201,9 +201,9 @@ namespace PsychroLib
         /// Return dew-point temperature given dry-bulb temperature, wet-bulb temperature, and pressure.
         /// Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1
         /// </summary>
-        /// <param name="tDryBulb"></param>
-        /// <param name="tWetBulb"></param>
-        /// <param name="pressure"></param>
+        /// <param name="tDryBulb">Dry bulb temperature in °F [IP] or °C [SI]</param>
+        /// <param name="tWetBulb">Wet bulb temperature in °F [IP] or °C [SI]</param>
+        /// <param name="pressure">Atmospheric pressure in Psi [IP] or Pa [SI]</param>
         /// <returns>Dew Point temperature in °F [IP] or °C [SI]</returns>
         public double GetTDewPointFromTWetBulb(double tDryBulb, double tWetBulb, double pressure)
         {
@@ -224,8 +224,8 @@ namespace PsychroLib
         /// Return partial pressure of water vapor as a function of relative humidity and temperature.
         /// Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 12, 22
         /// </summary>
-        /// <param name="tDryBulb"></param>
-        /// <param name="relHum"></param>
+        /// <param name="tDryBulb">Dry bulb temperature in °F [IP] or °C [SI]</param>
+        /// <param name="relHum">Relative humidity [0-1]</param>
         /// <returns>Partial pressure of water vapor in moist air in Psi [IP] or Pa [SI]</returns>
         public double GetVapPresFromRelHum(double tDryBulb, double relHum)
         {
@@ -239,8 +239,8 @@ namespace PsychroLib
         /// Return relative humidity given dry-bulb temperature and vapor pressure.
         /// Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 12, 22
         /// </summary>
-        /// <param name="tDryBulb"></param>
-        /// <param name="vapPres"></param>
+        /// <param name="tDryBulb">Dry bulb temperature in °F [IP] or °C [SI]</param>
+        /// <param name="vapPres">Partial pressure of water vapor in moist air in Psi [IP] or Pa [SI]</param>
         /// <returns>Relative humidity [0-1]</returns>
         public double GetRelHumFromVapPres(double tDryBulb, double vapPres)
         {
@@ -255,7 +255,7 @@ namespace PsychroLib
         /// as a function of dry-bulb temperature.
         /// Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn. 5 & 6
         /// </summary>
-        /// <param name="tDryBulb"></param>
+        /// <param name="tDryBulb">Dry bulb temperature in °F [IP] or °C [SI]</param>
         /// <returns>Derivative of natural log of vapor pressure of saturated air in Psi [IP] or Pa [SI]</returns>
         private double dLnPws_(double tDryBulb)
         {
@@ -301,8 +301,8 @@ namespace PsychroLib
         /// Convergence is usually achieved in 3 to 5 iterations.
         /// tDryBulb is not really needed here, just used for convenience.
         /// </summary>
-        /// <param name="tDryBulb"></param>
-        /// <param name="vapPres"></param>
+        /// <param name="tDryBulb">Dry bulb temperature in °F [IP] or °C [SI]</param>
+        /// <param name="vapPres">Partial pressure of water vapor in moist air in Psi [IP] or Pa [SI]</param>
         /// <returns>(o) Dew Point temperature in °F [IP] or °C [SI]</returns>
         public double GetTDewPointFromVapPres(double tDryBulb, double vapPres)
         {
@@ -352,7 +352,7 @@ namespace PsychroLib
         /// Return vapor pressure given dew point temperature.
         /// Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn. 36
         /// </summary>
-        /// <param name="tDewPoint"></param>
+        /// <param name="tDewPoint">Dew point temperature in °F [IP] or °C [SI]</param>
         /// <returns>Partial pressure of water vapor in moist air in Psi [IP] or Pa [SI]</returns>
         public double GetVapPresFromTDewPoint(double tDewPoint)
         {
@@ -367,9 +367,9 @@ namespace PsychroLib
         /// Return wet-bulb temperature given dry-bulb temperature, humidity ratio, and pressure.
         /// Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 33 and 35 solved for Tstar
         /// </summary>
-        /// <param name="tDryBulb"></param>
-        /// <param name="humRatio"></param>
-        /// <param name="pressure"></param>
+        /// <param name="tDryBulb">Dry bulb temperature in °F [IP] or °C [SI]</param>
+        /// <param name="humRatio">Humidity ratio in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]</param>
+        /// <param name="pressure">Atmospheric pressure in Psi [IP] or Pa [SI]</param>
         /// <returns>Wet bulb temperature in °F [IP] or °C [SI]</returns>
         public double GetTWetBulbFromHumRatio(double tDryBulb, double humRatio, double pressure)
         {
@@ -417,9 +417,9 @@ namespace PsychroLib
         /// Return humidity ratio given dry-bulb temperature, wet-bulb temperature, and pressure.
         /// Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 33 and 35
         /// </summary>
-        /// <param name="tDryBulb"></param>
-        /// <param name="tWetBulb"></param>
-        /// <param name="pressure"></param>
+        /// <param name="tDryBulb">Dry bulb temperature in °F [IP] or °C [SI]</param>
+        /// <param name="tWetBulb">Wet bulb temperature in °F [IP] or °C [SI]</param>
+        /// <param name="pressure">Atmospheric pressure in Psi [IP] or Pa [SI]</param>
         /// <returns>Humidity Ratio in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]</returns>
         public double GetHumRatioFromTWetBulb(double tDryBulb, double tWetBulb, double pressure)
         {
@@ -459,9 +459,9 @@ namespace PsychroLib
         /// Return humidity ratio given dry-bulb temperature, relative humidity, and pressure.
         /// Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1
         /// </summary>
-        /// <param name="tDryBulb"></param>
-        /// <param name="relHum"></param>
-        /// <param name="pressure"></param>
+        /// <param name="tDryBulb">Dry bulb temperature in °F [IP] or °C [SI]</param>
+        /// <param name="relHum">Relative humidity [0-1]</param>
+        /// <param name="pressure">Atmospheric pressure in Psi [IP] or Pa [SI]</param>
         /// <returns>Humidity Ratio in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]</returns>
         public double GetHumRatioFromRelHum(double tDryBulb, double relHum, double pressure)
         {
@@ -477,9 +477,9 @@ namespace PsychroLib
         /// Return relative humidity given dry-bulb temperature, humidity ratio, and pressure.
         /// Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1
         /// </summary>
-        /// <param name="tDryBulb"></param>
-        /// <param name="humRatio"></param>
-        /// <param name="pressure"></param>
+        /// <param name="tDryBulb">Dry bulb temperature in °F [IP] or °C [SI]</param>
+        /// <param name="humRatio">Humidity ratio in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]</param>
+        /// <param name="pressure">Atmospheric pressure in Psi [IP] or Pa [SI]</param>
         /// <returns>Relative humidity [0-1]</returns>
         public double GetRelHumFromHumRatio(double tDryBulb, double humRatio, double pressure)
         {
@@ -494,8 +494,8 @@ namespace PsychroLib
         /// Return humidity ratio given dew-point temperature and pressure.
         /// Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1
         /// </summary>
-        /// <param name="tDewPoint"></param>
-        /// <param name="pressure"></param>
+        /// <param name="tDewPoint">Dew point temperature in °F [IP] or °C [SI]</param>
+        /// <param name="pressure">Atmospheric pressure in Psi [IP] or Pa [SI]</param>
         /// <returns>Humidity Ratio in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]</returns>
         public double GetHumRatioFromTDewPoint(double tDewPoint, double pressure)
         {
@@ -507,9 +507,9 @@ namespace PsychroLib
         /// Return dew-point temperature given dry-bulb temperature, humidity ratio, and pressure.
         /// Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1
         /// </summary>
-        /// <param name="tDryBulb"></param>
-        /// <param name="humRatio"></param>
-        /// <param name="pressure"></param>
+        /// <param name="tDryBulb">Dry bulb temperature in °F [IP] or °C [SI]</param>
+        /// <param name="humRatio">Humidity ratio in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]</param>
+        /// <param name="pressure">Atmospheric pressure in Psi [IP] or Pa [SI]</param>
         /// <returns>Dew Point temperature in °F [IP] or °C [SI]</returns>
         public double GetTDewPointFromHumRatio(double tDryBulb, double humRatio, double pressure)
         {
@@ -529,8 +529,8 @@ namespace PsychroLib
         /// Return humidity ratio given water vapor pressure and atmospheric pressure.
         /// Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 20
         /// </summary>
-        /// <param name="vapPres"></param>
-        /// <param name="pressure"></param>
+        /// <param name="vapPres">Partial pressure of water vapor in moist air in Psi [IP] or Pa [SI]</param>
+        /// <param name="pressure">Atmospheric pressure in Psi [IP] or Pa [SI]</param>
         /// <returns>Humidity Ratio in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]</returns>
         public double GetHumRatioFromVapPres(double vapPres, double pressure)
         {
@@ -548,8 +548,8 @@ namespace PsychroLib
         /// Return vapor pressure given humidity ratio and pressure.
         /// Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 20 solved for pw
         /// </summary>
-        /// <param name="humRatio"></param>
-        /// <param name="pressure"></param>
+        /// <param name="humRatio">Humidity ratio in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]</param>
+        /// <param name="pressure">Atmospheric pressure in Psi [IP] or Pa [SI]</param>
         /// <returns>Partial pressure of water vapor in moist air in Psi [IP] or Pa [SI]</returns>
         public double GetVapPresFromHumRatio(double humRatio, double pressure)
         {
@@ -569,7 +569,7 @@ namespace PsychroLib
         /// Return the specific humidity from humidity ratio (aka mixing ratio)
         /// Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 9b
         /// </summary>
-        /// <param name="humRatio"></param>
+        /// <param name="humRatio">Humidity ratio in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]</param>
         /// <returns>Specific humidity ratio in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]</returns>
         public double GetSpecificHumFromHumRatio(double humRatio)
         {
@@ -585,14 +585,14 @@ namespace PsychroLib
         /// Return the humidity ratio (aka mixing ratio) from specific humidity
         /// Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 9b (solved for humidity ratio)
         /// </summary>
-        /// <param name="SpecificHum"></param>
+        /// <param name="specificHum"></param>
         /// <returns>Humidity ratio in lb_H₂O lb_Dry_Air⁻¹ [IP] or kg_H₂O kg_Dry_Air⁻¹ [SI]</returns>
-        public double GetHumRatioFromSpecificHum(double SpecificHum)
+        public double GetHumRatioFromSpecificHum(double specificHum)
         {
-            if (!(SpecificHum >= 0.0 && SpecificHum < 1.0))
+            if (!(specificHum >= 0.0 && specificHum < 1.0))
                 throw new InvalidOperationException("Specific humidity is outside range [0, 1]");
 
-            var humRatio = SpecificHum / (1.0 - SpecificHum);
+            var humRatio = specificHum / (1.0 - specificHum);
 
             // Validity check
             return Math.Max(humRatio, MIN_HUM_RATIO);
@@ -607,7 +607,7 @@ namespace PsychroLib
         /// Return dry-air enthalpy given dry-bulb temperature.
         /// Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn. 28
         /// </summary>
-        /// <param name="tDryBulb"></param>
+        /// <param name="tDryBulb">Dry bulb temperature in °F [IP] or °C [SI]</param>
         /// <returns>Dry air enthalpy in Btu lb⁻¹ [IP] or J kg⁻¹ [SI]</returns>
         public double GetDryAirEnthalpy(double tDryBulb)
         {
@@ -625,8 +625,8 @@ namespace PsychroLib
         /// Eqn 1 for the universal gas constant.
         /// The factor 144 in IP is for the conversion of Psi = lb in⁻² to lb ft⁻².
         /// </summary>
-        /// <param name="tDryBulb"></param>
-        /// <param name="pressure"></param>
+        /// <param name="tDryBulb">Dry bulb temperature in °F [IP] or °C [SI]</param>
+        /// <param name="pressure">Atmospheric pressure in Psi [IP] or Pa [SI]</param>
         /// <returns>Dry air density in lb ft⁻³ [IP] or kg m⁻³ [SI]</returns>
         public double GetDryAirDensity(double tDryBulb, double pressure)
         {
@@ -644,8 +644,8 @@ namespace PsychroLib
         /// Eqn 1 for the universal gas constant.
         /// The factor 144 in IP is for the conversion of Psi = lb in⁻² to lb ft⁻².
         /// </summary>
-        /// <param name="tDryBulb"></param>
-        /// <param name="pressure"></param>
+        /// <param name="tDryBulb">Dry bulb temperature in °F [IP] or °C [SI]</param>
+        /// <param name="pressure">Atmospheric pressure in Psi [IP] or Pa [SI]</param>
         /// <returns>Dry air volume ft³ lb⁻¹ [IP] or in m³ kg⁻¹ [SI]</returns>
         public double GetDryAirVolume(double tDryBulb, double pressure)
         {
@@ -662,7 +662,7 @@ namespace PsychroLib
         /// Notes: based on the `GetMoistAirEnthalpy` function, rearranged for temperature.
         /// </summary>
         /// <param name="moistAirEnthalpy">Moist air enthalpy in Btu lb⁻¹ [IP] or J kg⁻¹</param>
-        /// <param name="humRatio"></param>
+        /// <param name="humRatio">Humidity ratio in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]</param>
         /// <returns>Dry-bulb temperature in °F [IP] or °C [SI]</returns>
         public double GetTDryBulbFromEnthalpyAndHumRatio(double moistAirEnthalpy, double humRatio)
         {
@@ -683,7 +683,7 @@ namespace PsychroLib
         /// Notes: based on the `GetMoistAirEnthalpy` function, rearranged for humidity ratio.
         /// </summary>
         /// <param name="moistAirEnthalpy">Moist air enthalpy in Btu lb⁻¹ [IP] or J kg⁻¹</param>
-        /// <param name="tDryBulb"></param>
+        /// <param name="tDryBulb">Dry bulb temperature in °F [IP] or °C [SI]</param>
         /// <returns>Humidity ratio in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻</returns>
         public double GetHumRatioFromEnthalpyAndTDryBulb(double moistAirEnthalpy, double tDryBulb)
         {
@@ -715,7 +715,7 @@ namespace PsychroLib
         /// GetTDewPointFromVapPres, which inverts the present function, does not converge properly around
         /// the freezing point.
         /// </summary>
-        /// <param name="tDryBulb"></param>
+        /// <param name="tDryBulb">Dry bulb temperature in °F [IP] or °C [SI]</param>
         /// <returns>Vapor pressure of saturated air in Psi [IP] or Pa [SI]</returns>
         public double GetSatVapPres(double tDryBulb)
         {
@@ -758,8 +758,8 @@ namespace PsychroLib
         /// Return humidity ratio of saturated air given dry-bulb temperature and pressure.
         /// Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 36, solved for W
         /// </summary>
-        /// <param name="tDryBulb"></param>
-        /// <param name="pressure"></param>
+        /// <param name="tDryBulb">Dry bulb temperature in °F [IP] or °C [SI]</param>
+        /// <param name="pressure">Atmospheric pressure in Psi [IP] or Pa [SI]</param>
         /// <returns>Humidity ratio of saturated air in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]</returns>
         public double GetSatHumRatio(double tDryBulb, double pressure)
         {
@@ -775,8 +775,8 @@ namespace PsychroLib
         /// Return saturated air enthalpy given dry-bulb temperature and pressure.
         /// Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1
         /// </summary>
-        /// <param name="tDryBulb"></param>
-        /// <param name="pressure"></param>
+        /// <param name="tDryBulb">Dry bulb temperature in °F [IP] or °C [SI]</param>
+        /// <param name="pressure">Atmospheric pressure in Psi [IP] or Pa [SI]</param>
         /// <returns>Saturated air enthalpy in Btu lb⁻¹ [IP] or J kg⁻¹ [SI]</returns>
         public double GetSatAirEnthalpy(double tDryBulb, double pressure)
         {
@@ -793,11 +793,11 @@ namespace PsychroLib
         /// Return Vapor pressure deficit given dry-bulb temperature, humidity ratio, and pressure.
         /// Reference: see Oke (1987) eqn. 2.13a
         /// </summary>
-        /// <param name="tDryBulb"></param>
-        /// <param name="humRatio"></param>
-        /// <param name="pressure"></param>
+        /// <param name="tDryBulb">Dry bulb temperature in °F [IP] or °C [SI]</param>
+        /// <param name="humRatio">Humidity ratio in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]</param>
+        /// <param name="pressure">Atmospheric pressure in Psi [IP] or Pa [SI]</param>
         /// <returns>Vapor pressure deficit in Psi [IP] or Pa [SI]</returns>
-        public double GetSatAirEnthalpy(double tDryBulb, double humRatio, double pressure)
+        public double GetVaporPressureDeficit(double tDryBulb, double humRatio, double pressure)
         {
             if (!(humRatio >= 0.0))
                 throw new InvalidOperationException("Humidity ratio is negative");
@@ -813,9 +813,9 @@ namespace PsychroLib
         /// Reference: ASHRAE Handbook - Fundamentals (2009) ch. 1 eqn. 12
         /// Notes: the definition is absent from the 2017 Handbook
         /// </summary>
-        /// <param name="tDryBulb"></param>
-        /// <param name="humRatio"></param>
-        /// <param name="pressure"></param>
+        /// <param name="tDryBulb">Dry bulb temperature in °F [IP] or °C [SI]</param>
+        /// <param name="humRatio">Humidity ratio in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]</param>
+        /// <param name="pressure">Atmospheric pressure in Psi [IP] or Pa [SI]</param>
         /// <returns>Degree of saturation (unitless)</returns>
         public double GetDegreeOfSaturation(double tDryBulb, double humRatio, double pressure)
         {
@@ -830,8 +830,8 @@ namespace PsychroLib
         /// Return moist air enthalpy given dry-bulb temperature and humidity ratio.
         /// Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn. 30
         /// </summary>
-        /// <param name="tDryBulb"></param>
-        /// <param name="humRatio"></param>
+        /// <param name="tDryBulb">Dry bulb temperature in °F [IP] or °C [SI]</param>
+        /// <param name="humRatio">Humidity ratio in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]</param>
         /// <returns>Moist Air Enthalpy in Btu lb⁻¹ [IP] or J kg⁻¹ [SI]</returns>
         public double GetMoistAirEnthalpy(double tDryBulb, double humRatio)
         {
@@ -853,9 +853,9 @@ namespace PsychroLib
         /// Notes: in IP units, R_DA_IP / 144 equals 0.370486 which is the coefficient appearing in eqn 26.
         /// The factor 144 is for the conversion of Psi = lb in⁻² to lb ft⁻².
         /// </summary>
-        /// <param name="tDryBulb"></param>
-        /// <param name="humRatio"></param>
-        /// <param name="pressure"></param>
+        /// <param name="tDryBulb">Dry bulb temperature in °F [IP] or °C [SI]</param>
+        /// <param name="humRatio">Humidity ratio in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]</param>
+        /// <param name="pressure">Atmospheric pressure in Psi [IP] or Pa [SI]</param>
         /// <returns>Specific Volume ft³ lb⁻¹ [IP] or in m³ kg⁻¹ [SI]</returns>
         public double GetMoistAirVolume(double tDryBulb, double humRatio, double pressure)
         {
@@ -875,9 +875,9 @@ namespace PsychroLib
         /// Return moist air density given humidity ratio, dry bulb temperature, and pressure.
         /// Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn. 11
         /// </summary>
-        /// <param name="tDryBulb"></param>
-        /// <param name="humRatio"></param>
-        /// <param name="pressure"></param>
+        /// <param name="tDryBulb">Dry bulb temperature in °F [IP] or °C [SI]</param>
+        /// <param name="humRatio">Humidity ratio in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]</param>
+        /// <param name="pressure">Atmospheric pressure in Psi [IP] or Pa [SI]</param>
         /// <returns>Moist air density in lb ft⁻³ [IP] or kg m⁻³ [SI]</returns>
         public double GetMoistAirDensity(double tDryBulb, double humRatio, double pressure)
         {
@@ -928,8 +928,8 @@ namespace PsychroLib
         /// of the current station temperature and the station temperature from 12 hours ago.
         /// </summary>
         /// <param name="stnPressure">Observed station pressure in Psi [IP] or Pa [SI]</param>
-        /// <param name="altitude"></param>
-        /// <param name="tDryBulb"></param>
+        /// <param name="altitude">Altitude above sea level in ft [IP] or m [SI]</param>
+        /// <param name="tDryBulb">Dry bulb temperature in °F [IP] or °C [SI]</param>
         /// <returns>Sea level barometric pressure in Psi [IP] or Pa [SI]</returns>
         public double GetSeaLevelPressure(double stnPressure, double altitude, double tDryBulb)
         {
@@ -965,8 +965,8 @@ namespace PsychroLib
         /// Notes: this function is just the inverse of 'GetSeaLevelPressure'.
         /// </summary>
         /// <param name="seaLevelPressure">Sea level barometric pressure in Psi [IP] or Pa [SI]</param>
-        /// <param name="altitude"></param>
-        /// <param name="tDryBulb"></param>
+        /// <param name="altitude">Altitude above sea level in ft [IP] or m [SI]</param>
+        /// <param name="tDryBulb">Dry bulb temperature in °F [IP] or °C [SI]</param>
         /// <returns>Station pressure in Psi [IP] or Pa [SI]</returns>
         public double GetStationPressure(double seaLevelPressure, double altitude, double tDryBulb)
         {
@@ -983,9 +983,9 @@ namespace PsychroLib
         /// vapour pressure, moist air enthalpy, moist air volume, and degree of saturation of air given
         /// dry-bulb temperature, wet-bulb temperature, and pressure.
         /// </summary>
-        /// <param name="tDryBulb"></param>
-        /// <param name="tWetBulb"></param>
-        /// <param name="pressure"></param>
+        /// <param name="tDryBulb">Dry bulb temperature in °F [IP] or °C [SI]</param>
+        /// <param name="tWetBulb">Wet bulb temperature in °F [IP] or °C [SI]</param>
+        /// <param name="pressure">Atmospheric pressure in Psi [IP] or Pa [SI]</param>
         /// <returns>Calculated values.</returns>
         public PsychrometricValue CalcPsychrometricsFromTWetBulb(double tDryBulb, double tWetBulb, double pressure)
         {
@@ -1013,9 +1013,9 @@ namespace PsychroLib
         /// vapour pressure, moist air enthalpy, moist air volume, and degree of saturation of air given
         /// dry-bulb temperature, dew-point temperature, and pressure.
         /// </summary>
-        /// <param name="tDryBulb"></param>
-        /// <param name="tDewPoint"></param>
-        /// <param name="pressure"></param>
+        /// <param name="tDryBulb">Dry bulb temperature in °F [IP] or °C [SI]</param>
+        /// <param name="tDewPoint">Dew point temperature in °F [IP] or °C [SI]</param>
+        /// <param name="pressure">Atmospheric pressure in Psi [IP] or Pa [SI]</param>
         /// <returns>Calculated values.</returns>
         public PsychrometricValue CalcPsychrometricsFromTDewPoint(double tDryBulb, double tDewPoint, double pressure)
         {
@@ -1043,9 +1043,9 @@ namespace PsychroLib
         /// vapour pressure, moist air enthalpy, moist air volume, and degree of saturation of air given
         /// dry-bulb temperature, relative humidity and pressure.
         /// </summary>
-        /// <param name="tDryBulb"></param>
-        /// <param name="relHum"></param>
-        /// <param name="pressure"></param>
+        /// <param name="tDryBulb">Dry bulb temperature in °F [IP] or °C [SI]</param>
+        /// <param name="relHum">Relative humidity [0-1]</param>
+        /// <param name="pressure">Atmospheric pressure in Psi [IP] or Pa [SI]</param>
         /// <returns>Calculated values.</returns>
         public PsychrometricValue CalcPsychrometricsFromRelHum(double tDryBulb, double relHum, double pressure)
         {
