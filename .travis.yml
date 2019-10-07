@@ -9,6 +9,8 @@ before_install:
   - pip uninstall numpy -y && pip install numpy==1.15.4 # FIXME: Temporary fix as f2py is buggy on numpy 1.16.0
   - sudo apt-get install gfortran
   - pip install Sphinx sphinx_bootstrap_theme sphinx-autodoc-typehints m2r cffi
+  - sudo apt install snapd
+  - sudo snap install dotnet-sdk --classic
 
 install:
   - sphinx-build docs/sphinx build/html
@@ -20,6 +22,8 @@ script:
   # See https://stackoverflow.com/a/34140498 for why "python -m" is needed.
   - python3 -m pytest -v -s
   - cd tests/js && npm test
+  - cd $TRAVIS_BUILD_DIR
+  - cd src/c_sharp && dotnet-sdk.dotnet test
   - cd $TRAVIS_BUILD_DIR
 
 deploy:
