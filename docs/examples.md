@@ -82,14 +82,14 @@ Excel will calculate the result as 21.30939716, as shown in the example below.
 <p align="center"><img src="../assets/excel_example.png" alt="Excel/VBA"></p>
 
 
-### .NET Standard
+### C# (.NET Standard)
 
 Install NuGet package.
-
-The unit system is specified in the Phychrometrics class constructor.  This allows for indipendent instances of the class in different unit systems.
 ```
 Install-Package PsychroLib
 ```
+
+The unit system is specified in the Phychrometrics class constructor.  This allows for independent instances of the class in different unit systems.
 ```csharp
 // Create instance of Phychrometrics class and specify the unit system.
 var psyIP = new Phychrometrics(UnitSystem.IP);
