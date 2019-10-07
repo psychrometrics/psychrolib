@@ -5,7 +5,7 @@
 |---|---|------|
 [![Build Status](https://travis-ci.com/psychrometrics/psychrolib.svg?branch=master)](https://travis-ci.com/psychrometrics/psychrolib) | [![DOI](https://joss.theoj.org/papers/10.21105/joss.01137/status.svg)](https://doi.org/10.21105/joss.01137) | [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.2537945.svg)](https://doi.org/10.5281/zenodo.2537945)|
 
-PsychroLib is a library of functions to enable the calculation of psychrometric properties of moist and dry air. Versions in Python, C, Fortran, JavaScript, Microsoft Excel Visual Basic for Applications (VBA), and .NET Standard 1.0 (.NET Core >= 1.0 & .NET Framework >= 4.5) are available. The library works in both metric (SI) and imperial (IP) systems of units. For a general overview and a list of currently available functions, please see the [overview page](docs/overview.md).
+PsychroLib is a library of functions to enable the calculation of psychrometric properties of moist and dry air. Versions in Python, C, Fortran, JavaScript, Microsoft Excel Visual Basic for Applications (VBA), C#, Visual Basic, and F# with .NET Standard 1.0 (.NET Core >= 1.0 & .NET Framework >= 4.5) are available. The library works in both metric (SI) and imperial (IP) systems of units. For a general overview and a list of currently available functions, please see the [overview page](docs/overview.md).
 
 
 ## Documentation
