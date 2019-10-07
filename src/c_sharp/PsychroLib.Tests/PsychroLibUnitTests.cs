@@ -5,6 +5,19 @@ namespace PsychroLib.Tests
 {
     public class PsychroLibUnitTests
     {
+        private void RelativeDifference(double actual, double expected, double eps, string description)
+        {
+            var absActual = Math.Abs(actual);
+            var absExpected = Math.Abs(expected);
+            var max = absActual > absExpected ? absActual : absExpected;
+
+            var result = Math.Abs((actual - expected) / max);
+
+            if (result > eps)
+                throw new Exception(
+                    $"expected {actual} to be close to {expected} with rel error {eps}.\r\n{description}");
+        }
+
         [Test]
         public void GetTKelvinFromTCelsius()
         {
@@ -25,7 +38,6 @@ namespace PsychroLib.Tests
         /// over the range [-148, +392] F & over the range [-100, +200] C
         /// ASHRAE's assertion is that the formula is within 300 ppm of the true values, which is true except for the value at -76 F
         /// </summary>
-        [TestCase(UnitSystem.IP, -76, 0.000157, 0.00001)]
         [TestCase(UnitSystem.IP, -4, 0.014974, 0.0003)]
         [TestCase(UnitSystem.IP, 23, 0.058268, 0.0003)]
         [TestCase(UnitSystem.IP, 41, 0.12656, 0.0003)]
@@ -33,7 +45,6 @@ namespace PsychroLib.Tests
         [TestCase(UnitSystem.IP, 122, 1.79140, 0.0003)]
         [TestCase(UnitSystem.IP, 212, 14.7094, 0.0003)]
         [TestCase(UnitSystem.IP, 300, 67.0206, 0.0003)]
-        [TestCase(UnitSystem.SI, -60, 1.08, 0.01)]
         [TestCase(UnitSystem.SI, -20, 103.24, 0.0003)]
         [TestCase(UnitSystem.SI, -5, 401.74, 0.0003)]
         [TestCase(UnitSystem.SI, 5, 872.6, 0.0003)]
@@ -41,7 +52,26 @@ namespace PsychroLib.Tests
         [TestCase(UnitSystem.SI, 50, 12351.3, 0.0003)]
         [TestCase(UnitSystem.SI, 100, 101418.0, 0.0003)]
         [TestCase(UnitSystem.SI, 150, 476101.4, 0.0003)]
-        public void GetSatVapPres(
+        public void GetSatVapPres_Relative(
+            UnitSystem system,
+            double dryBulb,
+            double expected,
+            double within)
+        {
+            var psy = new Phychrometrics(system);
+            RelativeDifference(psy.GetSatVapPres(dryBulb), expected, within, "GetSatVapPres");
+            //Assert.That(psy.GetSatVapPres(dryBulb), Is.EqualTo(expected).Within(within));
+        }
+
+        /// <summary>
+        /// Test saturation vapour pressure calculation
+        /// The values are tested against the values published in Table 3 of ch. 1 of the 2017 ASHRAE Handbook - Fundamentals
+        /// over the range [-148, +392] F & over the range [-100, +200] C
+        /// ASHRAE's assertion is that the formula is within 300 ppm of the true values, which is true except for the value at -76 F
+        /// </summary>
+        [TestCase(UnitSystem.SI, -60, 1.08, 0.01)]
+        [TestCase(UnitSystem.IP, -76, 0.000157, 0.00001)]
+        public void GetSatVapPres_Absolute(
             UnitSystem system,
             double dryBulb,
             double expected,
@@ -115,7 +145,7 @@ namespace PsychroLib.Tests
             double within)
         {
             var psy = new Phychrometrics(system);
-            Assert.That(psy.GetSatAirEnthalpy(dryBulb, pressure), Is.EqualTo(expected).Within(within));
+            RelativeDifference(psy.GetSatAirEnthalpy(dryBulb, pressure), expected, within, "GetSatAirEnthalpy");
         }
 
         /**
@@ -162,7 +192,7 @@ namespace PsychroLib.Tests
             double within)
         {
             var psy = new Phychrometrics(system);
-            Assert.That(psy.GetTWetBulbFromRelHum(dryBulb, relHum, pressure), Is.EqualTo(expected).Within(within));
+            RelativeDifference(psy.GetTWetBulbFromRelHum(dryBulb, relHum, pressure), expected, within, "GetTWetBulbFromRelHum");
         }
 
 
@@ -220,9 +250,9 @@ namespace PsychroLib.Tests
             {
                 // conditions at 77 F, std atm pressure at 1000 ft; conditions at 25 C, std atm pressure at 500 m
                 var calculatedHumRatio = psy.GetHumRatioFromVapPres(vapPres, pressure);
-                Assert.That(calculatedHumRatio, Is.EqualTo(expectedHumRatio).Within(humRatioWithin), "GetHumRatioFromVapPres");
+                RelativeDifference(calculatedHumRatio, expectedHumRatio, humRatioWithin, "GetHumRatioFromVapPres");
                 var calculatedVapPres = psy.GetVapPresFromHumRatio(calculatedHumRatio, pressure);
-                Assert.That(calculatedVapPres, Is.EqualTo(vapPres).Within(vapPresWithin), "GetVapPresFromHumRatio");
+                RelativeDifference(calculatedVapPres, vapPres, vapPresWithin, "GetVapPresFromHumRatio");
             });
         }
 
@@ -243,10 +273,10 @@ namespace PsychroLib.Tests
             Assert.Multiple(() =>
             {
                 var calculatedVapPres = psy.GetVapPresFromRelHum(dryBulb, relHum);
-                Assert.That(calculatedVapPres, Is.EqualTo(expectedVapPres).Within(within), "GetVapPresFromRelHum");
+                RelativeDifference(calculatedVapPres, expectedVapPres, within, "GetVapPresFromRelHum");
 
                 var calculatedHumRatio = psy.GetRelHumFromVapPres(dryBulb, calculatedVapPres);
-                Assert.That(calculatedHumRatio, Is.EqualTo(expectedHumRatio).Within(within), "GetRelHumFromVapPres");
+                RelativeDifference(calculatedHumRatio, expectedHumRatio, within, "GetRelHumFromVapPres");
             });
         }
 
@@ -273,9 +303,9 @@ namespace PsychroLib.Tests
             Assert.Multiple(() =>
             {
                 var HumRatio = psy.GetHumRatioFromTWetBulb(dryBulb, wetBulb, pressure);
-                Assert.That(HumRatio, Is.EqualTo(expectedHumRatio).Within(humRatioWithin), "GetHumRatioFromTWetBulb");
+                RelativeDifference(HumRatio, expectedHumRatio, humRatioWithin, "GetHumRatioFromTWetBulb");
                 var TWetBulb = psy.GetTWetBulbFromHumRatio(dryBulb, HumRatio, pressure);
-                Assert.That(TWetBulb, Is.EqualTo(wetBulb).Within(wetBulbWithin), "GetTWetBulbFromHumRatio");
+                RelativeDifference(TWetBulb,wetBulb, wetBulbWithin, "GetTWetBulbFromHumRatio");
             });
         }
 
@@ -316,13 +346,15 @@ namespace PsychroLib.Tests
             var psy = new Phychrometrics(system);
             Assert.Multiple(() =>
             {
-                Assert.That(psy.GetDryAirEnthalpy(dryBulb), Is.EqualTo(expectedEnthalpy).Within(within), "GetDryAirEnthalpy");
-                Assert.That(psy.GetDryAirVolume(dryBulb, pressure), Is.EqualTo(expectedDryAirVolume).Within(within), "GetDryAirVolume");
-                Assert.That(psy.GetDryAirDensity(dryBulb, pressure), Is.EqualTo(expectedDryAirDensity).Within(within), "GetDryAirDensity");
+                RelativeDifference(psy.GetDryAirEnthalpy(dryBulb), expectedEnthalpy, within, "GetDryAirEnthalpy");
+                RelativeDifference(psy.GetDryAirVolume(dryBulb, pressure), expectedDryAirVolume, within,
+                    "GetDryAirVolume");
+                RelativeDifference(psy.GetDryAirDensity(dryBulb, pressure), expectedDryAirDensity, within,
+                    "GetDryAirDensity");
                 Assert.That(psy.GetTDryBulbFromEnthalpyAndHumRatio(moistAirEnthalpy, humRatio),
                     Is.EqualTo(expectedDryBulb).Within(0.05), "GetTDryBulbFromEnthalpyAndHumRatio");
-                Assert.That(psy.GetHumRatioFromEnthalpyAndTDryBulb(moistAirEnthalpy, expectedDryBulb),
-                    Is.EqualTo(humRatio).Within(within), "GetHumRatioFromEnthalpyAndTDryBulb");
+                RelativeDifference(psy.GetHumRatioFromEnthalpyAndTDryBulb(moistAirEnthalpy, expectedDryBulb), humRatio,
+                    within, "GetHumRatioFromEnthalpyAndTDryBulb");
             });
         }
 
@@ -331,7 +363,7 @@ namespace PsychroLib.Tests
         /// Moist air calculations
         /// Values are compared against values calculated with Excel
         /// </summary>
-        [TestCase(UnitSystem.IP, 86, 0.02, 42.6168, 14.185, 14.7205749002918, 0.0692907720594378, 0.0003)]
+        [TestCase(UnitSystem.IP, 86, 0.02, 42.6168, 14.175, 14.7205749002918, 0.0692907720594378, 0.0003)]
         [TestCase(UnitSystem.SI, 30, 0.02, 81316, 95461, 0.940855374352943, 1.08411986348219, 0.0003)]
         public void MoistAir(
             UnitSystem system,
@@ -347,11 +379,12 @@ namespace PsychroLib.Tests
 
             Assert.Multiple(() =>
             {
-                Assert.That(psy.GetMoistAirEnthalpy(dryBulb, humRatio), Is.EqualTo(expectedEnthalpy).Within(within), "GetMoistAirEnthalpy");
-                Assert.That(psy.GetMoistAirVolume(dryBulb, humRatio, pressure),
-                    Is.EqualTo(expectedVolume).Within(within), "GetMoistAirVolume");
-                Assert.That(psy.GetMoistAirDensity(dryBulb, humRatio, pressure),
-                    Is.EqualTo(expectedDensity).Within(within), "GetMoistAirDensity");
+                RelativeDifference(psy.GetMoistAirEnthalpy(dryBulb, humRatio), expectedEnthalpy, within,
+                    "GetMoistAirEnthalpy");
+                RelativeDifference(psy.GetMoistAirVolume(dryBulb, humRatio, pressure), expectedVolume, within,
+                    "GetMoistAirVolume");
+                RelativeDifference(psy.GetMoistAirDensity(dryBulb, humRatio, pressure), expectedDensity, within,
+                    "GetMoistAirDensity");
             });
         }
 
@@ -434,7 +467,8 @@ namespace PsychroLib.Tests
             {
                 var seaLevelPressure = psy.GetSeaLevelPressure(stnPressure, altitude, dryBulb);
 
-                Assert.That(seaLevelPressure, Is.EqualTo(expectedSeaLevelPressure).Within(within), "GetSeaLevelPressure");
+                Assert.That(seaLevelPressure, Is.EqualTo(expectedSeaLevelPressure).Within(within),
+                    "GetSeaLevelPressure");
 
                 Assert.That(psy.GetStationPressure(seaLevelPressure, altitude, dryBulb),
                     Is.EqualTo(stnPressure).Within(within), "GetStationPressure");
@@ -457,7 +491,7 @@ namespace PsychroLib.Tests
         {
             var psy = new Phychrometrics(system);
 
-            Assert.That(psy.GetSpecificHumFromHumRatio(humRatio), Is.EqualTo(expected).Within(within));
+            RelativeDifference(psy.GetSpecificHumFromHumRatio(humRatio), expected,within, "GetSpecificHumFromHumRatio");
         }
 
 
@@ -471,17 +505,13 @@ namespace PsychroLib.Tests
         {
             var psy = new Phychrometrics(system);
 
-            Assert.That(psy.GetSpecificHumFromHumRatio(humRatio), Is.EqualTo(expected).Within(within));
+            RelativeDifference(psy.GetHumRatioFromSpecificHum(humRatio), expected,within, "GetHumRatioFromSpecificHum");
         }
 
 
         /// <summary>
         /// The functions are tested against Table 1 of ch. 1 of the 2017 ASHRAE Handbook - Fundamentals
         /// </summary>
-        /// <param name="system"></param>
-        /// <param name="humRatio"></param>
-        /// <param name="expected"></param>
-        /// <param name="within"></param>
         [Test]
         public void AllPsychrometrics()
         {
@@ -494,12 +524,13 @@ namespace PsychroLib.Tests
                     Assert.That(results1.TDewPoint, Is.EqualTo(7).Within(0.5), "TDewPoint"); // not great agreement
                     Assert.That(results1.RelHum, Is.EqualTo(0.14).Within(0.01), "RelHum");
                     Assert.That(results1.MoistAirEnthalpy, Is.EqualTo(56700).Within(100), "MoistAirEnthalpy");
-                    Assert.That(results1.MoistAirVolume, Is.EqualTo(0.896).Within(0.01), "MoistAirVolume");
-    
-    
+                    RelativeDifference(results1.MoistAirVolume, 0.896, 0.01, "MoistAirVolume");
+
+
                     var results2 = psySi.CalcPsychrometricsFromTDewPoint(40, results1.TDewPoint, 101325);
-                    Assert.That(results2.TWetBulb, Is.EqualTo(20).Within(0.1), " CalcPsychrometricsFromTDewPointTWetBulb");
-    
+                    Assert.That(results2.TWetBulb, Is.EqualTo(20).Within(0.1),
+                        " CalcPsychrometricsFromTDewPointTWetBulb");
+
                     var results3 = psySi.CalcPsychrometricsFromRelHum(40, results2.RelHum, 101325);
                     Assert.That(results3.TWetBulb, Is.EqualTo(20).Within(0.1), "CalcPsychrometricsFromRelHum TWetBulb");
                 }
@@ -514,7 +545,8 @@ namespace PsychroLib.Tests
 
 
                     var results2 = psyIp.CalcPsychrometricsFromTDewPoint(100, results1.TDewPoint, 14.696);
-                    Assert.That(results2.TWetBulb, Is.EqualTo(65).Within(0.1), "CalcPsychrometricsFromTDewPoint TWetBulb");
+                    Assert.That(results2.TWetBulb, Is.EqualTo(65).Within(0.1),
+                        "CalcPsychrometricsFromTDewPoint TWetBulb");
 
                     var results3 = psyIp.CalcPsychrometricsFromRelHum(100, results2.RelHum, 14.696);
                     Assert.That(results3.TWetBulb, Is.EqualTo(65).Within(0.1), "CalcPsychrometricsFromRelHum TWetBulb");
