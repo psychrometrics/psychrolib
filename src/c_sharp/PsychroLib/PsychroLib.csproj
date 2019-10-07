@@ -2,6 +2,15 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard1.0</TargetFramework>
+    <Version>2.1.1</Version>
+    <PackageProjectUrl>https://github.com/psychrometrics/psychrolib</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/psychrometrics/psychrolib</RepositoryUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <Description>Library of psychrometric functions to calculate thermodynamic properties of air for .net.</Description>
+    <Authors>D. Thevenard, D. Meyer, DJGosnell</Authors>
+    <Company>PsychroLib</Company>
+    <PackageTags>net,standard,core</PackageTags>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
 </Project>

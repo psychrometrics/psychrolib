@@ -80,3 +80,24 @@ Then back in the worksheet, to calculate dew point temperature for a dry bulb te
 ```
 Excel will calculate the result as 21.30939716, as shown in the example below.
 <p align="center"><img src="../assets/excel_example.png" alt="Excel/VBA"></p>
+
+
+### .NET Standard
+
+Install NuGet package.
+
+The unit system is specified in the Phychrometrics class constructor.  This allows for indipendent instances of the class in different unit systems.
+```
+Install-Package PsychroLib
+```
+```csharp
+// Create instance of Phychrometrics class and specify the unit system.
+var psyIP = new Phychrometrics(UnitSystem.IP);
+var psySI = new Phychrometrics(UnitSystem.SI);
+// Calculate the dew point temperature for a dry bulb temperature of 25 C and a relative humidity of 80%
+var tDewPoint = psySI.GetTDewPointFromRelHum(25.0, 0.80);
+Console.WriteLine($"TDewPoint: {tDewPoint} degree C");
+>>> TDewPoint: 21.309397163329322 degree C
+```
+
+
