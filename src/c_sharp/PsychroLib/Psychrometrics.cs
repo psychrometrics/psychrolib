@@ -1,4 +1,4 @@
-﻿/**
+﻿/*
  * PsychroLib (version 2.1.1) (https://github.com/psychrometrics/psychrolib)
  * Copyright (c) 2018 D. Thevenard and D. Meyer for the current library implementation
  * Copyright (c) 2017 ASHRAE Handbook — Fundamentals for ASHRAE equations and coefficients
@@ -10,6 +10,9 @@ using System;
 
 namespace PsychroLib
 {
+    /// <summary>
+    /// Class of functions to enable the calculation of psychrometric properties of moist and dry air.
+    /// </summary>
     public class Phychrometrics
     {
         /// <summary>
@@ -60,6 +63,9 @@ namespace PsychroLib
         /// </summary>
         private const double TRIPLE_POINT_WATER_SI = 0.01;
 
+        /// <summary>
+        /// Gets or Sets the current system of units for the calculations.
+        /// </summary>
         public UnitSystem UnitSystem
         {
             get => _unitSystem;
@@ -76,6 +82,10 @@ namespace PsychroLib
         private double PSYCHROLIB_TOLERANCE;
         private UnitSystem _unitSystem;
 
+        /// <summary>
+        /// Constructor to create instance with the specified unit system.
+        /// </summary>
+        /// <param name="unitSystem">System of units to utilize for calculations.</param>
         public Phychrometrics(UnitSystem unitSystem)
         {
             UnitSystem = unitSystem;
@@ -253,7 +263,7 @@ namespace PsychroLib
         /// <summary>
         /// Helper function returning the derivative of the natural log of the saturation vapor pressure
         /// as a function of dry-bulb temperature.
-        /// Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn. 5 & 6
+        /// Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn. 5 &amp; 6
         /// </summary>
         /// <param name="tDryBulb">Dry bulb temperature in °F [IP] or °C [SI]</param>
         /// <returns>Derivative of natural log of vapor pressure of saturated air in Psi [IP] or Pa [SI]</returns>
@@ -707,7 +717,7 @@ namespace PsychroLib
 
         /// <summary>
         /// Return saturation vapor pressure given dry-bulb temperature.
-        /// Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn. 5 & 6
+        /// Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn. 5 &amp; 6
         /// Important note: the ASHRAE formulae are defined above and below the freezing point but have
         /// a discontinuity at the freezing point. This is a small inaccuracy on ASHRAE's part: the formulae
         /// should be defined above and below the triple point of water (not the feezing point) in which case

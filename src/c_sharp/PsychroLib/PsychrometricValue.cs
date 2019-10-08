@@ -1,5 +1,8 @@
 ﻿namespace PsychroLib
 {
+    /// <summary>
+    /// Contains output results of a Psychrometric calculation.
+    /// </summary>
     public class PsychrometricValue
     {
 
