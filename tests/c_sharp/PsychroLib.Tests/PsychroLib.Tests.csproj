@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\PsychroLib\PsychroLib.csproj" />
+    <ProjectReference Include="../../../src/c_sharp/PsychroLib/PsychroLib.csproj" />
   </ItemGroup>
 
 </Project>
