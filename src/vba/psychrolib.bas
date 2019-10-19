@@ -514,7 +514,7 @@ Private Function dLnPws_(TDryBulb As Variant) As Variant
     T = GetTRankineFromTFahrenheit(TDryBulb)
     If (TDryBulb <= TRIPLE_POINT_WATER_IP) Then
       dLnPws_ = 10214.165 / T ^ 2 - 0.0053765794 + 2 * 0.00000019202377 * T _
-             + 2 * 3.5575832E-10 * T ^ 2 - 4 * 9.0344688E-14 * T ^ 3 + 4.1635019 / T
+             + 3 * 3.5575832E-10 * T ^ 2 - 4 * 9.0344688E-14 * T ^ 3 + 4.1635019 / T
     Else
       dLnPws_ = 10440.397 / T ^ 2 - 0.027022355 + 2 * 0.00001289036 * T _
              - 3 * 2.4780681E-09 * T ^ 2 + 6.5459673 / T

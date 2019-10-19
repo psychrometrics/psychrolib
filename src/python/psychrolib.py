@@ -424,7 +424,7 @@ def dLnPws_(TDryBulb: float) -> float:
         T = GetTRankineFromTFahrenheit(TDryBulb)
         if TDryBulb <= TRIPLE_POINT_WATER_IP:
             dLnPws = 1.0214165E+04 / math.pow(T, 2) - 5.3765794E-03 + 2 * 1.9202377E-07 * T \
-                  + 2 * 3.5575832E-10 * math.pow(T, 2) - 4 * 9.0344688E-14 * math.pow(T, 3) + 4.1635019 / T
+                  + 3 * 3.5575832E-10 * math.pow(T, 2) - 4 * 9.0344688E-14 * math.pow(T, 3) + 4.1635019 / T
         else:
             dLnPws = 1.0440397E+04 / math.pow(T, 2) - 2.7022355E-02 + 2 * 1.2890360E-05 * T \
                   - 3 * 2.4780681E-09 * math.pow(T, 2) + 6.5459673 / T
