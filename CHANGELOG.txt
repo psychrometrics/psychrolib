@@ -1,5 +1,5 @@
 2.1.2
-- Fix coefficient in `dLnPws_` (2 -> 3 -- 1st order derivative T**3 in GetSatVapPres; #40).
+- Fix coefficient in `dLnPws_` (2 -> 3 -- 1st order derivative T^3 in GetSatVapPres; #40).
 
 2.1.1
 - Use of triple point of water in GetSatVapPres (#36).
