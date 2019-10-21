@@ -1,4 +1,4 @@
-! PsychroLib version 2.1.1 (https://github.com/psychrometrics/psychrolib)
+! PsychroLib (version 2.1.2) (https://github.com/psychrometrics/psychrolib)
 ! Copyright (c) 2018 D. Thevenard and D. Meyer for the current library implementation
 ! Copyright (c) 2017 ASHRAE Handbook — Fundamentals for ASHRAE equations and coefficients
 ! Licensed under the MIT License.
