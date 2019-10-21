@@ -21,14 +21,15 @@ namespace PsychroLib.Tests
         [Test]
         public void GetTKelvinFromTCelsius()
         {
-            var psy = new Phychrometrics(UnitSystem.SI);
+            var psy = new Psychrometrics(UnitSystem.SI);
             Assert.That(psy.GetTKelvinFromTCelsius(20), Is.EqualTo(293.15).Within(0.000001));
         }
 
         [Test]
         public void GetTRankineFromTFahrenheit()
         {
-            var psy = new Phychrometrics(UnitSystem.IP);
+            var psy = new Psychrometrics(UnitSystem.IP);
+            psy.UnitSystem = UnitSystem.SI;
             Assert.That(psy.GetTRankineFromTFahrenheit(70), Is.EqualTo(529.67).Within(0.000001));
         }
 
@@ -58,7 +59,7 @@ namespace PsychroLib.Tests
             double expected,
             double within)
         {
-            var psy = new Phychrometrics(system);
+            var psy = new Psychrometrics(system);
             RelativeDifference(psy.GetSatVapPres(dryBulb), expected, within, "GetSatVapPres");
             //Assert.That(psy.GetSatVapPres(dryBulb), Is.EqualTo(expected).Within(within));
         }
@@ -77,7 +78,7 @@ namespace PsychroLib.Tests
             double expected,
             double within)
         {
-            var psy = new Phychrometrics(system);
+            var psy = new Psychrometrics(system);
             Assert.That(psy.GetSatVapPres(dryBulb), Is.EqualTo(expected).Within(within));
         }
 
@@ -113,7 +114,7 @@ namespace PsychroLib.Tests
             double expected,
             double within)
         {
-            var psy = new Phychrometrics(system);
+            var psy = new Psychrometrics(system);
             Assert.That(psy.GetSatHumRatio(dryBulb, pressure), Is.EqualTo(expected).Within(within));
         }
 
@@ -144,7 +145,7 @@ namespace PsychroLib.Tests
             double expected,
             double within)
         {
-            var psy = new Phychrometrics(system);
+            var psy = new Psychrometrics(system);
             RelativeDifference(psy.GetSatAirEnthalpy(dryBulb, pressure), expected, within, "GetSatAirEnthalpy");
         }
 
@@ -171,7 +172,7 @@ namespace PsychroLib.Tests
             double expected,
             double within)
         {
-            var psy = new Phychrometrics(system);
+            var psy = new Psychrometrics(system);
             var vapPres = psy.GetVapPresFromTDewPoint(dewPoint);
             Assert.That(psy.GetTDewPointFromVapPres(dryBulb, vapPres), Is.EqualTo(expected).Within(within));
         }
@@ -191,7 +192,7 @@ namespace PsychroLib.Tests
             double expected,
             double within)
         {
-            var psy = new Phychrometrics(system);
+            var psy = new Psychrometrics(system);
             RelativeDifference(psy.GetTWetBulbFromRelHum(dryBulb, relHum, pressure), expected, within, "GetTWetBulbFromRelHum");
         }
 
@@ -219,7 +220,7 @@ namespace PsychroLib.Tests
             double pressureIncrement)
         {
             int iterations = 0;
-            var psy = new Phychrometrics(system);
+            var psy = new Psychrometrics(system);
             for (double tDryBulb = dryBulbStart; tDryBulb <= dryBulbMax; tDryBulb += dryBulbIncrement)
             for (double relHum = 0; relHum <= 1; relHum += 0.1)
             for (double pressure = pressureStart; pressure <= pressureMax; pressure += pressureIncrement)
@@ -245,7 +246,7 @@ namespace PsychroLib.Tests
             double humRatioWithin,
             double vapPresWithin)
         {
-            var psy = new Phychrometrics(system);
+            var psy = new Psychrometrics(system);
             Assert.Multiple(() =>
             {
                 // conditions at 77 F, std atm pressure at 1000 ft; conditions at 25 C, std atm pressure at 500 m
@@ -269,7 +270,7 @@ namespace PsychroLib.Tests
             double expectedHumRatio,
             double within)
         {
-            var psy = new Phychrometrics(system);
+            var psy = new Psychrometrics(system);
             Assert.Multiple(() =>
             {
                 var calculatedVapPres = psy.GetVapPresFromRelHum(dryBulb, relHum);
@@ -299,7 +300,7 @@ namespace PsychroLib.Tests
             double humRatioWithin,
             double wetBulbWithin)
         {
-            var psy = new Phychrometrics(system);
+            var psy = new Psychrometrics(system);
             Assert.Multiple(() =>
             {
                 var HumRatio = psy.GetHumRatioFromTWetBulb(dryBulb, wetBulb, pressure);
@@ -317,7 +318,7 @@ namespace PsychroLib.Tests
         [TestCase(UnitSystem.SI, -5)]
         public void HumRatio_TWetBulbClamp(UnitSystem system, double dryBulb)
         {
-            var psy = new Phychrometrics(system);
+            var psy = new Psychrometrics(system);
             Assert.That(psy.GetTWetBulbFromHumRatio(23, 1e-09, 95461),
                 Is.EqualTo(psy.GetTWetBulbFromHumRatio(23, 1e-07, 95461)));
         }
@@ -343,7 +344,7 @@ namespace PsychroLib.Tests
             double expectedDryBulb,
             double within)
         {
-            var psy = new Phychrometrics(system);
+            var psy = new Psychrometrics(system);
             Assert.Multiple(() =>
             {
                 RelativeDifference(psy.GetDryAirEnthalpy(dryBulb), expectedEnthalpy, within, "GetDryAirEnthalpy");
@@ -375,7 +376,7 @@ namespace PsychroLib.Tests
             double expectedDensity,
             double within)
         {
-            var psy = new Phychrometrics(system);
+            var psy = new Psychrometrics(system);
 
             Assert.Multiple(() =>
             {
@@ -414,7 +415,7 @@ namespace PsychroLib.Tests
             double expected,
             double within)
         {
-            var psy = new Phychrometrics(system);
+            var psy = new Psychrometrics(system);
 
             Assert.That(psy.GetStandardAtmPressure(altitude), Is.EqualTo(expected).Within(within));
         }
@@ -441,7 +442,7 @@ namespace PsychroLib.Tests
             double expected,
             double within)
         {
-            var psy = new Phychrometrics(system);
+            var psy = new Psychrometrics(system);
 
             Assert.That(psy.GetStandardAtmTemperature(altitude), Is.EqualTo(expected).Within(within));
         }
@@ -461,7 +462,7 @@ namespace PsychroLib.Tests
             double expectedSeaLevelPressure,
             double within)
         {
-            var psy = new Phychrometrics(system);
+            var psy = new Psychrometrics(system);
 
             Assert.Multiple(() =>
             {
@@ -489,7 +490,7 @@ namespace PsychroLib.Tests
             double expected,
             double within)
         {
-            var psy = new Phychrometrics(system);
+            var psy = new Psychrometrics(system);
 
             RelativeDifference(psy.GetSpecificHumFromHumRatio(humRatio), expected,within, "GetSpecificHumFromHumRatio");
         }
@@ -503,7 +504,7 @@ namespace PsychroLib.Tests
             double expected,
             double within)
         {
-            var psy = new Phychrometrics(system);
+            var psy = new Psychrometrics(system);
 
             RelativeDifference(psy.GetHumRatioFromSpecificHum(humRatio), expected,within, "GetHumRatioFromSpecificHum");
         }
@@ -518,7 +519,7 @@ namespace PsychroLib.Tests
             Assert.Multiple(() =>
             {
                 {
-                    var psySi = new Phychrometrics(UnitSystem.SI);
+                    var psySi = new Psychrometrics(UnitSystem.SI);
                     var results1 = psySi.CalcPsychrometricsFromTWetBulb(40, 20, 101325);
                     Assert.That(results1.HumRatio, Is.EqualTo(0.0065).Within(0.0001), "HumRatio");
                     Assert.That(results1.TDewPoint, Is.EqualTo(7).Within(0.5), "TDewPoint"); // not great agreement
@@ -535,7 +536,7 @@ namespace PsychroLib.Tests
                     Assert.That(results3.TWetBulb, Is.EqualTo(20).Within(0.1), "CalcPsychrometricsFromRelHum TWetBulb");
                 }
                 {
-                    var psyIp = new Phychrometrics(UnitSystem.IP);
+                    var psyIp = new Psychrometrics(UnitSystem.IP);
                     var results1 = psyIp.CalcPsychrometricsFromTWetBulb(100, 65, 14.696);
                     Assert.That(results1.HumRatio, Is.EqualTo(0.00523).Within(0.0001), "HumRatio");
                     Assert.That(results1.TDewPoint, Is.EqualTo(40).Within(1), "TDewPoint"); // not great agreement

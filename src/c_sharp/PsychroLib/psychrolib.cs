@@ -13,8 +13,12 @@ namespace PsychroLib
     /// <summary>
     /// Class of functions to enable the calculation of psychrometric properties of moist and dry air.
     /// </summary>
-    public class Phychrometrics
+    public class Psychrometrics
     {
+        /******************************************************************************************************
+         * Global constants
+         *****************************************************************************************************/
+
         /// <summary>
         /// Universal gas constant for dry air (IP version) in ft lb_Force lb_DryAir⁻¹ R⁻¹.
         /// Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1.
@@ -86,11 +90,15 @@ namespace PsychroLib
         /// Constructor to create instance with the specified unit system.
         /// </summary>
         /// <param name="unitSystem">System of units to utilize for calculations.</param>
-        public Phychrometrics(UnitSystem unitSystem)
+        public Psychrometrics(UnitSystem unitSystem)
         {
             UnitSystem = unitSystem;
         }
 
+
+        /******************************************************************************************************
+         * Conversion between temperature units
+         *****************************************************************************************************/
 
         /// <summary>
         /// Utility function to convert temperature to degree Rankine (°R)
@@ -229,7 +237,6 @@ namespace PsychroLib
          * Conversions between dew point, or relative humidity and vapor pressure
          *****************************************************************************************************/
 
-
         /// <summary>
         /// Return partial pressure of water vapor as a function of relative humidity and temperature.
         /// Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 12, 22
@@ -277,8 +284,8 @@ namespace PsychroLib
 
                 if (tDryBulb <= TRIPLE_POINT_WATER_IP)
                     dLnPws = 1.0214165E+04 / Math.Pow(T, 2) - 5.3765794E-03 + 2 * 1.9202377E-07 * T
-                                                                            + 2 * 3.5575832E-10 * Math.Pow(T, 2) -
-                             4 * 9.0344688E-14 * Math.Pow(T, 3) + 4.1635019 / T;
+                             + 3 * 3.5575832E-10 * Math.Pow(T, 2) - 4 * 9.0344688E-14 * Math.Pow(T, 3) 
+                             + 4.1635019 / T;
                 else
                     dLnPws = 1.0440397E+04 / Math.Pow(T, 2) - 2.7022355E-02 + 2 * 1.2890360E-05 * T
                              - 3 * 2.4780681E-09 * Math.Pow(T, 2) + 6.5459673 / T;
@@ -289,8 +296,8 @@ namespace PsychroLib
 
                 if (tDryBulb <= TRIPLE_POINT_WATER_SI)
                     dLnPws = 5.6745359E+03 / Math.Pow(T, 2) - 9.677843E-03 + 2 * 6.2215701E-07 * T
-                                                                           + 3 * 2.0747825E-09 * Math.Pow(T, 2) -
-                             4 * 9.484024E-13 * Math.Pow(T, 3) + 4.1635019 / T;
+                             + 3 * 2.0747825E-09 * Math.Pow(T, 2) - 4 * 9.484024E-13 * Math.Pow(T, 3) 
+                             + 4.1635019 / T;
                 else
                     dLnPws = 5.8002206E+03 / Math.Pow(T, 2) - 4.8640239E-02 + 2 * 4.1764768E-05 * T
                              - 3 * 1.4452093E-08 * Math.Pow(T, 2) + 6.5459673 / T;
@@ -318,13 +325,14 @@ namespace PsychroLib
         {
             // Bounds function of the system of units
 
-            var bounds = UnitSystem == UnitSystem.IP 
-                ? new[] {-148.0, 392.0} 
+            var bounds = UnitSystem == UnitSystem.IP
+                ? new[] {-148.0, 392.0}
                 : new[] {-100.0, 200.0};
 
             // Bounds outside which a solution cannot be found
             if (vapPres < GetSatVapPres(bounds[0]) || vapPres > GetSatVapPres(bounds[1]))
-                throw new InvalidOperationException("Partial pressure of water vapor is outside range of validity of equations");
+                throw new InvalidOperationException(
+                    "Partial pressure of water vapor is outside range of validity of equations");
 
             // We use NR to approximate the solution.
             // First guess
@@ -332,28 +340,29 @@ namespace PsychroLib
                 tDryBulb; // Calculated value of dew point temperatures, solved for iteratively in °F [IP] or °C [SI]
             var lnVP = Math.Log(vapPres); // Natural logarithm of partial pressure of water vapor pressure in moist air
 
-            double TDewPoint_iter; // Value of tDewPoint used in NR calculation
+            double tDewPoint_iter; // Value of tDewPoint used in NR calculation
             double lnVP_iter; // Value of log of vapor water pressure used in NR calculation
             var index = 1;
             do
             {
                 // Current point
-                TDewPoint_iter = tDewPoint;
-                lnVP_iter = Math.Log(GetSatVapPres(TDewPoint_iter));
+                tDewPoint_iter = tDewPoint;
+                lnVP_iter = Math.Log(GetSatVapPres(tDewPoint_iter));
 
                 // Derivative of function, calculated analytically
-                var d_lnVP = dLnPws_(TDewPoint_iter);
+                var d_lnVP = dLnPws_(tDewPoint_iter);
 
                 // New estimate, bounded by domain of validity of eqn. 5 and 6
-                tDewPoint = TDewPoint_iter - (lnVP_iter - lnVP) / d_lnVP;
+                tDewPoint = tDewPoint_iter - (lnVP_iter - lnVP) / d_lnVP;
                 tDewPoint = Math.Max(tDewPoint, bounds[0]);
                 tDewPoint = Math.Min(tDewPoint, bounds[1]);
 
                 if (index > MAX_ITER_COUNT)
-                    throw new InvalidOperationException("Convergence not reached in GetTDewPointFromVapPres. Stopping.");
+                    throw new InvalidOperationException(
+                        "Convergence not reached in GetTDewPointFromVapPres. Stopping.");
 
                 index++;
-            } while (Math.Abs(tDewPoint - TDewPoint_iter) > PSYCHROLIB_TOLERANCE);
+            } while (Math.Abs(tDewPoint - tDewPoint_iter) > PSYCHROLIB_TOLERANCE);
 
             return Math.Min(tDewPoint, tDryBulb);
         }
@@ -368,6 +377,7 @@ namespace PsychroLib
         {
             return GetSatVapPres(tDewPoint);
         }
+
 
         /******************************************************************************************************
          * Conversions from wet-bulb temperature, dew-point temperature, or relative humidity to humidity ratio
@@ -385,37 +395,38 @@ namespace PsychroLib
         {
             // Declarations
             double Wstar;
-            double tDewPoint, tWetBulb, TWetBulbSup, TWetBulbInf, BoundedHumRatio;
+            double tDewPoint, tWetBulb, tWetBulbSup, tWetBulbInf, boundedHumRatio;
             var index = 1;
 
             if (!(humRatio >= 0.0))
                 throw new InvalidOperationException("Humidity ratio is negative");
-            BoundedHumRatio = Math.Max(humRatio, MIN_HUM_RATIO);
+            boundedHumRatio = Math.Max(humRatio, MIN_HUM_RATIO);
 
-            tDewPoint = GetTDewPointFromHumRatio(tDryBulb, BoundedHumRatio, pressure);
+            tDewPoint = GetTDewPointFromHumRatio(tDryBulb, boundedHumRatio, pressure);
 
             // Initial guesses
-            TWetBulbSup = tDryBulb;
-            TWetBulbInf = tDewPoint;
-            tWetBulb = (TWetBulbInf + TWetBulbSup) / 2.0;
+            tWetBulbSup = tDryBulb;
+            tWetBulbInf = tDewPoint;
+            tWetBulb = (tWetBulbInf + tWetBulbSup) / 2.0;
 
             // Bisection loop
-            while ((TWetBulbSup - TWetBulbInf) > PSYCHROLIB_TOLERANCE)
+            while ((tWetBulbSup - tWetBulbInf) > PSYCHROLIB_TOLERANCE)
             {
                 // Compute humidity ratio at temperature Tstar
                 Wstar = GetHumRatioFromTWetBulb(tDryBulb, tWetBulb, pressure);
 
                 // Get new bounds
-                if (Wstar > BoundedHumRatio)
-                    TWetBulbSup = tWetBulb;
+                if (Wstar > boundedHumRatio)
+                    tWetBulbSup = tWetBulb;
                 else
-                    TWetBulbInf = tWetBulb;
+                    tWetBulbInf = tWetBulb;
 
                 // New guess of wet bulb temperature
-                tWetBulb = (TWetBulbSup + TWetBulbInf) / 2.0;
+                tWetBulb = (tWetBulbSup + tWetBulbInf) / 2.0;
 
                 if (index > MAX_ITER_COUNT)
-                    throw new InvalidOperationException("Convergence not reached in GetTWetBulbFromHumRatio. Stopping.");
+                    throw new InvalidOperationException(
+                        "Convergence not reached in GetTWetBulbFromHumRatio. Stopping.");
 
                 index++;
             }
@@ -433,30 +444,30 @@ namespace PsychroLib
         /// <returns>Humidity Ratio in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]</returns>
         public double GetHumRatioFromTWetBulb(double tDryBulb, double tWetBulb, double pressure)
         {
-            double Wsstar;
+            double wsstar;
             double humRatio = INVALID;
 
             if (!(tWetBulb <= tDryBulb))
                 throw new InvalidOperationException("Wet bulb temperature is above dry bulb temperature");
 
-            Wsstar = GetSatHumRatio(tWetBulb, pressure);
+            wsstar = GetSatHumRatio(tWetBulb, pressure);
 
             if (UnitSystem == UnitSystem.IP)
             {
                 if (tWetBulb >= FREEZING_POINT_WATER_IP)
-                    humRatio = ((1093.0 - 0.556 * tWetBulb) * Wsstar - 0.240 * (tDryBulb - tWetBulb))
+                    humRatio = ((1093.0 - 0.556 * tWetBulb) * wsstar - 0.240 * (tDryBulb - tWetBulb))
                                / (1093.0 + 0.444 * tDryBulb - tWetBulb);
                 else
-                    humRatio = ((1220.0 - 0.04 * tWetBulb) * Wsstar - 0.240 * (tDryBulb - tWetBulb))
+                    humRatio = ((1220.0 - 0.04 * tWetBulb) * wsstar - 0.240 * (tDryBulb - tWetBulb))
                                / (1220.0 + 0.444 * tDryBulb - 0.48 * tWetBulb);
             }
             else
             {
                 if (tWetBulb >= FREEZING_POINT_WATER_SI)
-                    humRatio = ((2501.0 - 2.326 * tWetBulb) * Wsstar - 1.006 * (tDryBulb - tWetBulb))
+                    humRatio = ((2501.0 - 2.326 * tWetBulb) * wsstar - 1.006 * (tDryBulb - tWetBulb))
                                / (2501.0 + 1.86 * tDryBulb - 4.186 * tWetBulb);
                 else
-                    humRatio = ((2830.0 - 0.24 * tWetBulb) * Wsstar - 1.006 * (tDryBulb - tWetBulb))
+                    humRatio = ((2830.0 - 0.24 * tWetBulb) * wsstar - 1.006 * (tDryBulb - tWetBulb))
                                / (2830.0 + 1.86 * tDryBulb - 2.1 * tWetBulb);
             }
 
@@ -530,10 +541,10 @@ namespace PsychroLib
             return GetTDewPointFromVapPres(tDryBulb, vapPres);
         }
 
+
         /******************************************************************************************************
          * Conversions between humidity ratio and vapor pressure
          *****************************************************************************************************/
-
 
         /// <summary>
         /// Return humidity ratio given water vapor pressure and atmospheric pressure.
@@ -565,11 +576,12 @@ namespace PsychroLib
         {
             if (!(humRatio >= 0.0))
                 throw new InvalidOperationException("Humidity ratio is negative");
-            var BoundedHumRatio = Math.Max(humRatio, MIN_HUM_RATIO);
+            var boundedHumRatio = Math.Max(humRatio, MIN_HUM_RATIO);
 
-            var vapPres = pressure * BoundedHumRatio / (0.621945 + BoundedHumRatio);
+            var vapPres = pressure * boundedHumRatio / (0.621945 + boundedHumRatio);
             return vapPres;
         }
+
 
         /******************************************************************************************************
          * Conversions between humidity ratio and specific humidity
@@ -585,9 +597,9 @@ namespace PsychroLib
         {
             if (!(humRatio >= 0.0))
                 throw new InvalidOperationException("Humidity ratio is negative");
-            var BoundedHumRatio = Math.Max(humRatio, MIN_HUM_RATIO);
+            var boundedHumRatio = Math.Max(humRatio, MIN_HUM_RATIO);
 
-            return BoundedHumRatio / (1.0 + BoundedHumRatio);
+            return boundedHumRatio / (1.0 + boundedHumRatio);
         }
 
 
@@ -678,12 +690,12 @@ namespace PsychroLib
         {
             if (!(humRatio >= 0.0))
                 throw new InvalidOperationException("Humidity ratio is negative");
-            var BoundedHumRatio = Math.Max(humRatio, MIN_HUM_RATIO);
+            var boundedHumRatio = Math.Max(humRatio, MIN_HUM_RATIO);
 
             if (UnitSystem == UnitSystem.IP)
-                return (moistAirEnthalpy - 1061.0 * BoundedHumRatio) / (0.240 + 0.444 * BoundedHumRatio);
+                return (moistAirEnthalpy - 1061.0 * boundedHumRatio) / (0.240 + 0.444 * boundedHumRatio);
 
-            return (moistAirEnthalpy / 1000.0 - 2501.0 * BoundedHumRatio) / (1.006 + 1.86 * BoundedHumRatio);
+            return (moistAirEnthalpy / 1000.0 - 2501.0 * boundedHumRatio) / (1.006 + 1.86 * boundedHumRatio);
         }
 
 
@@ -714,7 +726,6 @@ namespace PsychroLib
          * Saturated Air Calculations
          *****************************************************************************************************/
 
-
         /// <summary>
         /// Return saturation vapor pressure given dry-bulb temperature.
         /// Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn. 5 &amp; 6
@@ -729,7 +740,7 @@ namespace PsychroLib
         /// <returns>Vapor pressure of saturated air in Psi [IP] or Pa [SI]</returns>
         public double GetSatVapPres(double tDryBulb)
         {
-            double LnPws;
+            double lnPws;
 
             if (UnitSystem == UnitSystem.IP)
             {
@@ -738,11 +749,11 @@ namespace PsychroLib
 
                 var T = GetTRankineFromTFahrenheit(tDryBulb);
                 if (tDryBulb <= TRIPLE_POINT_WATER_IP)
-                    LnPws = (-1.0214165E+04 / T - 4.8932428 - 5.3765794E-03 * T + 1.9202377E-07 * T * T
+                    lnPws = (-1.0214165E+04 / T - 4.8932428 - 5.3765794E-03 * T + 1.9202377E-07 * T * T
                                                                                 + 3.5575832E-10 * Math.Pow(T, 3) -
                              9.0344688E-14 * Math.Pow(T, 4) + 4.1635019 * Math.Log(T));
                 else
-                    LnPws = -1.0440397E+04 / T - 1.1294650E+01 - 2.7022355E-02 * T + 1.2890360E-05 * T * T
+                    lnPws = -1.0440397E+04 / T - 1.1294650E+01 - 2.7022355E-02 * T + 1.2890360E-05 * T * T
                             - 2.4780681E-09 * Math.Pow(T, 3) + 6.5459673 * Math.Log(T);
             }
             else
@@ -752,15 +763,15 @@ namespace PsychroLib
 
                 var T = GetTKelvinFromTCelsius(tDryBulb);
                 if (tDryBulb <= TRIPLE_POINT_WATER_SI)
-                    LnPws = -5.6745359E+03 / T + 6.3925247 - 9.677843E-03 * T + 6.2215701E-07 * T * T
+                    lnPws = -5.6745359E+03 / T + 6.3925247 - 9.677843E-03 * T + 6.2215701E-07 * T * T
                                                                               + 2.0747825E-09 * Math.Pow(T, 3) -
                             9.484024E-13 * Math.Pow(T, 4) + 4.1635019 * Math.Log(T);
                 else
-                    LnPws = -5.8002206E+03 / T + 1.3914993 - 4.8640239E-02 * T + 4.1764768E-05 * T * T
+                    lnPws = -5.8002206E+03 / T + 1.3914993 - 4.8640239E-02 * T + 4.1764768E-05 * T * T
                             - 1.4452093E-08 * Math.Pow(T, 3) + 6.5459673 * Math.Log(T);
             }
 
-            return Math.Exp(LnPws);
+            return Math.Exp(lnPws);
         }
 
 
@@ -773,12 +784,11 @@ namespace PsychroLib
         /// <returns>Humidity ratio of saturated air in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]</returns>
         public double GetSatHumRatio(double tDryBulb, double pressure)
         {
-
-            var SatVaporPres = GetSatVapPres(tDryBulb);
-            var SatHumRatio = 0.621945 * SatVaporPres / (pressure - SatVaporPres);
+            var satVaporPres = GetSatVapPres(tDryBulb);
+            var satHumRatio = 0.621945 * satVaporPres / (pressure - satVaporPres);
 
             // Validity check.
-            return Math.Max(SatHumRatio, MIN_HUM_RATIO);
+            return Math.Max(satHumRatio, MIN_HUM_RATIO);
         }
 
         /// <summary>
@@ -797,7 +807,6 @@ namespace PsychroLib
         /******************************************************************************************************
          * Moist Air Calculations
          *****************************************************************************************************/
-
 
         /// <summary>
         /// Return Vapor pressure deficit given dry-bulb temperature, humidity ratio, and pressure.
@@ -831,9 +840,9 @@ namespace PsychroLib
         {
             if (!(humRatio >= 0.0))
                 throw new InvalidOperationException("Humidity ratio is negative");
-            var BoundedHumRatio = Math.Max(humRatio, MIN_HUM_RATIO);
+            var boundedHumRatio = Math.Max(humRatio, MIN_HUM_RATIO);
 
-            return BoundedHumRatio / GetSatHumRatio(tDryBulb, pressure);
+            return boundedHumRatio / GetSatHumRatio(tDryBulb, pressure);
         }
 
         /// <summary>
@@ -848,12 +857,12 @@ namespace PsychroLib
             if (!(humRatio >= 0.0))
                 throw new InvalidOperationException("Humidity ratio is negative");
 
-            var BoundedHumRatio = Math.Max(humRatio, MIN_HUM_RATIO);
+            var boundedHumRatio = Math.Max(humRatio, MIN_HUM_RATIO);
 
             if (UnitSystem == UnitSystem.IP)
-                return 0.240 * tDryBulb + BoundedHumRatio * (1061.0 + 0.444 * tDryBulb);
+                return 0.240 * tDryBulb + boundedHumRatio * (1061.0 + 0.444 * tDryBulb);
 
-            return (1.006 * tDryBulb + BoundedHumRatio * (2501.0 + 1.86 * tDryBulb)) * 1000.0;
+            return (1.006 * tDryBulb + boundedHumRatio * (2501.0 + 1.86 * tDryBulb)) * 1000.0;
         }
 
 
@@ -871,13 +880,13 @@ namespace PsychroLib
         {
             if (!(humRatio >= 0.0))
                 throw new InvalidOperationException("Humidity ratio is negative");
-            var BoundedHumRatio = Math.Max(humRatio, MIN_HUM_RATIO);
+            var boundedHumRatio = Math.Max(humRatio, MIN_HUM_RATIO);
 
             if (UnitSystem == UnitSystem.IP)
-                return R_DA_IP * GetTRankineFromTFahrenheit(tDryBulb) * (1.0 + 1.607858 * BoundedHumRatio) /
+                return R_DA_IP * GetTRankineFromTFahrenheit(tDryBulb) * (1.0 + 1.607858 * boundedHumRatio) /
                        (144.0 * pressure);
 
-            return R_DA_SI * GetTKelvinFromTCelsius(tDryBulb) * (1.0 + 1.607858 * BoundedHumRatio) / pressure;
+            return R_DA_SI * GetTKelvinFromTCelsius(tDryBulb) * (1.0 + 1.607858 * boundedHumRatio) / pressure;
         }
 
 
@@ -894,11 +903,15 @@ namespace PsychroLib
             if (!(humRatio >= 0.0))
                 throw new InvalidOperationException("Humidity ratio is negative");
 
-            var BoundedHumRatio = Math.Max(humRatio, MIN_HUM_RATIO);
+            var boundedHumRatio = Math.Max(humRatio, MIN_HUM_RATIO);
 
-            return (1.0 + BoundedHumRatio) / GetMoistAirVolume(tDryBulb, BoundedHumRatio, pressure);
+            return (1.0 + boundedHumRatio) / GetMoistAirVolume(tDryBulb, boundedHumRatio, pressure);
         }
 
+
+        /******************************************************************************************************
+         * Standard atmosphere
+         *****************************************************************************************************/
 
         /// <summary>
         /// Return standard atmosphere barometric pressure, given the elevation (altitude).
@@ -943,28 +956,28 @@ namespace PsychroLib
         /// <returns>Sea level barometric pressure in Psi [IP] or Pa [SI]</returns>
         public double GetSeaLevelPressure(double stnPressure, double altitude, double tDryBulb)
         {
-            double H;
+            double h;
             if (UnitSystem == UnitSystem.IP)
             {
                 // Calculate average temperature in column of air, assuming a lapse rate
                 // of 3.6 °F/1000ft
-                var TColumn = tDryBulb + 0.0036 * altitude / 2.0;
+                var tColumn = tDryBulb + 0.0036 * altitude / 2.0;
 
                 // Determine the scale height
-                H = 53.351 * GetTRankineFromTFahrenheit(TColumn);
+                h = 53.351 * GetTRankineFromTFahrenheit(tColumn);
             }
             else
             {
                 // Calculate average temperature in column of air, assuming a lapse rate
                 // of 6.5 °C/km
-                var TColumn = tDryBulb + 0.0065 * altitude / 2.0;
+                var tColumn = tDryBulb + 0.0065 * altitude / 2.0;
 
                 // Determine the scale height
-                H = 287.055 * GetTKelvinFromTCelsius(TColumn) / 9.807;
+                h = 287.055 * GetTKelvinFromTCelsius(tColumn) / 9.807;
             }
 
             // Calculate the sea level pressure
-            var seaLevelPressure = stnPressure * Math.Exp(altitude / H);
+            var seaLevelPressure = stnPressure * Math.Exp(altitude / h);
             return seaLevelPressure;
         }
 
@@ -1083,7 +1096,6 @@ namespace PsychroLib
     /// </summary>
     public class PsychrometricValue
     {
-
         /// <summary>
         /// Dry bulb temperature in °F [IP] or °C [SI]
         /// </summary>
