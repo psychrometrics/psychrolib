@@ -89,11 +89,11 @@ Install NuGet package.
 Install-Package PsychroLib
 ```
 
-The unit system is specified in the Phychrometrics class constructor.  This allows for independent instances of the class in different unit systems.
+The unit system is specified in the Psychrometrics class constructor.  This allows for independent instances of the class in different unit systems.
 ```csharp
-// Create instance of Phychrometrics class and specify the unit system.
-var psyIP = new Phychrometrics(UnitSystem.IP);
-var psySI = new Phychrometrics(UnitSystem.SI);
+// Create instance of Psychrometrics class and specify the unit system.
+var psyIP = new Psychrometrics(UnitSystem.IP);
+var psySI = new Psychrometrics(UnitSystem.SI);
 // Calculate the dew point temperature for a dry bulb temperature of 25 C and a relative humidity of 80%
 var tDewPoint = psySI.GetTDewPointFromRelHum(25.0, 0.80);
 Console.WriteLine($"TDewPoint: {tDewPoint} degree C");
