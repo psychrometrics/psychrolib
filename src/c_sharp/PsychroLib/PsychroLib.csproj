@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard1.0</TargetFramework>
+    <Version>2.2.0</Version>
+    <PackageProjectUrl>https://github.com/psychrometrics/psychrolib</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/psychrometrics/psychrolib</RepositoryUrl>
+    <PackageIcon>psychrolib_logo_64.png</PackageIcon>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <Description>Library of psychrometric functions to calculate thermodynamic properties of air for .net.</Description>
+    <Authors>D. Thevenard, D. Meyer, DJGosnell</Authors>
+    <Company>PsychroLib</Company>
+    <PackageTags>net,standard,core</PackageTags>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <AssemblyVersion>2.2.0.0</AssemblyVersion>
+    <FileVersion>2.2.0.0</FileVersion>
+  </PropertyGroup>
+  <ItemGroup>
+  <None Include="$(SolutionDir)../../assets/psychrolib_logo_64.png">
+    <Pack>True</Pack>
+    <PackagePath></PackagePath>
+  </None>
+</ItemGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+
+</Project>
