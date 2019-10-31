@@ -1,4 +1,4 @@
-# <img src="assets/psychrolib_logo.svg" alt="PsychroLib Logo" height="40" width="40"> PsychroLib
+# <img src="assets/psychrolib_logo.svg" alt="PsychroLib Logo" height="40" width="40"> PsychroLib ![PyPI](https://img.shields.io/pypi/v/psychrolib) [![NuGet](https://img.shields.io/nuget/v/PsychroLib.svg?maxAge=600)](https://www.nuget.org/packages/PsychroLib)
 
 
 |CI and Tests | Paper DOI | Software DOI |
