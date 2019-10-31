@@ -17,11 +17,11 @@ Examples on how to use PsychroLib in all the supported languages are described i
 
 ## Installing
 
-- Python: from the command prompt with `pip install psychrolib`.
+- Python: from the [Python Package Index (PyPI)](https://pypi.org/project/PsychroLib/).
 
 - C, Fortran and JavaScript: clone the repository, and bundle according to your requirements.
 
-- .NET (C#, F#, and Visual Basic): from the [NuGet package](https://www.nuget.org/packages/PsychroLib/) manager.
+- .NET (C#, F#, and Visual Basic): from the [NuGet package manager](https://www.nuget.org/packages/PsychroLib/).
 
 - C#: clone the repository, and bundle according to your requirements.
 
