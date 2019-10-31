@@ -21,7 +21,9 @@ Examples on how to use PsychroLib in all the supported languages are described i
 
 - C, Fortran and JavaScript: clone the repository, and bundle according to your requirements.
 
-- C#, F#, and Visual Basic: from the [NuGet package](https://www.nuget.org/packages/PsychroLib/) manager or clone the repository, and bundle according to your requirements.
+- .NET (C#, F#, and Visual Basic): from the [NuGet package](https://www.nuget.org/packages/PsychroLib/) manager.
+
+- C#: clone the repository, and bundle according to your requirements.
 
 - VBA/Excel: download the ready-made spreadsheets from the [release tab](https://github.com/psychrometrics/psychrolib/releases).
 
