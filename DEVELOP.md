@@ -27,7 +27,7 @@ From the command prompt, navigate to `src/python`. Then you can create and uploa
 ```
 python3 setup.py sdist --formats=zip
 python3 -m pip install --user --upgrade twine
-python3 -m twine upload dist/
+python3 -m twine upload dist/*
 ```
 
 ## Testing
