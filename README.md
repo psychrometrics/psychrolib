@@ -47,4 +47,4 @@ Licensed under the [MIT License](LICENSE.txt).
 
 ## Acknowledgements
 
-Many thanks to ([@tom--](https://github.com/tom--)) for his suggestions with the original JavaScript library implementation and ([@DJGosnell](https://github.com/DJGosnell)) for the C# port.
+Many thanks to [@tom--](https://github.com/tom--) for his suggestions with the original JavaScript library implementation and [@DJGosnell](https://github.com/DJGosnell) for the C# port.
