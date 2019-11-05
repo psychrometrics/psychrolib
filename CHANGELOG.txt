@@ -1,3 +1,6 @@
+2.2.0
+- Add C# support with .NET Standard 1.0 (.NET Core >= 1.0 & .NET Framework >= 4.5).
+
 2.1.2
 - Fix coefficient in `dLnPws_` (2 -> 3 -- 1st order derivative T^3 in GetSatVapPres; #40).
 

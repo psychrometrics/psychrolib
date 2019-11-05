@@ -1,8 +1,9 @@
 # GitHub Liniguist showing C header files `.h` as Objective-C.
 *.h linguist-language=C
 
-# Ignore all vba files in tests to make Python the main language used in this repo.
+# Ignore all vba and cs files in tests to make Python the main language used in this repo.
 tests/vba/* linguist-vendored
+tests/c_sharp/* linguist-vendored
 
 ###############################################################################
 # Set default behavior to automatically normalize line endings.
@@ -52,7 +53,7 @@ tests/vba/* linguist-vendored
 
 ###############################################################################
 # diff behavior for common document formats
-# 
+#
 # Convert binary document formats to text before diffing them. This feature
 # is only available from the command line. Turn it on by uncommenting the 
 # entries below.
