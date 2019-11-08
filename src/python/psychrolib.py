@@ -51,7 +51,12 @@ from typing import Optional
 # Global constants
 #######################################################################################################
 
-R_DA_IP =  53.350
+# Zero degree Fahrenheit (°F) expressed as degree Rankine (°R)
+ZERO_FAHRENHEIT_AS_RANKINE = 459.67
+# Zero degree Celsius (°C) expressed as Kelvin (K)
+ZERO_CELSIUS_AS_KELVIN = 273.15
+
+R_DA_IP = 53.350
 """float: Universal gas constant for dry air (IP version)
 
     Units:
@@ -189,11 +194,25 @@ def GetTRankineFromTFahrenheit(TFahrenheit: float) -> float:
         Exact conversion.
 
     """
-    # Zero degree Fahrenheit (°F) expressed as degree Rankine (°R)
-    ZERO_FAHRENHEIT_AS_RANKINE = 459.67
-
     TRankine = TFahrenheit + ZERO_FAHRENHEIT_AS_RANKINE
     return TRankine
+
+def GetTFahrenheitFromTRankine(TRankine: float) -> float:
+    """
+    Utility function to convert temperature to degree Fahrenheit (°F)
+    given temperature in degree Rankine (°R).
+
+    Args:
+        TRankine: Temperature in degree Rankine (°R)
+
+    Returns:
+        Temperature in degree Fahrenheit (°F)
+
+    Notes:
+        Exact conversion.
+
+    """
+    return TRankine - ZERO_FAHRENHEIT_AS_RANKINE
 
 def GetTKelvinFromTCelsius(TCelsius: float) -> float:
     """
@@ -210,11 +229,25 @@ def GetTKelvinFromTCelsius(TCelsius: float) -> float:
         Exact conversion.
 
     """
-    # Zero degree Celsius (°C) expressed as Kelvin (K)
-    ZERO_CELSIUS_AS_KELVIN = 273.15
-
     TKelvin = TCelsius + ZERO_CELSIUS_AS_KELVIN
     return TKelvin
+
+def GetTCelsiusFromTKelvin(TKelvin: float) -> float:
+    """
+    Utility function to convert temperature to degree Celsius (°C)
+    given temperature in Kelvin (K).
+
+    Args:
+        TKelvin: Temperature in Kelvin (K)
+
+    Returns:
+        Temperature in degree Celsius (°C)
+
+    Notes:
+        Exact conversion.
+
+    """
+    return TKelvin - ZERO_CELSIUS_AS_KELVIN
 
 
 #######################################################################################################
