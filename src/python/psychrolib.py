@@ -1169,6 +1169,46 @@ def GetMoistAirVolume(TDryBulb: float, HumRatio: float, Pressure: float) -> floa
         MoistAirVolume = R_DA_SI * GetTKelvinFromTCelsius(TDryBulb) * (1 + 1.607858 * BoundedHumRatio) / Pressure
     return MoistAirVolume
 
+def GetTDryBulbFromMoistAirVolume(MoistAirVolume: float, HumRatio: float, Pressure: float) -> float:
+    """
+    Return dry-bulb temperature given
+    moist air specific volume, humidity ratio, and pressure.
+
+    Args:
+        MoistAirVolume: Specific volume of moist air in ft³ lb⁻¹ of dry air [IP] or in m³ kg⁻¹ of dry air [SI]
+        HumRatio : Humidity ratio in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]
+        Pressure : Atmospheric pressure in Psi [IP] or Pa [SI]
+
+    Returns:
+        TDryBulb : Dry-bulb temperature in °F [IP] or °C [SI]
+
+    Reference:
+        ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 26
+
+    Notes:
+        In IP units, R_DA_IP / 144 equals 0.370486 which is the coefficient appearing in eqn 26
+        The factor 144 is for the conversion of Psi = lb in⁻² to lb ft⁻².
+        Based on the `GetMoistAirVolume` function, rearranged for dry-bulb temperature.
+
+    """
+    if HumRatio < 0:
+        raise ValueError("Humidity ratio is negative")
+    BoundedHumRatio = max(HumRatio, MIN_HUM_RATIO)
+
+    if isIP():
+        TDryBulb = GetTFahrenheitFromTRankine(
+            MoistAirVolume
+            * (144 * Pressure)
+            / (R_DA_IP * (1 + 1.607858 * BoundedHumRatio))
+        )
+    else:
+        TDryBulb = GetTCelsiusFromTKelvin(
+            MoistAirVolume
+            * Pressure
+            / (R_DA_SI * (1 + 1.607858 * BoundedHumRatio))
+        )
+    return TDryBulb
+
 def GetMoistAirDensity(TDryBulb: float, HumRatio: float, Pressure:float) -> float:
     """
     Return moist air density given humidity ratio, dry bulb temperature, and pressure.
