@@ -1169,7 +1169,7 @@ def GetMoistAirVolume(TDryBulb: float, HumRatio: float, Pressure: float) -> floa
         MoistAirVolume = R_DA_SI * GetTKelvinFromTCelsius(TDryBulb) * (1 + 1.607858 * BoundedHumRatio) / Pressure
     return MoistAirVolume
 
-def GetTDryBulbFromMoistAirVolume(MoistAirVolume: float, HumRatio: float, Pressure: float) -> float:
+def GetTDryBulbFromMoistAirVolumeAndHumRatio(MoistAirVolume: float, HumRatio: float, Pressure: float) -> float:
     """
     Return dry-bulb temperature given
     moist air specific volume, humidity ratio, and pressure.
