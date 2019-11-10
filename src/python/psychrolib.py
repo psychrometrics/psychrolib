@@ -51,10 +51,27 @@ from typing import Optional
 # Global constants
 #######################################################################################################
 
-# Zero degree Fahrenheit (°F) expressed as degree Rankine (°R)
 ZERO_FAHRENHEIT_AS_RANKINE = 459.67
-# Zero degree Celsius (°C) expressed as Kelvin (K)
+"""float: Zero degree Fahrenheit (°F) expressed as degree Rankine (°R)
+
+    Units:
+        °R
+
+    Reference:
+        ASHRAE Handbook - Fundamentals (2017) ch. 39
+
+"""
+
 ZERO_CELSIUS_AS_KELVIN = 273.15
+"""float: Zero degree Celsius (°C) expressed as Kelvin (K)
+
+    Units:
+        K
+
+    Reference:
+        ASHRAE Handbook - Fundamentals (2017) ch. 39
+
+"""
 
 R_DA_IP = 53.350
 """float: Universal gas constant for dry air (IP version)
@@ -1171,8 +1188,7 @@ def GetMoistAirVolume(TDryBulb: float, HumRatio: float, Pressure: float) -> floa
 
 def GetTDryBulbFromMoistAirVolumeAndHumRatio(MoistAirVolume: float, HumRatio: float, Pressure: float) -> float:
     """
-    Return dry-bulb temperature given
-    moist air specific volume, humidity ratio, and pressure.
+    Return dry-bulb temperature given moist air specific volume, humidity ratio, and pressure.
 
     Args:
         MoistAirVolume: Specific volume of moist air in ft³ lb⁻¹ of dry air [IP] or in m³ kg⁻¹ of dry air [SI]
@@ -1197,14 +1213,12 @@ def GetTDryBulbFromMoistAirVolumeAndHumRatio(MoistAirVolume: float, HumRatio: fl
 
     if isIP():
         TDryBulb = GetTFahrenheitFromTRankine(
-            MoistAirVolume
-            * (144 * Pressure)
+            MoistAirVolume * (144 * Pressure)
             / (R_DA_IP * (1 + 1.607858 * BoundedHumRatio))
         )
     else:
         TDryBulb = GetTCelsiusFromTKelvin(
-            MoistAirVolume
-            * Pressure
+            MoistAirVolume * Pressure
             / (R_DA_SI * (1 + 1.607858 * BoundedHumRatio))
         )
     return TDryBulb
