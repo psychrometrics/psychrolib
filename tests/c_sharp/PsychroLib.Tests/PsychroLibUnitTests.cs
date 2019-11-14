@@ -408,8 +408,8 @@ namespace PsychroLib.Tests
         /// <summary>
         /// Test dry-bulb temperature given moist air specific volume, humidity ratio, and pressure. Inverse of GetMoistAirDensity
         /// </summary>
-        [TestCase(UnitSystem.IP, 14.7205749002918, 0.02, 14.175, 14.7205749002918, 0.0003)]
-        [TestCase(UnitSystem.SI, 0.940855374352943, 0.02, 95461, 0.940855374352943, 0.0003)]
+        [TestCase(UnitSystem.IP, 14.7205749002918, 0.02, 14.175, 86, 0.0003)]
+        [TestCase(UnitSystem.SI, 0.940855374352943, 0.02, 95461, 30, 0.0003)]
         public void TDryBulbFromMoistAirVolumeAndHumRatio(
             UnitSystem system,
             double moistAirVolume,
