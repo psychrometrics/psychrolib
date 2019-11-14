@@ -20,6 +20,18 @@ namespace PsychroLib
          *****************************************************************************************************/
 
         /// <summary>
+        /// Zero degree Fahrenheit (°F) expressed as degree Rankine (°R).
+        /// Reference: ASHRAE Handbook - Fundamentals (2017) ch. 39.
+        /// </summary>
+        private const double ZERO_FAHRENHEIT_AS_RANKINE = 459.67;
+
+        /// <summary>
+        /// Zero degree Celsius (°C) expressed as Kelvin (K).
+        /// Reference: ASHRAE Handbook - Fundamentals (2017) ch. 39.
+        /// </summary>
+        private const double ZERO_CELSIUS_AS_KELVIN = 273.15;
+
+        /// <summary>
         /// Universal gas constant for dry air (IP version) in ft lb_Force lb_DryAir⁻¹ R⁻¹.
         /// Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1.
         /// </summary>
@@ -102,14 +114,26 @@ namespace PsychroLib
 
         /// <summary>
         /// Utility function to convert temperature to degree Rankine (°R)
-        /// given temperature in degree Fahrenheit(°F).
-        /// Reference: ASHRAE Handbook - Fundamentals(2017) ch. 1 section 3
+        /// given temperature in degree Fahrenheit (°F).
+        /// Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1 section 3
         /// </summary>
         /// <param name="tF">Temperature in Fahrenheit (°F)</param>
         /// <returns>Rankine (°R)</returns>
         public double GetTRankineFromTFahrenheit(double tF)
         {
-            return tF + 459.67; /* exact */
+            return tF + ZERO_FAHRENHEIT_AS_RANKINE; /* exact */
+        }
+
+        /// <summary>
+        /// Utility function to convert temperature to degree Fahrenheit (°F)
+        /// given temperature in degree Rankine (°R).
+        /// Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1 section 3
+        /// </summary>
+        /// <param name="tR">Temperature in Rankine (°R)</param>
+        /// <returns>Fahrenheit (°F)</returns>
+        public double GetTFahrenheitFromTRankine(double tR)
+        {
+            return tR - ZERO_FAHRENHEIT_AS_RANKINE; /* exact */
         }
 
         /// <summary>
@@ -121,7 +145,19 @@ namespace PsychroLib
         /// <returns>Rankine (°R)</returns>
         public double GetTKelvinFromTCelsius(double tC)
         {
-            return tC + 273.15; /* exact */
+            return tC + ZERO_CELSIUS_AS_KELVIN; /* exact */
+        }
+
+        /// <summary>
+        /// Utility function to convert temperature to degree Celsius (°C)
+        /// given temperature in Kelvin (K).
+        /// Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1 section 3
+        /// </summary>
+        /// <param name="tK">Temperature in Rankine (°R)</param>
+        /// <returns>Celsius (°C)</returns>
+        public double GetTCelsiusFromTKelvin(double tK)
+        {
+            return tK - ZERO_CELSIUS_AS_KELVIN; /* exact */
         }
 
 
@@ -887,6 +923,32 @@ namespace PsychroLib
                        (144.0 * pressure);
 
             return R_DA_SI * GetTKelvinFromTCelsius(tDryBulb) * (1.0 + 1.607858 * boundedHumRatio) / pressure;
+        }
+
+
+        /// <summary>
+        /// Return dry-bulb temperature given moist air specific volume, humidity ratio, and pressure.
+        /// Reference:
+        /// ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 26
+        /// Notes:
+        /// In IP units, R_DA_IP / 144 equals 0.370486 which is the coefficient appearing in eqn 26
+        /// The factor 144 is for the conversion of Psi = lb in⁻² to lb ft⁻².
+        /// Based on the `GetMoistAirVolume` function, rearranged for dry-bulb temperature.
+        /// </summary>
+        /// <param name="MoistAirVolume">Specific volume of moist air in ft³ lb⁻¹ of dry air [IP] or in m³ kg⁻¹ of dry air [SI]</param>
+        /// <param name="humRatio">Humidity ratio in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]</param>
+        /// <param name="pressure">Atmospheric pressure in Psi [IP] or Pa [SI]</param>
+        /// <returns>Dry-bulb temperature in °F [IP] or °C [SI]</returns>
+        public double GetTDryBulbFromMoistAirVolumeAndHumRatio(double MoistAirVolume, double humRatio, double pressure)
+        {
+            if (!(humRatio >= 0.0))
+                throw new InvalidOperationException("Humidity ratio is negative");
+            var boundedHumRatio = Math.Max(humRatio, MIN_HUM_RATIO);
+
+            if (UnitSystem == UnitSystem.IP)
+                return  GetTFahrenheitFromTRankine(MoistAirVolume * (144 * pressure) / (R_DA_IP * (1 + 1.607858 * boundedHumRatio)));
+
+            return GetTCelsiusFromTKelvin(MoistAirVolume * pressure / (R_DA_SI * (1 + 1.607858 * boundedHumRatio)));
         }
 
 
