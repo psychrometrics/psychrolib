@@ -22,7 +22,11 @@ enum UnitSystem GetUnitSystem  // (o) System of units (SI or IP)
 
 double GetTRankineFromTFahrenheit(double T_F);
 
+double GetTFahrenheitFromTRankine(double T_R);
+
 double GetTKelvinFromTCelsius(double T_C);
+
+double GetTCelsiusFromTKelvin(double T_K);
 
 
 /******************************************************************************************************
@@ -228,6 +232,12 @@ double GetMoistAirVolume        // (o) Specific Volume ft³ lb⁻¹ [IP] or in m
   ( double TDryBulb             // (i) Dry bulb temperature in °F [IP] or °C [SI]
   , double HumRatio             // (i) Humidity ratio in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]
   , double Pressure             // (i) Atmospheric pressure in Psi [IP] or Pa [SI]
+  );
+
+double GetTDryBulbFromMoistAirVolumeAndHumRatio   // (o) Dry-bulb temperature in °F [IP] or °C [SI]
+  ( double MoistAirVolume                         // (i) Specific volume of moist air in ft³ lb⁻¹ of dry air [IP] or in m³ kg⁻¹ of dry air [SI]
+  , double HumRatio                               // (i) Humidity ratio in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]
+  , double Pressure                               // (i) Atmospheric pressure in Psi [IP] or Pa [SI]
   );
 
 double GetMoistAirDensity       // (o) Moist air density in lb ft⁻³ [IP] or kg m⁻³ [SI]

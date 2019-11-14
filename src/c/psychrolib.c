@@ -53,10 +53,18 @@
  * Global constants
  *****************************************************************************************************/
 
+# define ZERO_FAHRENHEIT_AS_RANKINE 459.67  // Zero degree Fahrenheit (°F) expressed as degree Rankine (°R).
+                                            // Reference: ASHRAE Handbook - Fundamentals (2017) ch. 39.
+
+# define ZERO_CELSIUS_AS_KELVIN 273.15      // Zero degree Celsius (°C) expressed as Kelvin (K).
+                                            // Reference: ASHRAE Handbook - Fundamentals (2017) ch. 39.
+
 #define R_DA_IP 53.350                  // Universal gas constant for dry air (IP version) in ft∙lbf/lb_da/R.
                                         // Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1.
+
 #define R_DA_SI 287.042                 // Universal gas constant for dry air (SI version) in J/kg_da/K.
                                         // Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1.
+
 #define INVALID -99999                  // Invalid value.
 
 #define MAX_ITER_COUNT 100              // Maximum number of iterations before exiting while loops.
@@ -162,12 +170,22 @@ int isIP                    // (o) 1 if IP, 0 if SI, error otherwise
 // Utility function to convert temperature to degree Rankine (°R)
 // given temperature in degree Fahrenheit (°F).
 // Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1 section 3
-double GetTRankineFromTFahrenheit(double T_F) { return T_F + 459.67; }         /* exact */
+double GetTRankineFromTFahrenheit(double T_F) { return T_F + ZERO_FAHRENHEIT_AS_RANKINE; }         /* exact */
+
+// Utility function to convert temperature to degree Fahrenheit (°F)
+// given temperature in degree Rankine (°R).
+// Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1 section 3
+double GetTFahrenheitFromTRankine(double T_R) { return T_R - ZERO_FAHRENHEIT_AS_RANKINE; }        /* exact */
 
 // Utility function to convert temperature to Kelvin (K)
 // given temperature in degree Celsius (°C).
 // Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1 section 3
-double GetTKelvinFromTCelsius(double T_C) { return T_C + 273.15; }            /* exact */
+double GetTKelvinFromTCelsius(double T_C) { return T_C + ZERO_CELSIUS_AS_KELVIN; }                /* exact */
+
+// Utility function to convert temperature to degree Celsius (°C)
+// given temperature in Kelvin (K).
+// Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1 section 3
+double GetTCelsiusFromTKelvin(double T_K) { return T_K - ZERO_CELSIUS_AS_KELVIN; }                /* exact */
 
 
 /******************************************************************************************************
@@ -863,6 +881,30 @@ double GetMoistAirVolume        // (o) Specific Volume ft³ lb⁻¹ [IP] or in m
     return R_DA_IP * GetTRankineFromTFahrenheit(TDryBulb) * (1. + 1.607858 * BoundedHumRatio) / (144. * Pressure);
   else
     return R_DA_SI * GetTKelvinFromTCelsius(TDryBulb) * (1. + 1.607858 * BoundedHumRatio) / Pressure;
+}
+
+// Return dry-bulb temperature given moist air specific volume, humidity ratio, and pressure.
+// Reference:
+// ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 26
+// Notes:
+// In IP units, R_DA_IP / 144 equals 0.370486 which is the coefficient appearing in eqn 26
+// The factor 144 is for the conversion of Psi = lb in⁻² to lb ft⁻².
+// Based on the `GetMoistAirVolume` function, rearranged for dry-bulb temperature.
+double GetTDryBulbFromMoistAirVolumeAndHumRatio   // (o) Dry-bulb temperature in °F [IP] or °C [SI]
+  ( double MoistAirVolume                         // (i) Specific volume of moist air in ft³ lb⁻¹ of dry air [IP] or in m³ kg⁻¹ of dry air [SI]
+  , double HumRatio                               // (i) Humidity ratio in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]
+  , double Pressure                               // (i) Atmospheric pressure in Psi [IP] or Pa [SI]
+  )
+{
+  double BoundedHumRatio;
+
+  ASSERT (HumRatio >= 0., "Humidity ratio is negative")
+  BoundedHumRatio = max(HumRatio, MIN_HUM_RATIO);
+
+  if (isIP())
+    return GetTFahrenheitFromTRankine( MoistAirVolume * (144 * Pressure) / (R_DA_IP * (1 + 1.607858 * BoundedHumRatio)));
+  else
+    return  GetTCelsiusFromTKelvin(MoistAirVolume * Pressure / (R_DA_SI * (1 + 1.607858 * BoundedHumRatio)));
 }
 
 // Return moist air density given humidity ratio, dry bulb temperature, and pressure.
