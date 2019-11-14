@@ -47,7 +47,9 @@ module psychrolib
   public :: GetUnitSystem
   public :: isIP
   public :: GetTRankineFromTFahrenheit
+  public :: GetTFahrenheitFromTRankine
   public :: GetTKelvinFromTCelsius
+  public :: GetTCelsiusFromTKelvin
   public :: GetTWetBulbFromTDewPoint
   public :: GetTWetBulbFromRelHum
   public :: GetRelHumFromTDewPoint
@@ -78,6 +80,7 @@ module psychrolib
   public :: GetDegreeOfSaturation
   public :: GetMoistAirEnthalpy
   public :: GetMoistAirVolume
+  public :: GetTDryBulbFromMoistAirVolumeAndHumRatio
   public :: GetMoistAirDensity
   public :: GetStandardAtmPressure
   public :: GetStandardAtmTemperature
