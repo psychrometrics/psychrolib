@@ -1,4 +1,4 @@
-// PsychroLib (version 2.2.0) (https://github.com/psychrometrics/psychrolib)
+// PsychroLib (version 2.3.0) (https://github.com/psychrometrics/psychrolib)
 // Copyright(c) 2018 D.Thevenard and D.Meyer. Licensed under the MIT License.
 
 /******************************************************************************************************
