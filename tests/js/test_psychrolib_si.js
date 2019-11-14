@@ -28,6 +28,11 @@ it('test_GetTKelvinFromTCelsius', function () {
     expect(psyjs.GetTKelvinFromTCelsius(20)).to.be.closeTo(293.15, 0.000001)
 });
 
+it('test_GetTCelsiusFromTKelvin', function () {
+    expect(psyjs.GetTCelsiusFromTKelvin(293.15)).to.be.closeTo(20, 0.000001)
+});
+
+
 /**
  * Tests at saturation
  */
@@ -169,6 +174,10 @@ it('test_MoistAir', function () {
     checkRelDiff(psyjs.GetMoistAirDensity(30, 0.02, 95461), 1.08411986348219, 0.0003)
 });
 
+
+it('test_GetTDryBulbFromMoistAirVolumeAndHumRatio', function () {
+    checkRelDiff(psyjs.GetTDryBulbFromMoistAirVolumeAndHumRatio(0.940855374352943, 0.02, 95461), 30, 0.0003)
+});
 
 /**
  * Test standard atmosphere
