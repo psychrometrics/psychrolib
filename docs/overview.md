@@ -22,7 +22,9 @@ The following psychrometric functions are currently available across all the sup
 |Function Name|Description|
 |-------------|-----------|
 |`GetTRankineFromTFahrenheit`|Utility function to convert temperature to degree Rankine given temperature in degree Fahrenheit.|
+|`GetTFahrenheitFromTRankine`|Utility function to convert temperature to degree Fahrenheit given temperature in degree Rankine.|
 |`GetTKelvinFromTCelsius`|Utility function to convert temperature to Kelvin given temperature in degree Celsius.|
+|`GetTCelsiusFromTKelvin`|Utility function to convert temperature to degree Celsius given temperature in Kelvin.|
 |`GetTWetBulbFromTDewPoint`|Return wet-bulb temperature given dry-bulb temperature, dew-point temperature, and pressure.|
 |`GetTWetBulbFromRelHum`|Return wet-bulb temperature given dry-bulb temperature, relative humidity, and pressure.|
 |`GetRelHumFromTDewPoint`|Return relative humidity given dry-bulb temperature and dew-point temperature.|
@@ -53,6 +55,7 @@ The following psychrometric functions are currently available across all the sup
 |`GetDegreeOfSaturation`|Return the degree of saturation (i.e humidity ratio of the air / humidity ratio of the air at saturation at the same temperature and pressure) given dry-bulb temperature, humidity ratio, and atmospheric pressure.|
 |`GetMoistAirEnthalpy`|Return moist air enthalpy given dry-bulb temperature and humidity ratio.|
 |`GetMoistAirVolume`|Return moist air specific volume given dry-bulb temperature, humidity ratio, and pressure.|
+|`GetTDryBulbFromMoistAirVolumeAndHumRatio`|Return dry-bulb temperature given moist air specific volume, humidity ratio, and pressure.|
 |`GetMoistAirDensity`|Return moist air density given humidity ratio, dry bulb temperature, and pressure.|
 |`GetStandardAtmPressure`|Return standard atmosphere barometric pressure, given the elevation (altitude).|
 |`GetStandardAtmTemperature`|Return standard atmosphere temperature, given the elevation (altitude).|
