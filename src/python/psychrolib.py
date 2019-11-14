@@ -207,6 +207,9 @@ def GetTRankineFromTFahrenheit(TFahrenheit: float) -> float:
     Returns:
         Temperature in degree Rankine (°R)
 
+    Reference:
+        Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1 section 3
+
     Notes:
         Exact conversion.
 
@@ -225,6 +228,9 @@ def GetTFahrenheitFromTRankine(TRankine: float) -> float:
     Returns:
         Temperature in degree Fahrenheit (°F)
 
+    Reference:
+        Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1 section 3
+
     Notes:
         Exact conversion.
 
@@ -241,6 +247,9 @@ def GetTKelvinFromTCelsius(TCelsius: float) -> float:
 
     Returns:
         Temperature in Kelvin (K)
+
+    Reference:
+        Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1 section 3
 
     Notes:
         Exact conversion.
@@ -259,6 +268,9 @@ def GetTCelsiusFromTKelvin(TKelvin: float) -> float:
 
     Returns:
         Temperature in degree Celsius (°C)
+
+    Reference:
+        Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1 section 3
 
     Notes:
         Exact conversion.
