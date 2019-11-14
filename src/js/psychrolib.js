@@ -57,10 +57,18 @@ function Psychrometrics() {
    * Global constants
    *****************************************************************************************************/
 
+  var ZERO_FAHRENHEIT_AS_RANKINE = 459.67;  // Zero degree Fahrenheit (°F) expressed as degree Rankine (°R).
+                                            // Reference: ASHRAE Handbook - Fundamentals (2017) ch. 39.
+
+  var ZERO_CELSIUS_AS_KELVIN = 273.15;      // Zero degree Celsius (°C) expressed as Kelvin (K).
+                                            // Reference: ASHRAE Handbook - Fundamentals (2017) ch. 39.
+
   var R_DA_IP = 53.350;               // Universal gas constant for dry air (IP version) in ft lb_Force lb_DryAir⁻¹ R⁻¹.
                                       // Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1.
+
   var R_DA_SI = 287.042;              // Universal gas constant for dry air (SI version) in J kg_DryAir⁻¹ K⁻¹.
                                       // Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1.
+
   var INVALID = -99999;               // Invalid value (dimensionless).
 
   var MAX_ITER_COUNT = 100            // Maximum number of iterations before exiting while loops.
@@ -127,13 +135,22 @@ function Psychrometrics() {
   // Utility function to convert temperature to degree Rankine (°R)
   // given temperature in degree Fahrenheit (°F).
   // Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1 section 3
-  this.GetTRankineFromTFahrenheit = function (T_F) { return T_F + 459.67; }              /* exact */
+  this.GetTRankineFromTFahrenheit = function (T_F) { return T_F + ZERO_FAHRENHEIT_AS_RANKINE; }       /* exact */
+
+  // Utility function to convert temperature to degree Fahrenheit (°F)
+  // given temperature in degree Rankine (°R).
+  // Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1 section 3
+  this.GetTFahrenheitFromTRankine = function (T_R) { return T_R - ZERO_FAHRENHEIT_AS_RANKINE; }       /* exact */
 
   // Utility function to convert temperature to Kelvin (K)
   // given temperature in degree Celsius (°C).
   // Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1 section 3
-  this.GetTKelvinFromTCelsius = function (T_C) { return T_C + 273.15; }              /* exact */
+  this.GetTKelvinFromTCelsius = function (T_C) { return T_C + ZERO_CELSIUS_AS_KELVIN; }               /* exact */
 
+  // Utility function to convert temperature to degree Celsius (°C)
+  // given temperature in Kelvin (K).
+  // Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1 section 3
+  this.GetTCelsiusFromTKelvin = function (T_K) { return T_K - ZERO_CELSIUS_AS_KELVIN; }                /* exact */
 
   /******************************************************************************************************
    * Conversions between dew point, wet bulb, and relative humidity
@@ -817,6 +834,30 @@ function Psychrometrics() {
       return R_DA_IP * this.GetTRankineFromTFahrenheit(TDryBulb) * (1. + 1.607858 * BoundedHumRatio) / (144. * Pressure);
     else
       return R_DA_SI * this.GetTKelvinFromTCelsius(TDryBulb) * (1. + 1.607858 * BoundedHumRatio) / Pressure;
+  }
+
+  // Return dry-bulb temperature given moist air specific volume, humidity ratio, and pressure.
+  // Reference:
+  // ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 26
+  // Notes:
+  // In IP units, R_DA_IP / 144 equals 0.370486 which is the coefficient appearing in eqn 26
+  // The factor 144 is for the conversion of Psi = lb in⁻² to lb ft⁻².
+  // Based on the `GetMoistAirVolume` function, rearranged for dry-bulb temperature.
+  this.GetTDryBulbFromMoistAirVolumeAndHumRatio = function  // (o) Dry-bulb temperature in °F [IP] or °C [SI]
+    ( MoistAirVolume                                        // (i) Specific volume of moist air in ft³ lb⁻¹ of dry air [IP] or in m³ kg⁻¹ of dry air [SI]
+    , HumRatio                                              // (i) Humidity ratio in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]
+    , Pressure                                              // (i) Atmospheric pressure in Psi [IP] or Pa [SI]
+    ) {
+    var BoundedHumRatio;
+
+    if (!(HumRatio >= 0.))
+      throw new Error("Humidity ratio is negative");
+    BoundedHumRatio = max(HumRatio, MIN_HUM_RATIO);
+
+    if (this.isIP())
+      return this.GetTFahrenheitFromTRankine(MoistAirVolume * (144 * Pressure) / (R_DA_IP * (1 + 1.607858 * BoundedHumRatio)));
+    else
+      return  this.GetTCelsiusFromTKelvin(MoistAirVolume * Pressure / (R_DA_SI * (1 + 1.607858 * BoundedHumRatio)));
   }
 
   // Return moist air density given humidity ratio, dry bulb temperature, and pressure.
