@@ -902,7 +902,7 @@ double GetTDryBulbFromMoistAirVolumeAndHumRatio   // (o) Dry-bulb temperature in
   BoundedHumRatio = max(HumRatio, MIN_HUM_RATIO);
 
   if (isIP())
-    return GetTFahrenheitFromTRankine( MoistAirVolume * (144 * Pressure) / (R_DA_IP * (1 + 1.607858 * BoundedHumRatio)));
+    return GetTFahrenheitFromTRankine(MoistAirVolume * (144 * Pressure) / (R_DA_IP * (1 + 1.607858 * BoundedHumRatio)));
   else
     return  GetTCelsiusFromTKelvin(MoistAirVolume * Pressure / (R_DA_SI * (1 + 1.607858 * BoundedHumRatio)));
 }
