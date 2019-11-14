@@ -197,6 +197,10 @@ module psychrolib
   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   function GetTRankineFromTFahrenheit(TFahrenheit) result(TRankine)
+    !+ Utility function to convert temperature to degree Rankine (°R)
+    !+ given temperature in degree Fahrenheit (°F).
+    !+ Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1 section 3
+
     real, intent(in)  :: TFahrenheit
       !+ Temperature in degree Fahrenheit
     real              :: TRankine
@@ -206,6 +210,10 @@ module psychrolib
   end function GetTRankineFromTFahrenheit
 
   function GetTFahrenheitFromTRankine(TRankine) result(TFahrenheit)
+    !+ Utility function to convert temperature to degree Fahrenheit (°F)
+    !+ given temperature in degree Rankine (°R).
+    !+ Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1 section 3
+
     real, intent(in)  :: TRankine
       !+ Temperature in degree Rankine
     real              :: TFahrenheit
@@ -215,6 +223,10 @@ module psychrolib
   end function GetTFahrenheitFromTRankine
 
   function GetTKelvinFromTCelsius(TCelsius) result(TKelvin)
+    !+ Utility function to convert temperature to Kelvin (K)
+    !+ given temperature in degree Celsius (°C).
+    !+ Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1 section 3
+
     real, intent(in)  :: TCelsius
       !+ Temperature in degree Celsius
     real              :: TKelvin
@@ -224,6 +236,10 @@ module psychrolib
   end function GetTKelvinFromTCelsius
 
   function GetTCelsiusFromTKelvin(TKelvin) result(TCelsius)
+    !+ Utility function to convert temperature to degree Celsius (°C)
+    !+ given temperature in Kelvin (K).
+    !+ Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1 section 3
+
     real, intent(in)  :: TKelvin
       !+ Tempearatyre in Kelvin
     real              :: TCelsius
