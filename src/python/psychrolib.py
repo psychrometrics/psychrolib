@@ -1224,15 +1224,11 @@ def GetTDryBulbFromMoistAirVolumeAndHumRatio(MoistAirVolume: float, HumRatio: fl
     BoundedHumRatio = max(HumRatio, MIN_HUM_RATIO)
 
     if isIP():
-        TDryBulb = GetTFahrenheitFromTRankine(
-            MoistAirVolume * (144 * Pressure)
-            / (R_DA_IP * (1 + 1.607858 * BoundedHumRatio))
-        )
+        TDryBulb = GetTFahrenheitFromTRankine(MoistAirVolume * (144 * Pressure)
+                        / (R_DA_IP * (1 + 1.607858 * BoundedHumRatio)))
     else:
-        TDryBulb = GetTCelsiusFromTKelvin(
-            MoistAirVolume * Pressure
-            / (R_DA_SI * (1 + 1.607858 * BoundedHumRatio))
-        )
+        TDryBulb = GetTCelsiusFromTKelvin(MoistAirVolume * Pressure
+                        / (R_DA_SI * (1 + 1.607858 * BoundedHumRatio)))
     return TDryBulb
 
 def GetMoistAirDensity(TDryBulb: float, HumRatio: float, Pressure:float) -> float:
