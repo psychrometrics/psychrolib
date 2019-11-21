@@ -1,3 +1,4 @@
+' PsychroLib (version 2.3.0) (https://github.com/psychrometrics/psychrolib)
 ' Copyright (c) 2018 D. Thevenard and D. Meyer. Licensed under the MIT License.
 ' Test of PsychroLib in SI units
 '
@@ -63,7 +64,9 @@ End Sub
 Sub test_GetTKelvinFromTCelsius()
   Call TestExpression("GetTKelvinFromTCelsius", GetTKelvinFromTCelsius(20), 293.15, 0.000001)
 End Sub
-
+Sub test_GetTCelsiusFromTKelvin()
+  Call TestExpression("GetTCelsiusFromTKelvin", GetTCelsiusFromTKelvin(293.15), 20, 0.000001)
+End Sub
 
 '##############################################################################
 ' Tests at saturation
@@ -202,6 +205,10 @@ Sub test_MoistAir()
   Call TestExpression("GetMoistAirEnthalpy", GetMoistAirEnthalpy(30, 0.02), 81316, relt:=0.0003)
   Call TestExpression("GetMoistAirVolume", GetMoistAirVolume(30, 0.02, 95461), 0.940855374352943, relt:=0.0003)
   Call TestExpression("GetMoistAirDensity", GetMoistAirDensity(30, 0.02, 95461), 1.08411986348219, relt:=0.0003)
+End Sub
+
+Sub test_GetTDryBulbFromMoistAirVolumeAndHumRatio()
+  Call TestExpression("GetTDryBulbFromMoistAirVolumeAndHumRatio", GetTDryBulbFromMoistAirVolumeAndHumRatio(0.940855374352943, 0.02, 95461), 30, relt:=0.0003)
 End Sub
 
 '##############################################################################

@@ -1,4 +1,4 @@
-# PsychroLib (version 2.2.0) (https://github.com/psychrometrics/psychrolib)
+# PsychroLib (version 2.3.0) (https://github.com/psychrometrics/psychrolib)
 # Copyright (c) 2018 D. Thevenard and D. Meyer for the current library implementation
 # Copyright (c) 2017 ASHRAE Handbook — Fundamentals for ASHRAE equations and coefficients
 # Licensed under the MIT License.
@@ -51,7 +51,29 @@ from typing import Optional
 # Global constants
 #######################################################################################################
 
-R_DA_IP =  53.350
+ZERO_FAHRENHEIT_AS_RANKINE = 459.67
+"""float: Zero degree Fahrenheit (°F) expressed as degree Rankine (°R)
+
+    Units:
+        °R
+
+    Reference:
+        ASHRAE Handbook - Fundamentals (2017) ch. 39
+
+"""
+
+ZERO_CELSIUS_AS_KELVIN = 273.15
+"""float: Zero degree Celsius (°C) expressed as Kelvin (K)
+
+    Units:
+        K
+
+    Reference:
+        ASHRAE Handbook - Fundamentals (2017) ch. 39
+
+"""
+
+R_DA_IP = 53.350
 """float: Universal gas constant for dry air (IP version)
 
     Units:
@@ -185,15 +207,35 @@ def GetTRankineFromTFahrenheit(TFahrenheit: float) -> float:
     Returns:
         Temperature in degree Rankine (°R)
 
+    Reference:
+        Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1 section 3
+
     Notes:
         Exact conversion.
 
     """
-    # Zero degree Fahrenheit (°F) expressed as degree Rankine (°R)
-    ZERO_FAHRENHEIT_AS_RANKINE = 459.67
-
     TRankine = TFahrenheit + ZERO_FAHRENHEIT_AS_RANKINE
     return TRankine
+
+def GetTFahrenheitFromTRankine(TRankine: float) -> float:
+    """
+    Utility function to convert temperature to degree Fahrenheit (°F)
+    given temperature in degree Rankine (°R).
+
+    Args:
+        TRankine: Temperature in degree Rankine (°R)
+
+    Returns:
+        Temperature in degree Fahrenheit (°F)
+
+    Reference:
+        Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1 section 3
+
+    Notes:
+        Exact conversion.
+
+    """
+    return TRankine - ZERO_FAHRENHEIT_AS_RANKINE
 
 def GetTKelvinFromTCelsius(TCelsius: float) -> float:
     """
@@ -206,15 +248,35 @@ def GetTKelvinFromTCelsius(TCelsius: float) -> float:
     Returns:
         Temperature in Kelvin (K)
 
+    Reference:
+        Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1 section 3
+
     Notes:
         Exact conversion.
 
     """
-    # Zero degree Celsius (°C) expressed as Kelvin (K)
-    ZERO_CELSIUS_AS_KELVIN = 273.15
-
     TKelvin = TCelsius + ZERO_CELSIUS_AS_KELVIN
     return TKelvin
+
+def GetTCelsiusFromTKelvin(TKelvin: float) -> float:
+    """
+    Utility function to convert temperature to degree Celsius (°C)
+    given temperature in Kelvin (K).
+
+    Args:
+        TKelvin: Temperature in Kelvin (K)
+
+    Returns:
+        Temperature in degree Celsius (°C)
+
+    Reference:
+        Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1 section 3
+
+    Notes:
+        Exact conversion.
+
+    """
+    return TKelvin - ZERO_CELSIUS_AS_KELVIN
 
 
 #######################################################################################################
@@ -1135,6 +1197,39 @@ def GetMoistAirVolume(TDryBulb: float, HumRatio: float, Pressure: float) -> floa
     else:
         MoistAirVolume = R_DA_SI * GetTKelvinFromTCelsius(TDryBulb) * (1 + 1.607858 * BoundedHumRatio) / Pressure
     return MoistAirVolume
+
+def GetTDryBulbFromMoistAirVolumeAndHumRatio(MoistAirVolume: float, HumRatio: float, Pressure: float) -> float:
+    """
+    Return dry-bulb temperature given moist air specific volume, humidity ratio, and pressure.
+
+    Args:
+        MoistAirVolume: Specific volume of moist air in ft³ lb⁻¹ of dry air [IP] or in m³ kg⁻¹ of dry air [SI]
+        HumRatio : Humidity ratio in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]
+        Pressure : Atmospheric pressure in Psi [IP] or Pa [SI]
+
+    Returns:
+        TDryBulb : Dry-bulb temperature in °F [IP] or °C [SI]
+
+    Reference:
+        ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 26
+
+    Notes:
+        In IP units, R_DA_IP / 144 equals 0.370486 which is the coefficient appearing in eqn 26
+        The factor 144 is for the conversion of Psi = lb in⁻² to lb ft⁻².
+        Based on the `GetMoistAirVolume` function, rearranged for dry-bulb temperature.
+
+    """
+    if HumRatio < 0:
+        raise ValueError("Humidity ratio is negative")
+    BoundedHumRatio = max(HumRatio, MIN_HUM_RATIO)
+
+    if isIP():
+        TDryBulb = GetTFahrenheitFromTRankine(MoistAirVolume * (144 * Pressure)
+                        / (R_DA_IP * (1 + 1.607858 * BoundedHumRatio)))
+    else:
+        TDryBulb = GetTCelsiusFromTKelvin(MoistAirVolume * Pressure
+                        / (R_DA_SI * (1 + 1.607858 * BoundedHumRatio)))
+    return TDryBulb
 
 def GetMoistAirDensity(TDryBulb: float, HumRatio: float, Pressure:float) -> float:
     """

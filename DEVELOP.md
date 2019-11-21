@@ -20,7 +20,7 @@ This project uses [semantic versioning](https://semver.org/).
 We use two branches to record the history of the project. The `master` branch stores the official release history while the `develop` branch serves as an integration branch for features and bug fixes. All new releases are tagged with a version number in `master`.
 
 
-## How to create and upload a new version to PiPy
+## How to create and upload a new version to Pypi
 
 From the command prompt, navigate to `src/python`. Then you can create and upload a new release with the following commands:
 

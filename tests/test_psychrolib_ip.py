@@ -10,6 +10,8 @@ pytestmark = pytest.mark.usefixtures('SetUnitSystem_IP')
 def test_GetTRankineFromTFahrenheit(psy):
     assert psy.GetTRankineFromTFahrenheit(70) == pytest.approx(529.67, rel = 0.000001)
 
+def test_GetTFahrenheitFromTRankine(psy):
+    assert psy.GetTFahrenheitFromTRankine(529.67) == pytest.approx(70, rel = 0.000001)
 
 ###############################################################################
 # Tests at saturation
@@ -137,6 +139,9 @@ def test_MoistAir(psy):
     assert psy.GetMoistAirEnthalpy(86, 0.02) == pytest.approx(42.6168, rel = 0.0003)
     assert psy.GetMoistAirVolume(86, 0.02, 14.175) == pytest.approx(14.7205749002918, rel = 0.0003)
     assert psy.GetMoistAirDensity(86, 0.02, 14.175) == pytest.approx(0.0692907720594378, rel = 0.0003)
+
+def test_GetTDryBulbFromMoistAirVolumeAndHumRatio(psy):
+    assert psy.GetTDryBulbFromMoistAirVolumeAndHumRatio(14.7205749002918, 0.02, 14.175) == pytest.approx(86, rel = 0.0003)
 
 ###############################################################################
 # Test standard atmosphere

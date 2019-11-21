@@ -1,3 +1,4 @@
+' PsychroLib (version 2.3.0) (https://github.com/psychrometrics/psychrolib)
 ' Copyright (c) 2018 D. Thevenard and D. Meyer. Licensed under the MIT License.
 ' Test of PsychroLib in IP units
 '
@@ -62,6 +63,9 @@ End Sub
 ' Test of helper functions
 Sub test_GetTRankineFromTFahrenheit()
   Call TestExpression("GetTRankineFromTFahrenheit", GetTRankineFromTFahrenheit(70), 529.67, relt:=0.000001)
+End Sub
+Sub test_GetTFahrenheitFromTRankine()
+  Call TestExpression("GetTFahrenheitFromTRankine", GetTFahrenheitFromTRankine(529.67), 70.0, relt:=0.000001)
 End Sub
 
 '
@@ -193,6 +197,10 @@ Sub test_MoistAir()
   Call TestExpression("GetMoistAirEnthalpy", GetMoistAirEnthalpy(86, 0.02), 42.6168, relt:=0.0003)
   Call TestExpression("GetMoistAirEnthalpy", GetMoistAirVolume(86, 0.02, 14.175), 14.7205749002918, relt:=0.0003)
   Call TestExpression("GetMoistAirEnthalpy", GetMoistAirDensity(86, 0.02, 14.175), 6.92907720594378E-02, relt:=0.0003)
+End Sub
+
+Sub test_GetTDryBulbFromMoistAirVolumeAndHumRatio()
+  Call TestExpression("GetTDryBulbFromMoistAirVolumeAndHumRatio", GetTDryBulbFromMoistAirVolumeAndHumRatio(14.7205749002918, 0.02, 14.175), 86, relt:=0.0003)
 End Sub
 
 '##############################################################################

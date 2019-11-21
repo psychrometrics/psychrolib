@@ -28,6 +28,10 @@ it('test_GetTRankineFromTFahrenheit', function () {
     expect(psyjs.GetTRankineFromTFahrenheit(70)).to.be.closeTo(529.67, 0.000001)
 });
 
+it('test_GetTFahrenheitFromTRankine', function () {
+    expect(psyjs.GetTFahrenheitFromTRankine(529.67)).to.be.closeTo(70, 0.000001)
+});
+
 /**
  * Tests at saturation
  */
@@ -159,6 +163,10 @@ it('test_MoistAir', function () {
     checkRelDiff(psyjs.GetMoistAirEnthalpy(86, 0.02), 42.6168, 0.0003)
     checkRelDiff(psyjs.GetMoistAirVolume(86, 0.02, 14.175), 14.7205749002918, 0.0003)
     checkRelDiff(psyjs.GetMoistAirDensity(86, 0.02, 14.175), 0.0692907720594378, 0.0003)
+});
+
+it('test_GetTDryBulbFromMoistAirVolumeAndHumRatio', function () {
+    checkRelDiff(psyjs.GetTDryBulbFromMoistAirVolumeAndHumRatio(14.7205749002918, 0.02, 14.175), 86, 0.0003)
 });
 
 /**

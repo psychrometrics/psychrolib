@@ -1,4 +1,4 @@
-! PsychroLib (version 2.2.0) (https://github.com/psychrometrics/psychrolib)
+! PsychroLib (version 2.3.0) (https://github.com/psychrometrics/psychrolib)
 ! Copyright (c) 2018 D. Thevenard and D. Meyer for the current library implementation
 ! Copyright (c) 2017 ASHRAE Handbook — Fundamentals for ASHRAE equations and coefficients
 ! Licensed under the MIT License.
@@ -47,7 +47,9 @@ module psychrolib
   public :: GetUnitSystem
   public :: isIP
   public :: GetTRankineFromTFahrenheit
+  public :: GetTFahrenheitFromTRankine
   public :: GetTKelvinFromTCelsius
+  public :: GetTCelsiusFromTKelvin
   public :: GetTWetBulbFromTDewPoint
   public :: GetTWetBulbFromRelHum
   public :: GetRelHumFromTDewPoint
@@ -78,6 +80,7 @@ module psychrolib
   public :: GetDegreeOfSaturation
   public :: GetMoistAirEnthalpy
   public :: GetMoistAirVolume
+  public :: GetTDryBulbFromMoistAirVolumeAndHumRatio
   public :: GetMoistAirDensity
   public :: GetStandardAtmPressure
   public :: GetStandardAtmTemperature
@@ -94,6 +97,16 @@ module psychrolib
   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   ! Global constants
   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  real, parameter ::  ZERO_FAHRENHEIT_AS_RANKINE = 459.67
+    !+ Zero degree Fahrenheit (°F) expressed as degree Rankine (°R).
+    !+ Reference:
+    !+ ASHRAE Handbook - Fundamentals (2017) ch. 39.
+
+  real, parameter ::  ZERO_CELSIUS_AS_KELVIN = 273.15
+    !+ Zero degree Celsius (°C) expressed as Kelvin (K).
+    !+ Reference:
+    !+ ASHRAE Handbook - Fundamentals (2017) ch. 39.
 
   real, parameter ::  R_DA_IP = 53.350
     !+ Universal gas constant for dry air (IP version) in ft lb_Force lb_DryAir⁻¹ R⁻¹.
@@ -187,30 +200,56 @@ module psychrolib
   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   function GetTRankineFromTFahrenheit(TFahrenheit) result(TRankine)
+    !+ Utility function to convert temperature to degree Rankine (°R)
+    !+ given temperature in degree Fahrenheit (°F).
+    !+ Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1 section 3
+
     real, intent(in)  :: TFahrenheit
       !+ Temperature in degree Fahrenheit
     real              :: TRankine
       !+ Temperature in degree Rankine
-    real              :: ZERO_FAHRENHEIT_AS_RANKINE
-      !+ Zero degree Fahrenheit (°F) expressed as degree Rankine (°R)
-
-    ZERO_FAHRENHEIT_AS_RANKINE = 459.67
 
     TRankine = TFahrenheit + ZERO_FAHRENHEIT_AS_RANKINE
   end function GetTRankineFromTFahrenheit
 
+  function GetTFahrenheitFromTRankine(TRankine) result(TFahrenheit)
+    !+ Utility function to convert temperature to degree Fahrenheit (°F)
+    !+ given temperature in degree Rankine (°R).
+    !+ Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1 section 3
+
+    real, intent(in)  :: TRankine
+      !+ Temperature in degree Rankine
+    real              :: TFahrenheit
+      !+ Temperature in degree Fahrenheit
+
+    TFahrenheit = TRankine - ZERO_FAHRENHEIT_AS_RANKINE
+  end function GetTFahrenheitFromTRankine
+
   function GetTKelvinFromTCelsius(TCelsius) result(TKelvin)
+    !+ Utility function to convert temperature to Kelvin (K)
+    !+ given temperature in degree Celsius (°C).
+    !+ Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1 section 3
+
     real, intent(in)  :: TCelsius
       !+ Temperature in degree Celsius
     real              :: TKelvin
       !+ Tempearatyre in Kelvin
-    real              :: ZERO_CELSIUS_AS_KELVIN
-      ! Zero degree Fahrenheit (°F) expressed as Kelvin (K)
-
-    ZERO_CELSIUS_AS_KELVIN = 273.15
 
     TKelvin = TCelsius + ZERO_CELSIUS_AS_KELVIN
   end function GetTKelvinFromTCelsius
+
+  function GetTCelsiusFromTKelvin(TKelvin) result(TCelsius)
+    !+ Utility function to convert temperature to degree Celsius (°C)
+    !+ given temperature in Kelvin (K).
+    !+ Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1 section 3
+
+    real, intent(in)  :: TKelvin
+      !+ Tempearatyre in Kelvin
+    real              :: TCelsius
+      !+ Temperature in degree Celsius
+
+    TCelsius = TKelvin - ZERO_CELSIUS_AS_KELVIN
+  end function GetTCelsiusFromTKelvin
 
 
   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -1157,6 +1196,40 @@ module psychrolib
         MoistAirVolume = R_DA_SI * GetTKelvinFromTCelsius(TDryBulb) * (1.0 + 1.607858 * BoundedHumRatio) / Pressure
     end if
   end function GetMoistAirVolume
+
+  function GetTDryBulbFromMoistAirVolumeAndHumRatio(MoistAirVolume, HumRatio, Pressure) result(TDryBulb)
+    !+ Return dry-bulb temperature given moist air specific volume, humidity ratio, and pressure.
+    !+ Reference:
+    !+ ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 26
+    !+ Notes:
+    !+ In IP units, R_DA_IP / 144 equals 0.370486 which is the coefficient appearing in eqn 26
+    !+ The factor 144 is for the conversion of Psi = lb in⁻² to lb ft⁻².
+    !+ Based on the `GetMoistAirVolume` function, rearranged for dry-bulb temperature.
+
+    real, intent(in)  ::  MoistAirVolume
+      !+ Specific volume of moist air in ft³ lb⁻¹ of dry air [IP] or in m³ kg⁻¹ of dry air [SI]
+    real, intent(in)  ::  HumRatio
+      !+ Humidity ratio in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]
+    real, intent(in)  ::  Pressure
+      !+ Atmospheric pressure in Psi [IP] or Pa [SI]
+    real              ::  TDryBulb
+      !+ Dry-bulb temperature in °F [IP] or °C [SI]
+    real              ::  BoundedHumRatio
+      !+ Humidity ratio bounded to MIN_HUM_RATIO
+
+    if (HumRatio < 0.0) then
+      error stop "Error: humidity ratio is negative"
+    end if
+    BoundedHumRatio = max(HumRatio, MIN_HUM_RATIO)
+
+    if (isIP()) then
+      TDryBulb = GetTFahrenheitFromTRankine(MoistAirVolume * (144 * Pressure) &
+                                / (R_DA_IP * (1 + 1.607858 * BoundedHumRatio)))
+    else
+      TDryBulb = GetTCelsiusFromTKelvin(MoistAirVolume * Pressure &
+                                / (R_DA_SI * (1 + 1.607858 * BoundedHumRatio)))
+    end if
+  end function GetTDryBulbFromMoistAirVolumeAndHumRatio
 
   function GetMoistAirDensity(TDryBulb, HumRatio, Pressure) result(MoistAirDensity)
     !+ Return moist air density given humidity ratio, dry bulb temperature, and pressure.

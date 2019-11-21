@@ -1,4 +1,4 @@
-' PsychroLib (version 2.2.0) (https://github.com/psychrometrics/psychrolib)
+' PsychroLib (version 2.3.0) (https://github.com/psychrometrics/psychrolib)
 ' Copyright (c) 2018 D. Thevenard and D. Meyer for the current library implementation
 ' Copyright (c) 2017 ASHRAE Handbook — Fundamentals for ASHRAE equations and coefficients
 ' Licensed under the MIT License.
@@ -61,6 +61,12 @@ End Enum
 '******************************************************************************************************
 ' Global constants
 '******************************************************************************************************
+
+Private Const ZERO_FAHRENHEIT_AS_RANKINE = 459.67   ' Zero degree Fahrenheit (°F) expressed as degree Rankine (°R).
+                                                    'Reference: ASHRAE Handbook - Fundamentals (2017) ch. 39.
+
+Private Const ZERO_CELSIUS_AS_KELVIN = 273.15       ' Zero degree Celsius (°C) expressed as Kelvin (K).
+                                                    ' Reference: ASHRAE Handbook - Fundamentals (2017) ch. 39.
 
 Private Const R_DA_IP = 53.35                 ' Universal gas constant for dry air (IP version) in ft lbf/lb_DryAir/R.
 
@@ -186,21 +192,51 @@ Function GetTRankineFromTFahrenheit(ByVal T_Fahrenheit As Variant) As Variant
 ' given temperature in degree Fahrenheit (°F).
 '
 'Args:
-'        TRankine: Temperature in degree Fahrenheit (°F)
+'        T_Fahrenheit: Temperature in degree Fahrenheit (°F)
 '
 'Returns:
 '        Temperature in degree Rankine (°R)
+'
+'Reference:
+'        Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1 section 3
 '
 'Notes:
 '        Exact conversion.
 '
   On Error GoTo ErrHandler
 
-  GetTRankineFromTFahrenheit = (T_Fahrenheit + 459.67)
+  GetTRankineFromTFahrenheit = (T_Fahrenheit + ZERO_FAHRENHEIT_AS_RANKINE)
   Exit Function
 
 ErrHandler:
   GetTRankineFromTFahrenheit = CVErr(xlErrNA)
+
+End Function
+
+Function GetTFahrenheitFromTRankine(ByVal T_Rankine As Variant) As Variant
+'
+' Utility function to convert temperature to degree Fahrenheit (°F)
+' given temperature in degree Rankine (°R).
+'
+'Args:
+'        TRankine: Temperature in degree Rankine (°R)
+'
+'Returns:
+'        Temperature in degree Fahrenheit (°F)
+'
+'Reference:
+'        Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1 section 3
+'
+'Notes:
+'        Exact conversion.
+'
+  On Error GoTo ErrHandler
+
+  GetTFahrenheitFromTRankine = (T_Rankine - ZERO_FAHRENHEIT_AS_RANKINE)
+  Exit Function
+
+ErrHandler:
+  GetTFahrenheitFromTRankine = CVErr(xlErrNA)
 
 End Function
 
@@ -215,16 +251,46 @@ Function GetTKelvinFromTCelsius(ByVal T_Celsius As Variant) As Variant
 'Returns:
 '        Temperature in Kelvin (K)
 '
+'Reference:
+'        Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1 section 3
+'
 'Notes:
 '        Exact conversion.
 '
   On Error GoTo ErrHandler
 
-  GetTKelvinFromTCelsius = (T_Celsius + 273.15)
+  GetTKelvinFromTCelsius = (T_Celsius + ZERO_CELSIUS_AS_KELVIN)
   Exit Function
 
 ErrHandler:
   GetTKelvinFromTCelsius = CVErr(xlErrNA)
+
+End Function
+
+Function GetTCelsiusFromTKelvin(ByVal T_Kelvin As Variant) As Variant
+'
+' Utility function to convert temperature to degree Celsius (°C)
+' given temperature in Kelvin (K).
+'
+'Args:
+'        TKelvin: Temperature in Kelvin (K)
+'
+'Returns:
+'        Temperature in degree Celsius (°C)
+'
+'Reference:
+'        Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1 section 3
+'
+'Notes:
+'        Exact conversion.
+'
+  On Error GoTo ErrHandler
+
+  GetTCelsiusFromTKelvin = (T_Kelvin - ZERO_CELSIUS_AS_KELVIN)
+  Exit Function
+
+ErrHandler:
+  GetTCelsiusFromTKelvin = CVErr(xlErrNA)
 
 End Function
 
@@ -1468,6 +1534,48 @@ Function GetMoistAirVolume(ByVal TDryBulb As Variant, ByVal HumRatio As Variant,
 
 ErrHandler:
   GetMoistAirVolume = CVErr(xlErrNA)
+
+End Function
+
+Function GetTDryBulbFromMoistAirVolumeAndHumRatio(ByVal MoistAirVolume As Variant, ByVal HumRatio As Variant, ByVal Pressure As Variant) As Variant
+'
+' Return dry-bulb temperature given moist air specific volume, humidity ratio, and pressure.
+'
+' Args:
+'        MoistAirVolume: Specific volume of moist air in ft³ lb⁻¹ of dry air [IP] or in m³ kg⁻¹ of dry air [SI]
+'        HumRatio : Humidity ratio in lb_H2O/lb_Air [IP] or kg_H2O/kg_Air [SI]
+'        Pressure : Atmospheric pressure in Psi [IP] or Pa [SI]
+'
+' Returns:
+'        Specific volume of moist air in ft³/lb of dry air [IP] or in m³/kg of dry air [SI]
+'
+' Reference:
+'        ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 26
+'
+' Notes:
+'        In IP units, R_DA_IP / 144 equals 0.370486 which is the coefficient appearing in eqn 26
+'        The factor 144 is for the conversion of Psi = lb/in² to lb/ft².
+'        Based on the `GetMoistAirVolume` function, rearranged for dry-bulb temperature.
+'
+  Dim BoundedHumRatio As Variant
+
+  On Error GoTo ErrHandler
+
+  If (HumRatio < 0) Then
+    MyMsgBox ("Humidity ratio is negative")
+    GoTo ErrHandler
+  End If
+  BoundedHumRatio = max(HumRatio, MIN_HUM_RATIO)
+
+  If (isIP()) Then
+    GetTDryBulbFromMoistAirVolumeAndHumRatio = GetTFahrenheitFromTRankine(MoistAirVolume * (144 * Pressure) / (R_DA_IP * (1 + 1.607858 * BoundedHumRatio)))
+  Else
+    GetTDryBulbFromMoistAirVolumeAndHumRatio = GetTCelsiusFromTKelvin(MoistAirVolume * Pressure / (R_DA_SI * (1 + 1.607858 * BoundedHumRatio)))
+  End If
+  Exit Function
+
+ErrHandler:
+  GetTDryBulbFromMoistAirVolumeAndHumRatio = CVErr(xlErrNA)
 
 End Function
 

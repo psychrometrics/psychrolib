@@ -1,3 +1,8 @@
+2.3.0
+- Add `GetTDryBulbFromMoistAirVolumeAndHumRatio`.
+- Add `GetTFahrenheitFromTRankine` and `GetTCelsiusFromTKelvin`.
+- Define `ZERO_FAHRENHEIT_AS_RANKINE` and `ZERO_CELSIUS_AS_KELVIN`.
+
 2.2.0
 - Add C# support with .NET Standard 1.0 (.NET Core >= 1.0 & .NET Framework >= 4.5).
 

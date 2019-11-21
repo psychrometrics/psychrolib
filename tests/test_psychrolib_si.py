@@ -10,6 +10,9 @@ pytestmark = pytest.mark.usefixtures('SetUnitSystem_SI')
 def test_GetTKelvinFromTCelsius(psy):
     assert psy.GetTKelvinFromTCelsius(20) == pytest.approx(293.15, 0.000001)
 
+def test_GetTCelsiusFromTKelvin(psy):
+    assert psy.GetTCelsiusFromTKelvin(293.15) == pytest.approx(20, rel = 0.000001)
+
 
 ###############################################################################
 # Tests at saturation
@@ -144,6 +147,9 @@ def test_MoistAir(psy):
     assert psy.GetMoistAirEnthalpy(30, 0.02) == pytest.approx(81316, rel = 0.0003)
     assert psy.GetMoistAirVolume(30, 0.02, 95461) == pytest.approx(0.940855374352943, rel = 0.0003)
     assert psy.GetMoistAirDensity(30, 0.02, 95461) == pytest.approx(1.08411986348219, rel = 0.0003)
+
+def test_GetTDryBulbFromMoistAirVolumeAndHumRatio(psy):
+    assert psy.GetTDryBulbFromMoistAirVolumeAndHumRatio(0.940855374352943, 0.02, 95461) == pytest.approx(30, rel = 0.0003)
 
 ###############################################################################
 # Test standard atmosphere
