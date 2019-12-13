@@ -1,0 +1,18 @@
+Package: psychrolib
+Type: Package
+Title: Psychrometric Properties of Moist and Dry Air
+Version: 0.0.0-9001
+Authors@R: c(person("Jason", "Banfelder", email = "jason@banfelder.net", role = c("aut", "cre")),
+             person("D.", "Meyer", role = "aut"),
+             person("D.", "Thevenard", role = "aut"))
+Description: psychrolib is a library of functions to enable the calculation of
+    psychrometric properties of moist and dry air. The library works in both
+    metric (SI) and imperial (IP) systems of units. This is a port of the
+    original python psychrolib library written by D. Meyer & D. Thevenard (see
+    https://github.com/psychrometrics/psychrolib).
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.1.1
+Suggests: 
+    testthat (>= 2.1.0)
