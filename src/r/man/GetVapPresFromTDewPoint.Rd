@@ -15,6 +15,14 @@ Partial pressure of water vapor in moist air in Psi [IP] or Pa [SI]
 \description{
 Return vapor pressure given dew point temperature.
 }
+\examples{
+SetUnitSystem("IP")
+GetVapPresFromTDewPoint(12:20)
+
+SetUnitSystem("SI")
+GetVapPresFromTDewPoint(12:20)
+
+}
 \references{
 ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 36
 }

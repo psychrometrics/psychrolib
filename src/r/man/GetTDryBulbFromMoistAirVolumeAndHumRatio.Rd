@@ -26,6 +26,14 @@ Return dry-bulb temperature given moist air specific volume, humidity ratio, and
   \item Based on the `GetMoistAirVolume` function, rearranged for dry-bulb temperature.
 }
 }
+\examples{
+SetUnitSystem("IP")
+GetTDryBulbFromMoistAirVolumeAndHumRatio(14.72, seq(0.02, 0.03, 0.001), 14.175)
+
+SetUnitSystem("SI")
+GetTDryBulbFromMoistAirVolumeAndHumRatio(0.94, seq(0.02, 0.03, 0.001), 95461)
+
+}
 \references{
 ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 26
 }

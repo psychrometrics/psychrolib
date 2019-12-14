@@ -17,6 +17,14 @@ Humidity ratio in lb_H2O lb_Air-1 [IP] or kg_H2O kg_Air-1 [SI]
 \description{
 Return humidity ratio given dew-point temperature and pressure.
 }
+\examples{
+SetUnitSystem("IP")
+GetHumRatioFromTDewPoint(50:80, 14.175)
+
+SetUnitSystem("SI")
+GetHumRatioFromTDewPoint(20:30, 95461.0)
+
+}
 \references{
 ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 13
 }

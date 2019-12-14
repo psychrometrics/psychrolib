@@ -17,6 +17,14 @@ Relative humidity in range [0, 1]
 \description{
 Return relative humidity given dry-bulb temperature and vapor pressure.
 }
+\examples{
+SetUnitSystem("IP")
+GetRelHumFromVapPres(70:80, 0.0149)
+
+SetUnitSystem("SI")
+GetRelHumFromVapPres(20:30, 12581)
+
+}
 \references{
 ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 12, 22
 }

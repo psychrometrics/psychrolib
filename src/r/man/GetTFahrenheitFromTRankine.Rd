@@ -22,6 +22,10 @@ given temperature in degree Rankine (°R).
 Exact conversion.
 }
 
+\examples{
+GetTFahrenheitFromTRankine(500:600)
+
+}
 \references{
 ASHRAE Handbook - Fundamentals (2017) ch. 1 section 3
 }

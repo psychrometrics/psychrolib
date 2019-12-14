@@ -17,6 +17,14 @@ Dry air volume in ft3 lb-1 [IP] or in m3 kg-1 [SI]
 \description{
 Return dry-air volume given dry-bulb temperature and pressure.
 }
+\examples{
+SetUnitSystem("IP")
+GetDryAirVolume(77:87, 14.696)
+
+SetUnitSystem("SI")
+GetDryAirVolume(25:30, 101325)
+
+}
 \references{
 ASHRAE Handbook - Fundamentals (2017) ch. 1
 \itemize{

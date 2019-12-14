@@ -18,7 +18,15 @@ Humidity ratio in lb_H2O lb_Air-1 [IP] or kg_H2O kg_Air-1 [SI]
 Return humidity ratio from enthalpy and dry-bulb temperature.
 }
 \note{
-Based on the `GetMoistAirEnthalpy` function, rearranged for humidity ratio.
+Based on the \code{\link{GetMoistAirEnthalpy}} function, rearranged for humidity ratio.
+}
+\examples{
+SetUnitSystem("IP")
+GetHumRatioFromEnthalpyAndTDryBulb(42.6168, 76:86)
+
+SetUnitSystem("SI")
+GetHumRatioFromEnthalpyAndTDryBulb(81316.0, 20:30)
+
 }
 \references{
 ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 30.

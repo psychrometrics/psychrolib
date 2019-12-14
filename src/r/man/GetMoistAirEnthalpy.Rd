@@ -17,6 +17,14 @@ Moist air enthalpy in Btu lb-1 [IP] or J kg-1
 \description{
 Return moist air enthalpy given dry-bulb temperature and humidity ratio.
 }
+\examples{
+SetUnitSystem("IP")
+GetMoistAirEnthalpy(80:100, 0.02)
+
+SetUnitSystem("SI")
+GetMoistAirEnthalpy(20:30, 0.02)
+
+}
 \references{
 ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 30
 }

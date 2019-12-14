@@ -19,6 +19,13 @@
 #' GetTDewPointFromVapPres, which inverts the present function, does not converge properly around
 #' the freezing point.
 #'
+#' @examples
+#' SetUnitSystem("IP")
+#' GetSatVapPres(80:100)
+#'
+#' SetUnitSystem("SI")
+#' GetSatVapPres(20:30)
+#'
 #' @export
 GetSatVapPres <- function (TDryBulb) {
     LnPws <- numeric(length(TDryBulb))
@@ -74,6 +81,13 @@ GetSatVapPres <- function (TDryBulb) {
 #' @references
 #' ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 36, solved for W
 #'
+#' @examples
+#' SetUnitSystem("IP")
+#' GetSatHumRatio(80:100, 14.696)
+#'
+#' SetUnitSystem("SI")
+#' GetSatHumRatio(20:30, 101325)
+#'
 #' @export
 GetSatHumRatio <- function (TDryBulb, Pressure) {
     CheckLength(TDryBulb, Pressure)
@@ -94,6 +108,13 @@ GetSatHumRatio <- function (TDryBulb, Pressure) {
 #'
 #' @references
 #' ASHRAE Handbook - Fundamentals (2017) ch. 1
+#'
+#' @examples
+#' SetUnitSystem("IP")
+#' GetSatAirEnthalpy(80:100, 14.696)
+#'
+#' SetUnitSystem("SI")
+#' GetSatAirEnthalpy(20:30, 101325)
 #'
 #' @export
 GetSatAirEnthalpy <- function (TDryBulb, Pressure) {

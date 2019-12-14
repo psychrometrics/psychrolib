@@ -13,6 +13,13 @@
 #' @references
 #' ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 33 and 35 solved for Tstar
 #'
+#' @examples
+#' SetUnitSystem("IP")
+#' GetTWetBulbFromHumRatio(80:100, 0.01, 14.175)
+#'
+#' SetUnitSystem("SI")
+#' GetTWetBulbFromHumRatio(20:30, 0.01, 95461)
+#'
 #' @export
 GetTWetBulbFromHumRatio <- function (TDryBulb, HumRatio, Pressure) {
     CheckLength(TDryBulb, HumRatio, Pressure)
@@ -49,8 +56,19 @@ GetTWetBulbFromHumRatio <- function (TDryBulb, HumRatio, Pressure) {
 #' @references
 #' ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 33 and 35
 #'
+#' @examples
+#' SetUnitSystem("IP")
+#' GetHumRatioFromTWetBulb(80:100, 77.0, 14.175)
+#'
+#' SetUnitSystem("SI")
+#' GetHumRatioFromTWetBulb(20:30, 19.0, 95461.0)
+#'
 #' @export
 GetHumRatioFromTWetBulb <- function (TDryBulb, TWetBulb, Pressure) {
+    x <- AlignLength(TDryBulb, TWetBulb, Pressure)
+    TDryBulb <- x$TDryBulb
+    TWetBulb <- x$TWetBulb
+    Pressure <- x$Pressure
 
     if (any(TWetBulb > TDryBulb)) {
         stop("Wet bulb temperature is above dry bulb temperature")
@@ -100,6 +118,13 @@ GetHumRatioFromTWetBulb <- function (TDryBulb, TWetBulb, Pressure) {
 #' @references
 #' ASHRAE Handbook - Fundamentals (2017) ch. 1
 #'
+#' @examples
+#' SetUnitSystem("IP")
+#' GetHumRatioFromRelHum(80:100, 0.5, 14.175)
+#'
+#' SetUnitSystem("SI")
+#' GetHumRatioFromRelHum(20:30, 0.5, 95461.0)
+#'
 #' @export
 GetHumRatioFromRelHum <- function (TDryBulb, RelHum, Pressure) {
     CheckLength(TDryBulb, RelHum, Pressure)
@@ -120,6 +145,13 @@ GetHumRatioFromRelHum <- function (TDryBulb, RelHum, Pressure) {
 #' @references
 #' ASHRAE Handbook - Fundamentals (2017) ch. 1
 #'
+#' @examples
+#' SetUnitSystem("IP")
+#' GetRelHumFromHumRatio(80:100, 0.01, 14.175)
+#'
+#' SetUnitSystem("SI")
+#' GetRelHumFromHumRatio(20:30, 0.01, 95461.0)
+#'
 #' @export
 GetRelHumFromHumRatio <- function (TDryBulb, HumRatio, Pressure) {
     CheckHumRatio(HumRatio)
@@ -138,6 +170,13 @@ GetRelHumFromHumRatio <- function (TDryBulb, HumRatio, Pressure) {
 #' @references
 #' ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 13
 #'
+#' @examples
+#' SetUnitSystem("IP")
+#' GetHumRatioFromTDewPoint(50:80, 14.175)
+#'
+#' SetUnitSystem("SI")
+#' GetHumRatioFromTDewPoint(20:30, 95461.0)
+#'
 #' @export
 GetHumRatioFromTDewPoint <- function (TDewPoint, Pressure) {
     VapPres <- GetSatVapPres(TDewPoint)
@@ -154,6 +193,13 @@ GetHumRatioFromTDewPoint <- function (TDewPoint, Pressure) {
 #'
 #' @references
 #' ASHRAE Handbook - Fundamentals (2017) ch. 1
+#'
+#' @examples
+#' SetUnitSystem("IP")
+#' GetTDewPointFromHumRatio(80:100, 0.01, 14.175)
+#'
+#' SetUnitSystem("SI")
+#' GetTDewPointFromHumRatio(20:30, 0.01, 95461.0)
 #'
 #' @export
 GetTDewPointFromHumRatio <- function (TDryBulb, HumRatio, Pressure) {

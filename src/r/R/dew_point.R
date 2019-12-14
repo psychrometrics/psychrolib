@@ -12,6 +12,13 @@
 #' @references
 #' ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 12, 22
 #'
+#' @examples
+#' SetUnitSystem("IP")
+#' GetVapPresFromRelHum(77, seq(0.1, 0.8, 0.1))
+#'
+#' SetUnitSystem("SI")
+#' GetVapPresFromRelHum(20, seq(0.1, 0.8, 0.1))
+#'
 #' @export
 GetVapPresFromRelHum <- function (TDryBulb, RelHum) {
     CheckLength(TDryBulb, RelHum)
@@ -29,6 +36,13 @@ GetVapPresFromRelHum <- function (TDryBulb, RelHum) {
 #'
 #' @references
 #' ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 12, 22
+#'
+#' @examples
+#' SetUnitSystem("IP")
+#' GetRelHumFromVapPres(70:80, 0.0149)
+#'
+#' SetUnitSystem("SI")
+#' GetRelHumFromVapPres(20:30, 12581)
 #'
 #' @export
 GetRelHumFromVapPres <- function (TDryBulb, VapPres) {
@@ -106,6 +120,13 @@ dLnPws_ <- function (TDryBulb) {
 #'  \item TDryBulb is not really needed here, just used for convenience.
 #' }
 #'
+#' @examples
+#' SetUnitSystem("IP")
+#' GetTDewPointFromVapPres(70:80, seq(0.0149, 0.0249, 0.001))
+#'
+#' SetUnitSystem("SI")
+#' GetTDewPointFromVapPres(70:80, 12581:12591)
+#'
 #' @export
 GetTDewPointFromVapPres <- function (TDryBulb, VapPres) {
     CheckLength(TDryBulb, VapPres)
@@ -144,6 +165,13 @@ GetTDewPointFromVapPres <- function (TDryBulb, VapPres) {
 #'
 #' @references
 #' ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 36
+#'
+#' @examples
+#' SetUnitSystem("IP")
+#' GetVapPresFromTDewPoint(12:20)
+#'
+#' SetUnitSystem("SI")
+#' GetVapPresFromTDewPoint(12:20)
 #'
 #' @export
 GetVapPresFromTDewPoint <- function (TDewPoint) {

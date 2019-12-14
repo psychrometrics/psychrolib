@@ -19,6 +19,14 @@ MoistAirDensity: Moist air density in lb ft-3 [IP] or kg m-3 [SI]
 \description{
 Return moist air density given humidity ratio, dry bulb temperature, and pressure.
 }
+\examples{
+SetUnitSystem("IP")
+GetMoistAirDensity(80:100, 0.02, 14.175)
+
+SetUnitSystem("SI")
+GetMoistAirDensity(20:30, 0.02, 95461)
+
+}
 \references{
 ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 11
 }

@@ -13,6 +13,13 @@
 #' @references
 #' ASHRAE Handbook - Fundamentals (2017) ch. 1
 #'
+#' @examples
+#' SetUnitSystem("IP")
+#' GetTWetBulbFromTDewPoint(80:100, 40.0, 14.696)
+#'
+#' SetUnitSystem("SI")
+#' GetTWetBulbFromTDewPoint(25:40, 20.0, 101325.0)
+#'
 #' @export
 GetTWetBulbFromTDewPoint <- function (TDryBulb, TDewPoint, Pressure) {
     CheckLength(TDryBulb, TDewPoint, Pressure)
@@ -33,10 +40,17 @@ GetTWetBulbFromTDewPoint <- function (TDryBulb, TDewPoint, Pressure) {
 #' @references
 #' ASHRAE Handbook - Fundamentals (2017) ch. 1
 #'
+#' @examples
+#' SetUnitSystem("IP")
+#' GetTWetBulbFromRelHum(80:100, 0.2, 14.696)
+#'
+#' SetUnitSystem("SI")
+#' GetTWetBulbFromRelHum(25:40, 0.2, 101325.0)
+#'
 #' @export
 GetTWetBulbFromRelHum <- function (TDryBulb, RelHum, Pressure) {
-    CheckLength(TDryBulb, RelHum, Pressure)
     CheckRelHum(RelHum)
+    CheckLength(TDryBulb, RelHum, Pressure)
 
     HumRatio <- GetHumRatioFromRelHum(TDryBulb, RelHum, Pressure)
     GetTWetBulbFromHumRatio(TDryBulb, HumRatio, Pressure)
@@ -51,6 +65,13 @@ GetTWetBulbFromRelHum <- function (TDryBulb, RelHum, Pressure) {
 #'
 #' @references
 #' ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 22
+#'
+#' @examples
+#' SetUnitSystem("IP")
+#' GetRelHumFromTDewPoint(80:100, 65)
+#'
+#' SetUnitSystem("SI")
+#' GetRelHumFromTDewPoint(20:30, 15)
 #'
 #' @export
 GetRelHumFromTDewPoint <- function (TDryBulb, TDewPoint) {
@@ -73,6 +94,13 @@ GetRelHumFromTDewPoint <- function (TDryBulb, TDewPoint) {
 #' @references
 #' ASHRAE Handbook - Fundamentals (2017) ch. 1
 #'
+#' @examples
+#' SetUnitSystem("IP")
+#' GetRelHumFromTWetBulb(80:100, 79.9, 14.696)
+#'
+#' SetUnitSystem("SI")
+#' GetRelHumFromTWetBulb(25:40, 20, 101325.0)
+#'
 #' @export
 GetRelHumFromTWetBulb <- function (TDryBulb, TWetBulb, Pressure) {
     CheckLength(TDryBulb, TWetBulb, Pressure)
@@ -91,6 +119,13 @@ GetRelHumFromTWetBulb <- function (TDryBulb, TWetBulb, Pressure) {
 #'
 #' @references
 #' ASHRAE Handbook - Fundamentals (2017) ch. 1
+#'
+#' @examples
+#' SetUnitSystem("IP")
+#' GetTDewPointFromRelHum(80:100, 0.2)
+#'
+#' SetUnitSystem("SI")
+#' GetTDewPointFromRelHum(20:30, 0.4)
 #'
 #' @export
 GetTDewPointFromRelHum <- function (TDryBulb, RelHum) {
@@ -111,6 +146,13 @@ GetTDewPointFromRelHum <- function (TDryBulb, RelHum) {
 #'
 #' @references
 #' ASHRAE Handbook - Fundamentals (2017) ch. 1
+#'
+#' @examples
+#' SetUnitSystem("IP")
+#' GetTDewPointFromTWetBulb(80:100, 65.0, 14.696)
+#'
+#' SetUnitSystem("SI")
+#' GetTDewPointFromTWetBulb(25:40, 20, 101325.0)
 #'
 #' @export
 GetTDewPointFromTWetBulb <- function (TDryBulb, TWetBulb, Pressure) {

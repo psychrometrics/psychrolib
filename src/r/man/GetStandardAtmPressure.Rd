@@ -15,6 +15,14 @@ Standard atmosphere barometric pressure in Psi [IP] or Pa [SI]
 \description{
 Return standard atmosphere barometric pressure, given the elevation (altitude).
 }
+\examples{
+SetUnitSystem("IP")
+GetStandardAtmPressure(seq(-500, 1000, 100))
+
+SetUnitSystem("SI")
+GetStandardAtmPressure(seq(-500, 1000, 100))
+
+}
 \references{
 ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 3
 }

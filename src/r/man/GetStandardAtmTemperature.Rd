@@ -15,6 +15,14 @@ Standard atmosphere dry-bulb temperature in °F [IP] or °C [SI]
 \description{
 Return standard atmosphere temperature, given the elevation (altitude).
 }
+\examples{
+SetUnitSystem("IP")
+GetStandardAtmTemperature(seq(-500, 1000, 100))
+
+SetUnitSystem("SI")
+GetStandardAtmTemperature(seq(-500, 1000, 100))
+
+}
 \references{
 ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 4
 }

@@ -24,6 +24,14 @@ In IP units, R_DA_IP / 144 equals 0.370486 which is the coefficient appearing in
 
 The factor 144 is for the conversion of Psi = lb in-2 to lb ft-2.
 }
+\examples{
+SetUnitSystem("IP")
+GetMoistAirVolume(80:100, 0.02, 14.175)
+
+SetUnitSystem("SI")
+GetMoistAirVolume(20:30, 0.02, 95461)
+
+}
 \references{
 ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 26
 }

@@ -19,6 +19,14 @@ Dew-point temperature in °F [IP] or °C [SI]
 \description{
 Return dew-point temperature given dry-bulb temperature, humidity ratio, and pressure.
 }
+\examples{
+SetUnitSystem("IP")
+GetTDewPointFromHumRatio(80:100, 0.01, 14.175)
+
+SetUnitSystem("SI")
+GetTDewPointFromHumRatio(20:30, 0.01, 95461.0)
+
+}
 \references{
 ASHRAE Handbook - Fundamentals (2017) ch. 1
 }

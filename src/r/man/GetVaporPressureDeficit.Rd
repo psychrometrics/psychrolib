@@ -19,6 +19,14 @@ Vapor pressure deficit in Psi [IP] or Pa [SI]
 \description{
 Return Vapor pressure deficit given dry-bulb temperature, humidity ratio, and pressure.
 }
+\examples{
+SetUnitSystem("IP")
+GetVaporPressureDeficit(80:100, 0.01, 14.175)
+
+SetUnitSystem("SI")
+GetVaporPressureDeficit(20:30, 0.01, 95461.0)
+
+}
 \references{
 Oke (1987) eqn 2.13a
 }

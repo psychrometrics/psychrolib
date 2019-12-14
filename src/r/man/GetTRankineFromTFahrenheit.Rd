@@ -22,6 +22,10 @@ given temperature in degree Fahrenheit (°F).
 Exact conversion.
 }
 
+\examples{
+GetTRankineFromTFahrenheit(1:100)
+
+}
 \references{
 ASHRAE Handbook - Fundamentals (2017) ch. 1 section 3
 }

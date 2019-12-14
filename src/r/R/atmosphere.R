@@ -11,6 +11,13 @@
 #' @references
 #' ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 3
 #'
+#' @examples
+#' SetUnitSystem("IP")
+#' GetStandardAtmPressure(seq(-500, 1000, 100))
+#'
+#' SetUnitSystem("SI")
+#' GetStandardAtmPressure(seq(-500, 1000, 100))
+#'
 #' @export
 GetStandardAtmPressure <- function (Altitude) {
     if (isIP()) {
@@ -28,6 +35,13 @@ GetStandardAtmPressure <- function (Altitude) {
 #'
 #' @references
 #' ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 4
+#'
+#' @examples
+#' SetUnitSystem("IP")
+#' GetStandardAtmTemperature(seq(-500, 1000, 100))
+#'
+#' SetUnitSystem("SI")
+#' GetStandardAtmTemperature(seq(-500, 1000, 100))
 #'
 #' @export
 GetStandardAtmTemperature <- function (Altitude) {
@@ -54,6 +68,13 @@ GetStandardAtmTemperature <- function (Altitude) {
 #' @note
 #' The standard procedure for the US is to use for TDryBulb the average
 #' of the current station temperature and the station temperature from 12 hours ago.
+#'
+#' @examples
+#' SetUnitSystem("IP")
+#' GetSeaLevelPressure(14.68, 300:400, 62.94)
+#'
+#' SetUnitSystem("SI")
+#' GetSeaLevelPressure(101226.5, 105:205, 17.19)
 #'
 #' @export
 GetSeaLevelPressure <- function (StationPressure, Altitude, TDryBulb) {
@@ -91,6 +112,13 @@ GetSeaLevelPressure <- function (StationPressure, Altitude, TDryBulb) {
 #'
 #' @note
 #' This function is just the inverse of \code{\link{GetSeaLevelPressure}}.
+#'
+#' @examples
+#' SetUnitSystem("IP")
+#' GetStationPressure(14.68, 300:400, 62.94)
+#'
+#' SetUnitSystem("SI")
+#' GetStationPressure(101226.5, 105:205, 17.19)
 #'
 #' @export
 GetStationPressure <- function (SeaLevelPressure, Altitude, TDryBulb) {

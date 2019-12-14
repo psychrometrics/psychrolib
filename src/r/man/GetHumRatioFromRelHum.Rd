@@ -19,6 +19,14 @@ Humidity ratio in lb_H2O lb_Air-1 [IP] or kg_H2O kg_Air-1 [SI]
 \description{
 Return humidity ratio given dry-bulb temperature, relative humidity, and pressure.
 }
+\examples{
+SetUnitSystem("IP")
+GetHumRatioFromRelHum(80:100, 0.5, 14.175)
+
+SetUnitSystem("SI")
+GetHumRatioFromRelHum(20:30, 0.5, 95461.0)
+
+}
 \references{
 ASHRAE Handbook - Fundamentals (2017) ch. 1
 }

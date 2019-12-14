@@ -13,6 +13,13 @@
 #' @references
 #' Oke (1987) eqn 2.13a
 #'
+#' @examples
+#' SetUnitSystem("IP")
+#' GetVaporPressureDeficit(80:100, 0.01, 14.175)
+#'
+#' SetUnitSystem("SI")
+#' GetVaporPressureDeficit(20:30, 0.01, 95461.0)
+#'
 #' @export
 GetVaporPressureDeficit <- function (TDryBulb, HumRatio, Pressure) {
     CheckLength(TDryBulb, HumRatio, Pressure)
@@ -37,6 +44,13 @@ GetVaporPressureDeficit <- function (TDryBulb, HumRatio, Pressure) {
 #' @note
 #' This definition is absent from the 2017 Handbook. Using 2009 version instead.
 #'
+#' @examples
+#' SetUnitSystem("IP")
+#' GetDegreeOfSaturation(80:100, 0.01, 14.175)
+#'
+#' SetUnitSystem("SI")
+#' GetDegreeOfSaturation(20:30, 0.01, 95461.0)
+#'
 #' @export
 GetDegreeOfSaturation <- function (TDryBulb, HumRatio, Pressure) {
     CheckLength(TDryBulb, HumRatio, Pressure)
@@ -56,6 +70,13 @@ GetDegreeOfSaturation <- function (TDryBulb, HumRatio, Pressure) {
 #'
 #' @references
 #' ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 30
+#'
+#' @examples
+#' SetUnitSystem("IP")
+#' GetMoistAirEnthalpy(80:100, 0.02)
+#'
+#' SetUnitSystem("SI")
+#' GetMoistAirEnthalpy(20:30, 0.02)
 #'
 #' @export
 GetMoistAirEnthalpy <- function (TDryBulb, HumRatio) {
@@ -85,6 +106,13 @@ GetMoistAirEnthalpy <- function (TDryBulb, HumRatio) {
 #' In IP units, R_DA_IP / 144 equals 0.370486 which is the coefficient appearing in eqn 26.
 #'
 #' The factor 144 is for the conversion of Psi = lb in-2 to lb ft-2.
+#'
+#' @examples
+#' SetUnitSystem("IP")
+#' GetMoistAirVolume(80:100, 0.02, 14.175)
+#'
+#' SetUnitSystem("SI")
+#' GetMoistAirVolume(20:30, 0.02, 95461)
 #'
 #' @export
 GetMoistAirVolume <- function (TDryBulb, HumRatio, Pressure) {
@@ -119,6 +147,13 @@ GetMoistAirVolume <- function (TDryBulb, HumRatio, Pressure) {
 #'   \item Based on the `GetMoistAirVolume` function, rearranged for dry-bulb temperature.
 #' }
 #'
+#' @examples
+#' SetUnitSystem("IP")
+#' GetTDryBulbFromMoistAirVolumeAndHumRatio(14.72, seq(0.02, 0.03, 0.001), 14.175)
+#'
+#' SetUnitSystem("SI")
+#' GetTDryBulbFromMoistAirVolumeAndHumRatio(0.94, seq(0.02, 0.03, 0.001), 95461)
+#'
 #' @export
 GetTDryBulbFromMoistAirVolumeAndHumRatio <- function (MoistAirVolume, HumRatio, Pressure) {
     CheckLength(MoistAirVolume, HumRatio, Pressure)
@@ -144,6 +179,13 @@ GetTDryBulbFromMoistAirVolumeAndHumRatio <- function (MoistAirVolume, HumRatio, 
 #'
 #' @references
 #' ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 11
+#'
+#' @examples
+#' SetUnitSystem("IP")
+#' GetMoistAirDensity(80:100, 0.02, 14.175)
+#'
+#' SetUnitSystem("SI")
+#' GetMoistAirDensity(20:30, 0.02, 95461)
 #'
 #' @export
 GetMoistAirDensity <- function (TDryBulb, HumRatio, Pressure) {

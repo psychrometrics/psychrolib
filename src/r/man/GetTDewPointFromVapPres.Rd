@@ -29,6 +29,14 @@ Return dew-point temperature given dry-bulb temperature and vapor pressure.
  \item TDryBulb is not really needed here, just used for convenience.
 }
 }
+\examples{
+SetUnitSystem("IP")
+GetTDewPointFromVapPres(70:80, seq(0.0149, 0.0249, 0.001))
+
+SetUnitSystem("SI")
+GetTDewPointFromVapPres(70:80, 12581:12591)
+
+}
 \references{
 ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn. 5 and 6
 }

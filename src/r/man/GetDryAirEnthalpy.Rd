@@ -15,6 +15,15 @@ Dry air enthalpy in Btu lb-1 [IP] or J kg-1 [SI]
 \description{
 Return dry-air enthalpy given dry-bulb temperature.
 }
+\examples{
+SetUnitSystem("IP")
+GetDryAirEnthalpy(77:87)
+
+SetUnitSystem("SI")
+GetDryAirEnthalpy(10:30)
+
+
+}
 \references{
 ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 28
 }

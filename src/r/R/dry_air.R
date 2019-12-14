@@ -11,6 +11,14 @@
 #' @references
 #' ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 28
 #'
+#' @examples
+#' SetUnitSystem("IP")
+#' GetDryAirEnthalpy(77:87)
+#'
+#' SetUnitSystem("SI")
+#' GetDryAirEnthalpy(10:30)
+#'
+#'
 #' @export
 GetDryAirEnthalpy <- function (TDryBulb) {
     if (isIP()) {
@@ -34,6 +42,13 @@ GetDryAirEnthalpy <- function (TDryBulb) {
 #'   \item Eqn 1 for the universal gas constant.
 #'   \item The factor 144 in IP is for the conversion of Psi = lb in-2 to lb ft-2.
 #' }
+#'
+#' @examples
+#' SetUnitSystem("IP")
+#' GetDryAirDensity(77:87, 14.696)
+#'
+#' SetUnitSystem("SI")
+#' GetDryAirDensity(25:30, 101325)
 #'
 #' @export
 GetDryAirDensity <- function (TDryBulb, Pressure) {
@@ -62,6 +77,13 @@ GetDryAirDensity <- function (TDryBulb, Pressure) {
 #'   \item The factor 144 in IP is for the conversion of Psi = lb in-2 to lb ft-2.
 #' }
 #'
+#' @examples
+#' SetUnitSystem("IP")
+#' GetDryAirVolume(77:87, 14.696)
+#'
+#' SetUnitSystem("SI")
+#' GetDryAirVolume(25:30, 101325)
+#'
 #' @export
 GetDryAirVolume <- function (TDryBulb, Pressure) {
     CheckLength(TDryBulb, Pressure)
@@ -85,7 +107,16 @@ GetDryAirVolume <- function (TDryBulb, Pressure) {
 #' ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 30
 #'
 #' @note
-#' Based on the `GetMoistAirEnthalpy` function, rearranged for temperature.
+#' Based on the \code{\link{GetMoistAirEnthalpy}} function, rearranged for temperature.
+#'
+#' @examples
+#'
+#' @examples
+#' SetUnitSystem("IP")
+#' GetTDryBulbFromEnthalpyAndHumRatio(42.6168, seq(0.01, 0.02, 0.001))
+#'
+#' SetUnitSystem("SI")
+#' GetTDryBulbFromEnthalpyAndHumRatio(81316.0, seq(0.01, 0.02, 0.001))
 #'
 #' @export
 GetTDryBulbFromEnthalpyAndHumRatio <- function (MoistAirEnthalpy, HumRatio) {
@@ -112,7 +143,14 @@ GetTDryBulbFromEnthalpyAndHumRatio <- function (MoistAirEnthalpy, HumRatio) {
 #' ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 30.
 #'
 #' @note
-#' Based on the `GetMoistAirEnthalpy` function, rearranged for humidity ratio.
+#' Based on the \code{\link{GetMoistAirEnthalpy}} function, rearranged for humidity ratio.
+#'
+#' @examples
+#' SetUnitSystem("IP")
+#' GetHumRatioFromEnthalpyAndTDryBulb(42.6168, 76:86)
+#'
+#' SetUnitSystem("SI")
+#' GetHumRatioFromEnthalpyAndTDryBulb(81316.0, 20:30)
 #'
 #' @export
 GetHumRatioFromEnthalpyAndTDryBulb <- function (MoistAirEnthalpy, TDryBulb) {

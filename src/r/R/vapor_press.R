@@ -12,6 +12,13 @@
 #' @references
 #' ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 20
 #'
+#' @examples
+#' SetUnitSystem("IP")
+#' GetHumRatioFromVapPres(seq(0.4, 0.6, 0.01), 14.175)
+#'
+#' SetUnitSystem("SI")
+#' GetHumRatioFromVapPres(seq(3000, 4000, 100), 95461)
+#'
 #' @export
 GetHumRatioFromVapPres <- function (VapPres, Pressure) {
     CheckLength(VapPres, Pressure)
@@ -32,6 +39,13 @@ GetHumRatioFromVapPres <- function (VapPres, Pressure) {
 #'
 #' @references
 #' ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 20 solved for pw
+#'
+#' @examples
+#' SetUnitSystem("IP")
+#' GetVapPresFromHumRatio(seq(0.02, 0.03, 0.001), 14.175)
+#'
+#' SetUnitSystem("SI")
+#' GetVapPresFromHumRatio(seq(0.02, 0.03, 0.001), 95461)
 #'
 #' @export
 GetVapPresFromHumRatio <- function (HumRatio, Pressure) {

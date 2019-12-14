@@ -22,6 +22,14 @@ Return station pressure from sea level pressure.
 \note{
 This function is just the inverse of \code{\link{GetSeaLevelPressure}}.
 }
+\examples{
+SetUnitSystem("IP")
+GetStationPressure(14.68, 300:400, 62.94)
+
+SetUnitSystem("SI")
+GetStationPressure(101226.5, 105:205, 17.19)
+
+}
 \references{
 See \code{\link{GetSeaLevelPressure}}.
 }

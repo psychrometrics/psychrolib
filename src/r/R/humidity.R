@@ -11,6 +11,13 @@
 #' @references
 #' ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 9b
 #'
+#' @examples
+#' SetUnitSystem("IP")
+#' GetSpecificHumFromHumRatio(seq(0.006, 0.016, 0.001))
+#'
+#' SetUnitSystem("SI")
+#' GetSpecificHumFromHumRatio(seq(0.006, 0.016, 0.001))
+#'
 #' @export
 GetSpecificHumFromHumRatio <- function (HumRatio) {
     CheckHumRatio(HumRatio)
@@ -27,6 +34,13 @@ GetSpecificHumFromHumRatio <- function (HumRatio) {
 #'
 #' @references
 #' ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 9b (solved for humidity ratio)
+#'
+#' @examples
+#' SetUnitSystem("IP")
+#' GetHumRatioFromSpecificHum(seq(0.006, 0.016, 0.001))
+#'
+#' SetUnitSystem("SI")
+#' GetHumRatioFromSpecificHum(seq(0.006, 0.016, 0.001))
 #'
 #' @export
 GetHumRatioFromSpecificHum <- function (SpecificHum) {

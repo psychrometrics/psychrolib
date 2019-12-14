@@ -17,6 +17,14 @@ Partial Pressure of water vapor in moist air in Psi [IP] or Pa [SI]
 \description{
 Return vapor Pressure given humidity ratio and pressure.
 }
+\examples{
+SetUnitSystem("IP")
+GetVapPresFromHumRatio(seq(0.02, 0.03, 0.001), 14.175)
+
+SetUnitSystem("SI")
+GetVapPresFromHumRatio(seq(0.02, 0.03, 0.001), 95461)
+
+}
 \references{
 ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 20 solved for pw
 }

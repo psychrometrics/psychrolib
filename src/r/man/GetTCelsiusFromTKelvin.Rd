@@ -22,6 +22,10 @@ given temperature in Kelvin (K).
 Exact conversion.
 }
 
+\examples{
+GetTCelsiusFromTKelvin(300:400)
+
+}
 \references{
 ASHRAE Handbook - Fundamentals (2017) ch. 1 section 3
 }

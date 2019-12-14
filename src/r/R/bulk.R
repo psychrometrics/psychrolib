@@ -23,6 +23,13 @@
 #'   \item{DegreeOfSaturation}{Degree of saturation [unitless]}
 #' }
 #'
+#' @examples
+#' SetUnitSystem("IP")
+#' CalcPsychrometricsFromTWetBulb(80:100, 65.0, 14.696)
+#'
+#' SetUnitSystem("SI")
+#' CalcPsychrometricsFromTWetBulb(25:40, 20, 101325.0)
+#'
 #' @export
 CalcPsychrometricsFromTWetBulb <- function (TDryBulb, TWetBulb, Pressure) {
     x <- AlignLength(TDryBulb, TWetBulb, Pressure)
@@ -59,6 +66,13 @@ CalcPsychrometricsFromTWetBulb <- function (TDryBulb, TWetBulb, Pressure) {
 #'   \item{DegreeOfSaturation}{Degree of saturation [unitless]}
 #' }
 #'
+#' @examples
+#' SetUnitSystem("IP")
+#' CalcPsychrometricsFromTDewPoint(80:100, 40.0, 14.696)
+#'
+#' SetUnitSystem("SI")
+#' CalcPsychrometricsFromTDewPoint(25:40, 20.0, 101325.0)
+#'
 #' @export
 CalcPsychrometricsFromTDewPoint <- function (TDryBulb, TDewPoint, Pressure) {
     x <- AlignLength(TDryBulb, TDewPoint, Pressure)
@@ -94,6 +108,13 @@ CalcPsychrometricsFromTDewPoint <- function (TDryBulb, TDewPoint, Pressure) {
 #'   \item{MoistAirVolume}{Specific volume of moist air in ft3 lb-1 [IP] or in m3 kg-1 [SI]}
 #'   \item{DegreeOfSaturation}{Degree of saturation [unitless]}
 #' }
+#'
+#' @examples
+#' SetUnitSystem("IP")
+#' CalcPsychrometricsFromRelHum(80:100, 0.13, 14.69)
+#'
+#' SetUnitSystem("SI")
+#' CalcPsychrometricsFromRelHum(25:40, 0.5, 101325.0)
 #'
 #' @export
 CalcPsychrometricsFromRelHum <- function (TDryBulb, RelHum, Pressure) {

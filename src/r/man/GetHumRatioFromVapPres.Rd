@@ -17,6 +17,14 @@ Humidity ratio in lb_H2O lb_Air-1 [IP] or kg_H2O kg_Air-1 [SI]
 \description{
 Return humidity ratio given water vapor Pressure and atmospheric pressure.
 }
+\examples{
+SetUnitSystem("IP")
+GetHumRatioFromVapPres(seq(0.4, 0.6, 0.01), 14.175)
+
+SetUnitSystem("SI")
+GetHumRatioFromVapPres(seq(3000, 4000, 100), 95461)
+
+}
 \references{
 ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 20
 }

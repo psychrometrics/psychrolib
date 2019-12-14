@@ -17,6 +17,14 @@ Saturated air enthalpy in Btu lb-1 [IP] or J kg-1 [SI]
 \description{
 Return saturated air enthalpy given dry-bulb temperature and pressure.
 }
+\examples{
+SetUnitSystem("IP")
+GetSatAirEnthalpy(80:100, 14.696)
+
+SetUnitSystem("SI")
+GetSatAirEnthalpy(20:30, 101325)
+
+}
 \references{
 ASHRAE Handbook - Fundamentals (2017) ch. 1
 }

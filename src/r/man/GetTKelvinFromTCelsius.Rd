@@ -22,6 +22,10 @@ given temperature in degree Celsius (°C).
 Exact conversion.
 }
 
+\examples{
+GetTKelvinFromTCelsius(20:30)
+
+}
 \references{
 ASHRAE Handbook - Fundamentals (2017) ch. 1 section 3
 }

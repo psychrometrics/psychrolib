@@ -17,6 +17,14 @@ Dry air density in lb ft-3 [IP] or kg m-3 [SI]
 \description{
 Return dry-air density given dry-bulb temperature and pressure.
 }
+\examples{
+SetUnitSystem("IP")
+GetDryAirDensity(77:87, 14.696)
+
+SetUnitSystem("SI")
+GetDryAirDensity(25:30, 101325)
+
+}
 \references{
 ASHRAE Handbook - Fundamentals (2017) ch. 1
 \itemize{

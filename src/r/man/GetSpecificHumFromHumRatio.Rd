@@ -15,6 +15,14 @@ Specific humidity in lb_H2O lb_Air-1 [IP] or kg_H2O kg_Air-1 [SI]
 \description{
 Return the specific humidity from humidity ratio (aka mixing ratio).
 }
+\examples{
+SetUnitSystem("IP")
+GetSpecificHumFromHumRatio(seq(0.006, 0.016, 0.001))
+
+SetUnitSystem("SI")
+GetSpecificHumFromHumRatio(seq(0.006, 0.016, 0.001))
+
+}
 \references{
 ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 9b
 }

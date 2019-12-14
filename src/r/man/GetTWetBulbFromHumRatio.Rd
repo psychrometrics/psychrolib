@@ -19,6 +19,14 @@ Wet-bulb temperature in °F [IP] or °C [SI]
 \description{
 Return wet-bulb temperature given dry-bulb temperature, humidity ratio, and pressure.
 }
+\examples{
+SetUnitSystem("IP")
+GetTWetBulbFromHumRatio(80:100, 0.01, 14.175)
+
+SetUnitSystem("SI")
+GetTWetBulbFromHumRatio(20:30, 0.01, 95461)
+
+}
 \references{
 ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 33 and 35 solved for Tstar
 }

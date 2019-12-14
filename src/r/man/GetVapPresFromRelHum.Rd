@@ -17,6 +17,14 @@ Partial pressure of water vapor in moist air in Psi [IP] or Pa [SI]
 \description{
 Return partial pressure of water vapor as a function of relative humidity and temperature.
 }
+\examples{
+SetUnitSystem("IP")
+GetVapPresFromRelHum(77, seq(0.1, 0.8, 0.1))
+
+SetUnitSystem("SI")
+GetVapPresFromRelHum(20, seq(0.1, 0.8, 0.1))
+
+}
 \references{
 ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 12, 22
 }

@@ -19,6 +19,14 @@ Dew-point temperature in °F [IP] or °C [SI]
 \description{
 Return dew-point temperature given dry-bulb temperature, wet-bulb temperature, and pressure.
 }
+\examples{
+SetUnitSystem("IP")
+GetTDewPointFromTWetBulb(80:100, 65.0, 14.696)
+
+SetUnitSystem("SI")
+GetTDewPointFromTWetBulb(25:40, 20, 101325.0)
+
+}
 \references{
 ASHRAE Handbook - Fundamentals (2017) ch. 1
 }

@@ -17,6 +17,14 @@ Relative humidity in range [0, 1]
 \description{
 Return relative humidity given dry-bulb temperature and dew-point temperature.
 }
+\examples{
+SetUnitSystem("IP")
+GetRelHumFromTDewPoint(80:100, 65)
+
+SetUnitSystem("SI")
+GetRelHumFromTDewPoint(20:30, 15)
+
+}
 \references{
 ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 22
 }

@@ -23,6 +23,14 @@ Return sea level pressure given dry-bulb temperature, altitude above sea level a
 The standard procedure for the US is to use for TDryBulb the average
 of the current station temperature and the station temperature from 12 hours ago.
 }
+\examples{
+SetUnitSystem("IP")
+GetSeaLevelPressure(14.68, 300:400, 62.94)
+
+SetUnitSystem("SI")
+GetSeaLevelPressure(101226.5, 105:205, 17.19)
+
+}
 \references{
 Hess SL, Introduction to theoretical meteorology, Holt Rinehart and Winston, NY 1959,
 ch. 6.5; Stull RB, Meteorology for scientists and engineers, 2nd edition,

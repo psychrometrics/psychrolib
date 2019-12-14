@@ -30,3 +30,11 @@ Utility function to calculate humidity ratio, dew-point temperature, relative hu
 vapour pressure, moist air enthalpy, moist air volume, and degree of saturation of air given
 dry-bulb temperature, wet-bulb temperature, and pressure.
 }
+\examples{
+SetUnitSystem("IP")
+CalcPsychrometricsFromTWetBulb(80:100, 65.0, 14.696)
+
+SetUnitSystem("SI")
+CalcPsychrometricsFromTWetBulb(25:40, 20, 101325.0)
+
+}

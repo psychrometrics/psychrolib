@@ -24,6 +24,14 @@ at the same temperature and pressure) given dry-bulb temperature, humidity ratio
 \note{
 This definition is absent from the 2017 Handbook. Using 2009 version instead.
 }
+\examples{
+SetUnitSystem("IP")
+GetDegreeOfSaturation(80:100, 0.01, 14.175)
+
+SetUnitSystem("SI")
+GetDegreeOfSaturation(20:30, 0.01, 95461.0)
+
+}
 \references{
 ASHRAE Handbook - Fundamentals (2009) ch. 1 eqn 12
 }

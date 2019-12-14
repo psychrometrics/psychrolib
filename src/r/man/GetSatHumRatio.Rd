@@ -17,6 +17,14 @@ Humidity ratio of saturated air in lb_H2O lb_Air-1 [IP] or kg_H2O kg_Air-1 [SI]
 \description{
 Return humidity ratio of saturated air given dry-bulb temperature and pressure.
 }
+\examples{
+SetUnitSystem("IP")
+GetSatHumRatio(80:100, 14.696)
+
+SetUnitSystem("SI")
+GetSatHumRatio(20:30, 101325)
+
+}
 \references{
 ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 36, solved for W
 }

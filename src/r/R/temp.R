@@ -15,6 +15,9 @@
 #' @references
 #' ASHRAE Handbook - Fundamentals (2017) ch. 1 section 3
 #'
+#' @examples
+#' GetTRankineFromTFahrenheit(1:100)
+#'
 #' @export
 GetTRankineFromTFahrenheit <- function (TFahrenheit) {
     TFahrenheit + ZERO_FAHRENHEIT_AS_RANKINE
@@ -32,6 +35,9 @@ GetTRankineFromTFahrenheit <- function (TFahrenheit) {
 #'
 #' @references
 #' ASHRAE Handbook - Fundamentals (2017) ch. 1 section 3
+#'
+#' @examples
+#' GetTFahrenheitFromTRankine(500:600)
 #'
 #' @export
 GetTFahrenheitFromTRankine <- function (TRankine) {
@@ -51,6 +57,9 @@ GetTFahrenheitFromTRankine <- function (TRankine) {
 #' @references
 #' ASHRAE Handbook - Fundamentals (2017) ch. 1 section 3
 #'
+#' @examples
+#' GetTKelvinFromTCelsius(20:30)
+#'
 #' @export
 GetTKelvinFromTCelsius <- function (TCelsius) {
     TCelsius + ZERO_CELSIUS_AS_KELVIN
@@ -68,6 +77,9 @@ GetTKelvinFromTCelsius <- function (TCelsius) {
 #'
 #' @references
 #' ASHRAE Handbook - Fundamentals (2017) ch. 1 section 3
+#'
+#' @examples
+#' GetTCelsiusFromTKelvin(300:400)
 #'
 #' @export
 GetTCelsiusFromTKelvin <- function (TKelvin) {

@@ -18,7 +18,16 @@ Dry-bulb temperature in °F [IP] or °C [SI]
 Return dry bulb temperature from enthalpy and humidity ratio.
 }
 \note{
-Based on the `GetMoistAirEnthalpy` function, rearranged for temperature.
+Based on the \code{\link{GetMoistAirEnthalpy}} function, rearranged for temperature.
+}
+\examples{
+
+SetUnitSystem("IP")
+GetTDryBulbFromEnthalpyAndHumRatio(42.6168, seq(0.01, 0.02, 0.001))
+
+SetUnitSystem("SI")
+GetTDryBulbFromEnthalpyAndHumRatio(81316.0, seq(0.01, 0.02, 0.001))
+
 }
 \references{
 ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 30

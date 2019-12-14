@@ -23,6 +23,14 @@ the discontinuity vanishes. It is essential to use the triple point of water oth
 GetTDewPointFromVapPres, which inverts the present function, does not converge properly around
 the freezing point.
 }
+\examples{
+SetUnitSystem("IP")
+GetSatVapPres(80:100)
+
+SetUnitSystem("SI")
+GetSatVapPres(20:30)
+
+}
 \references{
 ASHRAE Handbook - Fundamentals (2017) ch. 1  eqn 5 & 6
 }

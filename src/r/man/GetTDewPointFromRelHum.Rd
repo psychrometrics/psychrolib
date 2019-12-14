@@ -17,6 +17,14 @@ Dew-point temperature in °F [IP] or °C [SI]
 \description{
 Return dew-point temperature given dry-bulb temperature and relative humidity.
 }
+\examples{
+SetUnitSystem("IP")
+GetTDewPointFromRelHum(80:100, 0.2)
+
+SetUnitSystem("SI")
+GetTDewPointFromRelHum(20:30, 0.4)
+
+}
 \references{
 ASHRAE Handbook - Fundamentals (2017) ch. 1
 }
