@@ -102,6 +102,7 @@ GetHumRatioFromTWetBulb <- function (TDryBulb, TWetBulb, Pressure) {
 #'
 #' @export
 GetHumRatioFromRelHum <- function (TDryBulb, RelHum, Pressure) {
+    CheckLength(TDryBulb, RelHum, Pressure)
     CheckRelHum(RelHum)
 
     VapPres <- GetVapPresFromRelHum(TDryBulb, RelHum)

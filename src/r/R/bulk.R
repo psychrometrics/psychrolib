@@ -25,16 +25,16 @@
 #'
 #' @export
 CalcPsychrometricsFromTWetBulb <- function (TDryBulb, TWetBulb, Pressure) {
-    CheckLength(TDryBulb, TWetBulb, Pressure)
+    x <- AlignLength(TDryBulb, TWetBulb, Pressure)
 
-    HumRatio <- GetHumRatioFromTWetBulb(TDryBulb, TWetBulb, Pressure)
+    HumRatio <- GetHumRatioFromTWetBulb(x$TDryBulb, x$TWetBulb, x$Pressure)
     list(HumRatio = HumRatio,
-         TDewPoint = GetTDewPointFromHumRatio(TDryBulb, HumRatio, Pressure),
-         RelHum = GetRelHumFromHumRatio(TDryBulb, HumRatio, Pressure),
-         VapPres = GetVapPresFromHumRatio(HumRatio, Pressure),
-         MoistAirEnthalpy = GetMoistAirEnthalpy(TDryBulb, HumRatio),
-         MoistAirVolume = GetMoistAirVolume(TDryBulb, HumRatio, Pressure),
-         DegreeOfSaturation = GetDegreeOfSaturation(TDryBulb, HumRatio, Pressure)
+         TDewPoint = GetTDewPointFromHumRatio(x$TDryBulb, HumRatio, x$Pressure),
+         RelHum = GetRelHumFromHumRatio(x$TDryBulb, HumRatio, x$Pressure),
+         VapPres = GetVapPresFromHumRatio(HumRatio, x$Pressure),
+         MoistAirEnthalpy = GetMoistAirEnthalpy(x$TDryBulb, HumRatio),
+         MoistAirVolume = GetMoistAirVolume(x$TDryBulb, HumRatio, x$Pressure),
+         DegreeOfSaturation = GetDegreeOfSaturation(x$TDryBulb, HumRatio, x$Pressure)
     )
 }
 
@@ -61,16 +61,16 @@ CalcPsychrometricsFromTWetBulb <- function (TDryBulb, TWetBulb, Pressure) {
 #'
 #' @export
 CalcPsychrometricsFromTDewPoint <- function (TDryBulb, TDewPoint, Pressure) {
-    CheckLength(TDryBulb, TDewPoint, Pressure)
+    x <- AlignLength(TDryBulb, TDewPoint, Pressure)
 
-    HumRatio <- GetHumRatioFromTDewPoint(TDewPoint, Pressure)
+    HumRatio <- GetHumRatioFromTDewPoint(x$TDewPoint, x$Pressure)
     list(HumRatio = HumRatio,
-         TWetBulb = GetTWetBulbFromHumRatio(TDryBulb, HumRatio, Pressure),
-         RelHum = GetRelHumFromHumRatio(TDryBulb, HumRatio, Pressure),
-         VapPres = GetVapPresFromHumRatio(HumRatio, Pressure),
-         MoistAirEnthalpy = GetMoistAirEnthalpy(TDryBulb, HumRatio),
-         MoistAirVolume = GetMoistAirVolume(TDryBulb, HumRatio, Pressure),
-         DegreeOfSaturation = GetDegreeOfSaturation(TDryBulb, HumRatio, Pressure)
+         TWetBulb = GetTWetBulbFromHumRatio(x$TDryBulb, HumRatio, x$Pressure),
+         RelHum = GetRelHumFromHumRatio(x$TDryBulb, HumRatio, x$Pressure),
+         VapPres = GetVapPresFromHumRatio(HumRatio, x$Pressure),
+         MoistAirEnthalpy = GetMoistAirEnthalpy(x$TDryBulb, HumRatio),
+         MoistAirVolume = GetMoistAirVolume(x$TDryBulb, HumRatio, x$Pressure),
+         DegreeOfSaturation = GetDegreeOfSaturation(x$TDryBulb, HumRatio, x$Pressure)
     )
 }
 
@@ -97,15 +97,15 @@ CalcPsychrometricsFromTDewPoint <- function (TDryBulb, TDewPoint, Pressure) {
 #'
 #' @export
 CalcPsychrometricsFromRelHum <- function (TDryBulb, RelHum, Pressure) {
-    CheckLength(TDryBulb, RelHum, Pressure)
+    x <- AlignLength(TDryBulb, RelHum, Pressure)
 
-    HumRatio <- GetHumRatioFromRelHum(TDryBulb, RelHum, Pressure)
+    HumRatio <- GetHumRatioFromRelHum(x$TDryBulb, RelHum, x$Pressure)
     list(HumRatio = HumRatio,
-         TWetBulb = GetTWetBulbFromHumRatio(TDryBulb, HumRatio, Pressure),
-         TDewPoint = GetTDewPointFromHumRatio(TDryBulb, HumRatio, Pressure),
-         VapPres = GetVapPresFromHumRatio(HumRatio, Pressure),
-         MoistAirEnthalpy = GetMoistAirEnthalpy(TDryBulb, HumRatio),
-         MoistAirVolume = GetMoistAirVolume(TDryBulb, HumRatio, Pressure),
-         DegreeOfSaturation = GetDegreeOfSaturation(TDryBulb, HumRatio, Pressure)
+         TWetBulb = GetTWetBulbFromHumRatio(x$TDryBulb, HumRatio, x$Pressure),
+         TDewPoint = GetTDewPointFromHumRatio(x$TDryBulb, HumRatio, x$Pressure),
+         VapPres = GetVapPresFromHumRatio(HumRatio, x$Pressure),
+         MoistAirEnthalpy = GetMoistAirEnthalpy(x$TDryBulb, HumRatio),
+         MoistAirVolume = GetMoistAirVolume(x$TDryBulb, HumRatio, x$Pressure),
+         DegreeOfSaturation = GetDegreeOfSaturation(x$TDryBulb, HumRatio, x$Pressure)
     )
 }
