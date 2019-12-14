@@ -26,7 +26,6 @@ matrix:
         - cd $TRAVIS_BUILD_DIR
         - cd src/c_sharp && dotnet-sdk.dotnet test
         - cd $TRAVIS_BUILD_DIR
-  include:
     - language: r
       r:
         - release
