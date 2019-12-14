@@ -22,13 +22,13 @@ GetTWetBulbFromHumRatio <- function (TDryBulb, HumRatio, Pressure) {
 
     TDewPoint <- GetTDewPointFromHumRatio(TDryBulb, BoundedHumRatio, Pressure)
 
-    # Initial guesses
-    TWetBulbSup <- TDryBulb
-    TWetBulbInf <- TDewPoint
-    TWetBulb <- (TWetBulbInf + TWetBulbSup) / 2
-
-    find_root <- function (TWetBulb, TWetBulbSup, TWetBulbInf) {
+    find_root <- function (TDryBulb, TDewPoint, BoundedHumRatio, Pressure) {
         index <- 1L
+
+        # Initial guesses
+        TWetBulbSup <- TDryBulb
+        TWetBulbInf <- TDewPoint
+        TWetBulb <- (TWetBulbInf + TWetBulbSup) / 2
 
         # Bisection loop
         while((TWetBulbSup - TWetBulbInf) > PSYCHRO_ENV$TOLERANCE) {
@@ -56,7 +56,11 @@ GetTWetBulbFromHumRatio <- function (TDryBulb, HumRatio, Pressure) {
         TWetBulb
     }
 
-    vapply(seq_along(TWetBulb), function (i) find_root(TWetBulb[i], TWetBulbSup[i], TWetBulbInf[i]), 0.0)
+    input <- list(TDryBulb = TDryBulb, TDewPoint = TDewPoint, BoundedHumRatio = BoundedHumRatio, Pressure = Pressure)
+    l <- max(sapply(input, length))
+    input <- lapply(input, function (x) rep(x, length.out = l))
+
+    vapply(seq.int(l), function (i) find_root(input$TDryBulb[i], input$TDewPoint[i], input$BoundedHumRatio[i], input$Pressure[i]), 0.0)
 }
 
 #' Return humidity ratio given dry-bulb temperature, wet-bulb temperature, and pressure.
