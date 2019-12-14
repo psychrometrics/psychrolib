@@ -1,35 +1,35 @@
 test_that("helper functions work sanely before initialization", {
-  init_psychrolib()
-  expect_true(is.na(get_unit_system()))
-  expect_error(is_ip())
+    PSYCHRO_ENV$UNITS <- NA_character_
+    expect_true(is.na(GetUnitSystem()))
+    expect_error(isIP())
 })
 
 test_that("unit system can be set to SI", {
-  set_unit_system("SI")
-  expect_identical(get_unit_system(), "SI")
-  expect_false(is_ip())
+    SetUnitSystem("SI")
+    expect_identical(GetUnitSystem(), "SI")
+    expect_false(isIP())
 })
 
 test_that("unit system can be set to IP", {
-  set_unit_system("IP")
-  expect_identical(get_unit_system(), "IP")
-  expect_true(is_ip())
+    SetUnitSystem("IP")
+    expect_identical(GetUnitSystem(), "IP")
+    expect_true(isIP())
 })
 
 test_that("unit system cannot be set to garbage", {
-  expect_error(set_unit_system("foo"))
+    expect_error(SetUnitSystem("foo"))
 })
 
 test_that("unit system can be reset to SI", {
-  set_unit_system("IP")
-  set_unit_system("SI")
-  expect_identical(get_unit_system(), "SI")
-  expect_false(is_ip())
+    SetUnitSystem("IP")
+    SetUnitSystem("SI")
+    expect_identical(GetUnitSystem(), "SI")
+    expect_false(isIP())
 })
 
 test_that("unit system can be reset to IP", {
-  set_unit_system("SI")
-  set_unit_system("IP")
-  expect_identical(get_unit_system(), "IP")
-  expect_true(is_ip())
+    SetUnitSystem("SI")
+    SetUnitSystem("IP")
+    expect_identical(GetUnitSystem(), "IP")
+    expect_true(isIP())
 })
