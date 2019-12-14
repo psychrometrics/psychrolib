@@ -1,30 +1,42 @@
-language: python
 dist: xenial
-python:
-    - "3.6"
-    - "3.7"
+sudo: required
 
-before_install:
-  - pip freeze
-  - pip uninstall numpy -y && pip install numpy==1.15.4 # FIXME: Temporary fix as f2py is buggy on numpy 1.16.0
-  - sudo apt-get install gfortran
-  - pip install Sphinx sphinx_bootstrap_theme sphinx-autodoc-typehints m2r cffi
-  - sudo apt install snapd
-  - sudo snap install dotnet-sdk --classic
-
-install:
-  - sphinx-build docs/sphinx build/html
-  - touch build/html/.nojekyll # https://help.github.com/articles/files-that-start-with-an-underscore-are-missing/
-  - cd tests/js && npm install
-  - cd $TRAVIS_BUILD_DIR
-
-script:
-  # See https://stackoverflow.com/a/34140498 for why "python -m" is needed.
-  - python3 -m pytest -v -s
-  - cd tests/js && npm test
-  - cd $TRAVIS_BUILD_DIR
-  - cd src/c_sharp && dotnet-sdk.dotnet test
-  - cd $TRAVIS_BUILD_DIR
+matrix:
+  include:
+    - language: python
+      python:
+        - "3.6"
+        - "3.7"
+      before_install:
+        - pip freeze
+        - pip uninstall numpy -y && pip install numpy==1.15.4 # FIXME: Temporary fix as f2py is buggy on numpy 1.16.0
+        - sudo apt-get install gfortran
+        - pip install Sphinx sphinx_bootstrap_theme sphinx-autodoc-typehints m2r cffi
+        - sudo apt install snapd
+        - sudo snap install dotnet-sdk --classic
+      install:
+        - sphinx-build docs/sphinx build/html
+        - touch build/html/.nojekyll # https://help.github.com/articles/files-that-start-with-an-underscore-are-missing/
+        - cd tests/js && npm install
+        - cd $TRAVIS_BUILD_DIR
+      script:
+        # See https://stackoverflow.com/a/34140498 for why "python -m" is needed.
+        - python3 -m pytest -v -s
+        - cd tests/js && npm test
+        - cd $TRAVIS_BUILD_DIR
+        - cd src/c_sharp && dotnet-sdk.dotnet test
+        - cd $TRAVIS_BUILD_DIR
+  include:
+    - language: r
+      r:
+        - release
+        - devel
+      script:
+        - |
+          R CMD build .
+          R CMD check psychrolib*tar.gz
+      after_success:
+        - Rscript -e 'covr::codecov()'
 
 deploy:
  provider: pages
