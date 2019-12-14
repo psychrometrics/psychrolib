@@ -1,6 +1,6 @@
 # MIT License
 
-Copyright (c) 2019 J. Banfelder
+Copyright (c) 2019  H. Jia, J. Banfelder
 Copyright (c) 2018 D. Meyer, D. Thevenard
 
 Permission is hereby granted, free of charge, to any person obtaining a copy

@@ -1,8 +1,9 @@
 Package: psychrolib
 Type: Package
 Title: Psychrometric Properties of Moist and Dry Air
-Version: 0.0.0-9001
-Authors@R: c(person("Jason", "Banfelder", email = "jason@banfelder.net", role = c("aut", "cre")),
+Version: 2.3.0
+Authors@R: c(person("Hongyuan", "Jia", email = "hongyuan.jia@bears-berkeley.sg", role = c("aut"), comment = c(ORCID = "0000-0002-0075-8183")),
+             person("Jason", "Banfelder", email = "jason@banfelder.net", role = c("aut", "cre")),
              person("D.", "Meyer", role = "aut"),
              person("D.", "Thevenard", role = "aut"))
 Description: psychrolib is a library of functions to enable the calculation of
@@ -13,6 +14,6 @@ Description: psychrolib is a library of functions to enable the calculation of
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 6.1.1
-Suggests: 
+RoxygenNote: 7.0.2
+Suggests:
     testthat (>= 2.1.0)
