@@ -12,7 +12,7 @@
 #' @param TWetBulb Wet-bulb temperature in °F [IP] or °C [SI]
 #' @param Pressure Atmospheric pressure in Psi [IP] or Pa [SI]
 #'
-#' @return Vector with named components for each psychrometric value computed:
+#' @return A list with named components for each psychrometric value computed:
 #' \describe{
 #'   \item{HumRatio}{Humidity ratio in lb_H2O lb_Air-1 [IP] or kg_H2O kg_Air-1 [SI]}
 #'   \item{TDewPoint}{Dew-point temperature in °F [IP] or °C [SI]}
@@ -48,7 +48,7 @@ CalcPsychrometricsFromTWetBulb <- function (TDryBulb, TWetBulb, Pressure) {
 #' @param TDewPoint Dew-point temperature in °F [IP] or °C [SI]
 #' @param Pressure Atmospheric pressure in Psi [IP] or Pa [SI]
 #'
-#' @return Vector with named components for each psychrometric value computed:
+#' @return A list with named components for each psychrometric value computed:
 #' \describe{
 #'   \item{HumRatio}{Humidity ratio in lb_H₂O lb_Air-1 [IP] or kg_H2O kg_Air-1 [SI]}
 #'   \item{TWetBulb}{Wet-bulb temperature in °F [IP] or °C [SI]}
@@ -84,7 +84,7 @@ CalcPsychrometricsFromTDewPoint <- function (TDryBulb, TDewPoint, Pressure) {
 #' @param RelHum Relative humidity in range [0, 1]
 #' @param Pressure Atmospheric pressure in Psi [IP] or Pa [SI]
 #'
-#' @return Vector with named components for each psychrometric value computed:
+#' @return A list with named components for each psychrometric value computed:
 #' \describe{
 #'   \item{HumRatio}{Humidity ratio in lb_H2O lb_Air-1 [IP] or kg_H2O kg_Air-1 [SI]}
 #'   \item{TWetBulb}{Wet-bulb temperature in °F [IP] or °C [SI]}
