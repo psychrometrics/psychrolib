@@ -16,7 +16,8 @@ License: MIT + file LICENSE
 Imports:
     Rcpp
 Suggests:
-    testthat (>= 2.1.0)
+    testthat (>= 2.1.0),
+    covr
 URL: https://github.com/psychrometrics/psychrolib
 BugReports: https://github.com/psychrometrics/psychrolib/issues
 LinkingTo: Rcpp
