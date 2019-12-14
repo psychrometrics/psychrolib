@@ -11,7 +11,7 @@ CalcPsychrometricsFromRelHum(TDryBulb, RelHum, Pressure)
 
 \item{RelHum}{Relative humidity in range [0, 1]}
 
-\item{pressure}{Atmospheric pressure in Psi [IP] or Pa [SI]}
+\item{Pressure}{Atmospheric pressure in Psi [IP] or Pa [SI]}
 }
 \value{
 Vector with named components for each psychrometric value computed:

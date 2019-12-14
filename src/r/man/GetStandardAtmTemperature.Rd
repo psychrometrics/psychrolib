@@ -7,7 +7,7 @@
 GetStandardAtmTemperature(Altitude)
 }
 \arguments{
-\item{altitude}{Altitude in ft [IP] or m [SI]}
+\item{Altitude}{Altitude in ft [IP] or m [SI]}
 }
 \value{
 Standard atmosphere dry-bulb temperature in °F [IP] or °C [SI]

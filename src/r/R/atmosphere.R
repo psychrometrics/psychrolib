@@ -22,7 +22,7 @@ GetStandardAtmPressure <- function (Altitude) {
 
 #' Return standard atmosphere temperature, given the elevation (altitude).
 #'
-#' @param altitude Altitude in ft [IP] or m [SI]
+#' @param Altitude Altitude in ft [IP] or m [SI]
 #'
 #' @return Standard atmosphere dry-bulb temperature in °F [IP] or °C [SI]
 #'
@@ -40,8 +40,8 @@ GetStandardAtmTemperature <- function (Altitude) {
 
 #' Return sea level pressure given dry-bulb temperature, altitude above sea level and pressure.
 #'
-#' @param station_pressure Observed station pressure in Psi [IP] or Pa [SI]
-#' @param altitude Altitude in ft [IP] or m [SI]
+#' @param StationPressure Observed station pressure in Psi [IP] or Pa [SI]
+#' @param Altitude Altitude in ft [IP] or m [SI]
 #' @param TDryBulb Dry-bulb temperature in °F [IP] or °C [SI]
 #'
 #' @return Sea level barometric pressure in Psi [IP] or Pa [SI]

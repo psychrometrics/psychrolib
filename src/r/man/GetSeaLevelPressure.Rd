@@ -7,11 +7,11 @@
 GetSeaLevelPressure(StationPressure, Altitude, TDryBulb)
 }
 \arguments{
+\item{StationPressure}{Observed station pressure in Psi [IP] or Pa [SI]}
+
+\item{Altitude}{Altitude in ft [IP] or m [SI]}
+
 \item{TDryBulb}{Dry-bulb temperature in °F [IP] or °C [SI]}
-
-\item{station_pressure}{Observed station pressure in Psi [IP] or Pa [SI]}
-
-\item{altitude}{Altitude in ft [IP] or m [SI]}
 }
 \value{
 Sea level barometric pressure in Psi [IP] or Pa [SI]

@@ -11,7 +11,7 @@ CalcPsychrometricsFromTDewPoint(TDryBulb, TDewPoint, Pressure)
 
 \item{TDewPoint}{Dew-point temperature in °F [IP] or °C [SI]}
 
-\item{pressure}{Atmospheric pressure in Psi [IP] or Pa [SI]}
+\item{Pressure}{Atmospheric pressure in Psi [IP] or Pa [SI]}
 }
 \value{
 Vector with named components for each psychrometric value computed:

@@ -46,7 +46,7 @@ CalcPsychrometricsFromTWetBulb <- function (TDryBulb, TWetBulb, Pressure) {
 #'
 #' @param TDryBulb Dry-bulb temperature in °F [IP] or °C [SI]
 #' @param TDewPoint Dew-point temperature in °F [IP] or °C [SI]
-#' @param pressure Atmospheric pressure in Psi [IP] or Pa [SI]
+#' @param Pressure Atmospheric pressure in Psi [IP] or Pa [SI]
 #'
 #' @return Vector with named components for each psychrometric value computed:
 #' \describe{
@@ -82,7 +82,7 @@ CalcPsychrometricsFromTDewPoint <- function (TDryBulb, TDewPoint, Pressure) {
 #'
 #' @param TDryBulb Dry-bulb temperature in °F [IP] or °C [SI]
 #' @param RelHum Relative humidity in range [0, 1]
-#' @param pressure Atmospheric pressure in Psi [IP] or Pa [SI]
+#' @param Pressure Atmospheric pressure in Psi [IP] or Pa [SI]
 #'
 #' @return Vector with named components for each psychrometric value computed:
 #' \describe{

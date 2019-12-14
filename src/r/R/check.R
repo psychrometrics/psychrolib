@@ -56,10 +56,10 @@ CheckTDewPoint <- function (TDewPoint, TDryBulb) {
     TDewPoint
 }
 
-CheckTWetPoint <- function (TWetPoint, TDryBulb) {
-    if (any(TWetPoint > TDryBulb)) {
+CheckTWetBulb <- function (TWetBulb, TDryBulb) {
+    if (any(TWetBulb > TDryBulb)) {
         stop("Wet bulb temperature is above dry bulb temperature")
     }
 
-    TWetPoint
+    TWetBulb
 }
