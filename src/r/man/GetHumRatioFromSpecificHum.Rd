@@ -7,10 +7,10 @@
 GetHumRatioFromSpecificHum(SpecificHum)
 }
 \arguments{
-\item{SpecificHum}{Specific humidity in lb_H2O lb_Air-1 [IP] or kg_H2O kg_Air-1 [SI]}
+\item{SpecificHum}{A numeric vector of specific humidity in lb_H2O lb_Air-1 [IP] or kg_H2O kg_Air-1 [SI]}
 }
 \value{
-Humidity ratio in lb_H2O lb_Dry_Air-1 [IP] or kg_H2O kg_Dry_Air-1 [SI]
+A numeric vector of humidity ratio in lb_H2O lb_Dry_Air-1 [IP] or kg_H2O kg_Dry_Air-1 [SI]
 }
 \description{
 Return the humidity ratio (aka mixing ratio) from specific humidity.

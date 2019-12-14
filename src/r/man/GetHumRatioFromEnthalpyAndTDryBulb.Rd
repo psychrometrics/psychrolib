@@ -7,12 +7,12 @@
 GetHumRatioFromEnthalpyAndTDryBulb(MoistAirEnthalpy, TDryBulb)
 }
 \arguments{
-\item{MoistAirEnthalpy}{Moist air enthalpy in Btu lb-1 [IP] or J kg-1}
+\item{MoistAirEnthalpy}{A numeric vector of moist air enthalpy in Btu lb-1 [IP] or J kg-1}
 
-\item{TDryBulb}{Dry-bulb temperature in °F [IP] or °C [SI]}
+\item{TDryBulb}{A numeric vector of dry-bulb temperature in °F [IP] or °C [SI]}
 }
 \value{
-Humidity ratio in lb_H2O lb_Air-1 [IP] or kg_H2O kg_Air-1 [SI]
+A numeric vector of humidity ratio in lb_H2O lb_Air-1 [IP] or kg_H2O kg_Air-1 [SI]
 }
 \description{
 Return humidity ratio from enthalpy and dry-bulb temperature.

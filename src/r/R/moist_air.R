@@ -4,11 +4,11 @@
 
 #' Return Vapor pressure deficit given dry-bulb temperature, humidity ratio, and pressure.
 #'
-#' @param TDryBulb Dry-bulb temperature in °F [IP] or °C [SI]
-#' @param HumRatio Humidity ratio in lb_H2O lb_Air-1 [IP] or kg_H2O kg_Air-1 [SI]
-#' @param Pressure Atmospheric pressure in Psi [IP] or Pa [SI]
+#' @param TDryBulb A numeric vector of dry-bulb temperature in °F [IP] or °C [SI]
+#' @param HumRatio A numeric vector of humidity ratio in lb_H2O lb_Air-1 [IP] or kg_H2O kg_Air-1 [SI]
+#' @param Pressure A numeric vector of atmospheric pressure in Psi [IP] or Pa [SI]
 #'
-#' @return Vapor pressure deficit in Psi [IP] or Pa [SI]
+#' @return A numeric vector of vapor pressure deficit in Psi [IP] or Pa [SI]
 #'
 #' @references
 #' Oke (1987) eqn 2.13a
@@ -32,11 +32,11 @@ GetVaporPressureDeficit <- function (TDryBulb, HumRatio, Pressure) {
 #' Return the degree of saturation (i.e humidity ratio of the air / humidity ratio of the air at saturation
 #' at the same temperature and pressure) given dry-bulb temperature, humidity ratio, and atmospheric pressure.
 #'
-#' @param TDryBulb Dry-bulb temperature in °F [IP] or °C [SI]
-#' @param HumRatio Humidity ratio in lb_H2O lb_Air-1 [IP] or kg_H2O kg_Air-1 [SI]
-#' @param Pressure Atmospheric pressure in Psi [IP] or Pa [SI]
+#' @param TDryBulb A numeric vector of dry-bulb temperature in °F [IP] or °C [SI]
+#' @param HumRatio A numeric vector of humidity ratio in lb_H2O lb_Air-1 [IP] or kg_H2O kg_Air-1 [SI]
+#' @param Pressure A numeric vector of atmospheric pressure in Psi [IP] or Pa [SI]
 #'
-#' @return Degree of saturation in arbitrary unit
+#' @return A numeric vector of degree of saturation in arbitrary unit
 #'
 #' @references
 #' ASHRAE Handbook - Fundamentals (2009) ch. 1 eqn 12
@@ -63,10 +63,10 @@ GetDegreeOfSaturation <- function (TDryBulb, HumRatio, Pressure) {
 
 #' Return moist air enthalpy given dry-bulb temperature and humidity ratio.
 #'
-#' @param TDryBulb Dry-bulb temperature in °F [IP] or °C [SI]
-#' @param HumRatio Humidity ratio in lb_H2O lb_Air-1 [IP] or kg_H2O kg_Air-1 [SI]
+#' @param TDryBulb A numeric vector of dry-bulb temperature in °F [IP] or °C [SI]
+#' @param HumRatio A numeric vector of humidity ratio in lb_H2O lb_Air-1 [IP] or kg_H2O kg_Air-1 [SI]
 #'
-#' @return Moist air enthalpy in Btu lb-1 [IP] or J kg-1
+#' @return A numeric vector of moist air enthalpy in Btu lb-1 [IP] or J kg-1
 #'
 #' @references
 #' ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 30
@@ -93,11 +93,11 @@ GetMoistAirEnthalpy <- function (TDryBulb, HumRatio) {
 
 #' Return moist air specific volume given dry-bulb temperature, humidity ratio, and pressure.
 #'
-#' @param TDryBulb Dry-bulb temperature in °F [IP] or °C [SI]
-#' @param HumRatio Humidity ratio in lb_H2O lb_Air-1 [IP] or kg_H2O kg_Air-1 [SI]
-#' @param Pressure Atmospheric pressure in Psi [IP] or Pa [SI]
+#' @param TDryBulb A numeric vector of dry-bulb temperature in °F [IP] or °C [SI]
+#' @param HumRatio A numeric vector of humidity ratio in lb_H2O lb_Air-1 [IP] or kg_H2O kg_Air-1 [SI]
+#' @param Pressure A numeric vector of atmospheric pressure in Psi [IP] or Pa [SI]
 #'
-#' @return Specific volume of moist air in ft³ lb-1 of dry air [IP] or in m³ kg-1 of dry air [SI]
+#' @return A numeric vector of specific volume of moist air in ft³ lb-1 of dry air [IP] or in m³ kg-1 of dry air [SI]
 #'
 #' @references
 #' ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 26
@@ -131,11 +131,11 @@ GetMoistAirVolume <- function (TDryBulb, HumRatio, Pressure) {
 
 #' Return dry-bulb temperature given moist air specific volume, humidity ratio, and pressure.
 #'
-#' @param MoistAirVolume Specific volume of moist air in ft3 lb-1 of dry air [IP] or in m3 kg-1 of dry air [SI]
-#' @param HumRatio Humidity ratio in lb_H2O lb_Air-1 [IP] or kg_H2O kg_Air-1 [SI]
-#' @param Pressure Atmospheric pressure in Psi [IP] or Pa [SI]
+#' @param MoistAirVolume A numeric vector of specific volume of moist air in ft3 lb-1 of dry air [IP] or in m3 kg-1 of dry air [SI]
+#' @param HumRatio A numeric vector of humidity ratio in lb_H2O lb_Air-1 [IP] or kg_H2O kg_Air-1 [SI]
+#' @param Pressure A numeric vector of atmospheric pressure in Psi [IP] or Pa [SI]
 #'
-#' @return TDryBulb : Dry-bulb temperature in °F [IP] or °C [SI]
+#' @return A numeric vector of tDryBulb : Dry-bulb temperature in °F [IP] or °C [SI]
 #'
 #' @references
 #' ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 26
@@ -171,11 +171,11 @@ GetTDryBulbFromMoistAirVolumeAndHumRatio <- function (MoistAirVolume, HumRatio, 
 
 #' Return moist air density given humidity ratio, dry bulb temperature, and pressure.
 #'
-#' @param TDryBulb Dry-bulb temperature in °F [IP] or °C [SI]
-#' @param HumRatio Humidity ratio in lb_H2O lb_Air-1 [IP] or kg_H2O kg_Air-1 [SI]
-#' @param Pressure Atmospheric pressure in Psi [IP] or Pa [SI]
+#' @param TDryBulb A numeric vector of dry-bulb temperature in °F [IP] or °C [SI]
+#' @param HumRatio A numeric vector of humidity ratio in lb_H2O lb_Air-1 [IP] or kg_H2O kg_Air-1 [SI]
+#' @param Pressure A numeric vector of atmospheric pressure in Psi [IP] or Pa [SI]
 #'
-#' @return MoistAirDensity: Moist air density in lb ft-3 [IP] or kg m-3 [SI]
+#' @return A numeric vector of moistAirDensity: Moist air density in lb ft-3 [IP] or kg m-3 [SI]
 #'
 #' @references
 #' ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 11

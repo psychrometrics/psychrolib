@@ -8,10 +8,10 @@ given temperature in Kelvin (K).}
 GetTCelsiusFromTKelvin(TKelvin)
 }
 \arguments{
-\item{TKelvin}{Temperature in degree Kelvin (K)}
+\item{TKelvin}{A numeric vector of temperature in degree Kelvin (K)}
 }
 \value{
-Temperature in Celsius (°C)
+A numeric vector of temperature in Celsius (°C)
 }
 \description{
 Utility function to convert temperature to degree Celsius (°C)

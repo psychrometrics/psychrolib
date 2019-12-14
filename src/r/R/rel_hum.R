@@ -4,11 +4,11 @@
 
 #' Return wet-bulb temperature given dry-bulb temperature, dew-point temperature, and pressure.
 #'
-#' @param TDryBulb Dry-bulb temperature in °F [IP] or °C [SI]
-#' @param TDewPoint Dew-point temperature in °F [IP] or °C [SI]
-#' @param Pressure Atmospheric pressure in Psi [IP] or Pa [SI]
+#' @param TDryBulb A numeric vector of dry-bulb temperature in °F [IP] or °C [SI]
+#' @param TDewPoint A numeric vector of dew-point temperature in °F [IP] or °C [SI]
+#' @param Pressure A numeric vector of atmospheric pressure in Psi [IP] or Pa [SI]
 #'
-#' @return Wet-bulb temperature in °F [IP] or °C [SI]
+#' @return A numeric vector of wet-bulb temperature in °F [IP] or °C [SI]
 #'
 #' @references
 #' ASHRAE Handbook - Fundamentals (2017) ch. 1
@@ -31,11 +31,11 @@ GetTWetBulbFromTDewPoint <- function (TDryBulb, TDewPoint, Pressure) {
 
 #' Return wet-bulb temperature given dry-bulb temperature, relative humidity, and pressure.
 #'
-#' @param TDryBulb Dry-bulb temperature in °F [IP] or °C [SI]
-#' @param RelHum Relative humidity in range [0, 1]
-#' @param Pressure Atmospheric pressure in Psi [IP] or Pa [SI]
+#' @param TDryBulb A numeric vector of dry-bulb temperature in °F [IP] or °C [SI]
+#' @param RelHum A numeric vector of relative humidity in range [0, 1]
+#' @param Pressure A numeric vector of atmospheric pressure in Psi [IP] or Pa [SI]
 #'
-#' @return Wet-bulb temperature in °F [IP] or °C [SI]
+#' @return A numeric vector of wet-bulb temperature in °F [IP] or °C [SI]
 #'
 #' @references
 #' ASHRAE Handbook - Fundamentals (2017) ch. 1
@@ -58,10 +58,10 @@ GetTWetBulbFromRelHum <- function (TDryBulb, RelHum, Pressure) {
 
 #' Return relative humidity given dry-bulb temperature and dew-point temperature.
 #'
-#' @param TDryBulb Dry-bulb temperature in °F [IP] or °C [SI]
-#' @param TDewPoint Dew-point temperature in °F [IP] or °C [SI]
+#' @param TDryBulb A numeric vector of dry-bulb temperature in °F [IP] or °C [SI]
+#' @param TDewPoint A numeric vector of dew-point temperature in °F [IP] or °C [SI]
 #'
-#' @return Relative humidity in range [0, 1]
+#' @return A numeric vector of relative humidity in range [0, 1]
 #'
 #' @references
 #' ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 22
@@ -85,11 +85,11 @@ GetRelHumFromTDewPoint <- function (TDryBulb, TDewPoint) {
 
 #' Return relative humidity given dry-bulb temperature, wet bulb temperature and pressure.
 #'
-#' @param TDryBulb Dry-bulb temperature in °F [IP] or °C [SI]
-#' @param TWetBulb Wet-bulb temperature in °F [IP] or °C [SI]
-#' @param Pressure Atmospheric pressure in Psi [IP] or Pa [SI]
+#' @param TDryBulb A numeric vector of dry-bulb temperature in °F [IP] or °C [SI]
+#' @param TWetBulb A numeric vector of wet-bulb temperature in °F [IP] or °C [SI]
+#' @param Pressure A numeric vector of atmospheric pressure in Psi [IP] or Pa [SI]
 #'
-#' @return Relative humidity in range [0, 1]
+#' @return A numeric vector of relative humidity in range [0, 1]
 #'
 #' @references
 #' ASHRAE Handbook - Fundamentals (2017) ch. 1
@@ -112,10 +112,10 @@ GetRelHumFromTWetBulb <- function (TDryBulb, TWetBulb, Pressure) {
 
 #' Return dew-point temperature given dry-bulb temperature and relative humidity.
 #'
-#' @param TDryBulb Dry-bulb temperature in °F [IP] or °C [SI]
-#' @param RelHum Relative humidity in range [0, 1]
+#' @param TDryBulb A numeric vector of dry-bulb temperature in °F [IP] or °C [SI]
+#' @param RelHum A numeric vector of relative humidity in range [0, 1]
 #'
-#' @return Dew-point temperature in °F [IP] or °C [SI]
+#' @return A numeric vector of dew-point temperature in °F [IP] or °C [SI]
 #'
 #' @references
 #' ASHRAE Handbook - Fundamentals (2017) ch. 1
@@ -138,11 +138,11 @@ GetTDewPointFromRelHum <- function (TDryBulb, RelHum) {
 
 #' Return dew-point temperature given dry-bulb temperature, wet-bulb temperature, and pressure.
 #'
-#' @param TDryBulb Dry-bulb temperature in °F [IP] or °C [SI]
-#' @param TWetBulb Wet-bulb temperature in °F [IP] or °C [SI]
-#' @param Pressure Atmospheric pressure in Psi [IP] or Pa [SI]
+#' @param TDryBulb A numeric vector of dry-bulb temperature in °F [IP] or °C [SI]
+#' @param TWetBulb A numeric vector of wet-bulb temperature in °F [IP] or °C [SI]
+#' @param Pressure A numeric vector of atmospheric pressure in Psi [IP] or Pa [SI]
 #'
-#' @return Dew-point temperature in °F [IP] or °C [SI]
+#' @return A numeric vector of dew-point temperature in °F [IP] or °C [SI]
 #'
 #' @references
 #' ASHRAE Handbook - Fundamentals (2017) ch. 1

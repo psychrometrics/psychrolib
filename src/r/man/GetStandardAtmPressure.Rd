@@ -7,10 +7,10 @@
 GetStandardAtmPressure(Altitude)
 }
 \arguments{
-\item{Altitude}{Altitude in ft [IP] or m [SI]}
+\item{Altitude}{A numeric vector of altitude in ft [IP] or m [SI]}
 }
 \value{
-Standard atmosphere barometric pressure in Psi [IP] or Pa [SI]
+A numeric vector of standard atmosphere barometric pressure in Psi [IP] or Pa [SI]
 }
 \description{
 Return standard atmosphere barometric pressure, given the elevation (altitude).

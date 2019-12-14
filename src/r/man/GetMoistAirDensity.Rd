@@ -7,14 +7,14 @@
 GetMoistAirDensity(TDryBulb, HumRatio, Pressure)
 }
 \arguments{
-\item{TDryBulb}{Dry-bulb temperature in °F [IP] or °C [SI]}
+\item{TDryBulb}{A numeric vector of dry-bulb temperature in °F [IP] or °C [SI]}
 
-\item{HumRatio}{Humidity ratio in lb_H2O lb_Air-1 [IP] or kg_H2O kg_Air-1 [SI]}
+\item{HumRatio}{A numeric vector of humidity ratio in lb_H2O lb_Air-1 [IP] or kg_H2O kg_Air-1 [SI]}
 
-\item{Pressure}{Atmospheric pressure in Psi [IP] or Pa [SI]}
+\item{Pressure}{A numeric vector of atmospheric pressure in Psi [IP] or Pa [SI]}
 }
 \value{
-MoistAirDensity: Moist air density in lb ft-3 [IP] or kg m-3 [SI]
+A numeric vector of moistAirDensity: Moist air density in lb ft-3 [IP] or kg m-3 [SI]
 }
 \description{
 Return moist air density given humidity ratio, dry bulb temperature, and pressure.

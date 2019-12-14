@@ -7,12 +7,12 @@
 GetSatHumRatio(TDryBulb, Pressure)
 }
 \arguments{
-\item{TDryBulb}{Dry-bulb temperature in °F [IP] or °C [SI]}
+\item{TDryBulb}{A numeric vector of dry-bulb temperature in °F [IP] or °C [SI]}
 
-\item{Pressure}{Atmospheric pressure in Psi [IP] or Pa [SI]}
+\item{Pressure}{A numeric vector of atmospheric pressure in Psi [IP] or Pa [SI]}
 }
 \value{
-Humidity ratio of saturated air in lb_H2O lb_Air-1 [IP] or kg_H2O kg_Air-1 [SI]
+A numeric vector of humidity ratio of saturated air in lb_H2O lb_Air-1 [IP] or kg_H2O kg_Air-1 [SI]
 }
 \description{
 Return humidity ratio of saturated air given dry-bulb temperature and pressure.

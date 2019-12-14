@@ -7,7 +7,7 @@
 isIP()
 }
 \value{
-boolean TRUE if unit system is IP
+\code{TRUE} if unit system is IP
 }
 \description{
 Check whether the system in use is IP or SI.

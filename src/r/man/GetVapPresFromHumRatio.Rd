@@ -7,12 +7,12 @@
 GetVapPresFromHumRatio(HumRatio, Pressure)
 }
 \arguments{
-\item{HumRatio}{Humidity ratio in lb_H2O lb_Air-1 [IP] or kg_H2O kg_Air-1 [SI]}
+\item{HumRatio}{A numeric vector of humidity ratio in lb_H2O lb_Air-1 [IP] or kg_H2O kg_Air-1 [SI]}
 
-\item{Pressure}{Atmospheric Pressure in Psi [IP] or Pa [SI]}
+\item{Pressure}{A numeric vector of atmospheric Pressure in Psi [IP] or Pa [SI]}
 }
 \value{
-Partial Pressure of water vapor in moist air in Psi [IP] or Pa [SI]
+A numeric vector of partial Pressure of water vapor in moist air in Psi [IP] or Pa [SI]
 }
 \description{
 Return vapor Pressure given humidity ratio and pressure.

@@ -4,9 +4,9 @@
 
 #' Return saturation vapor pressure given dry-bulb temperature.
 #'
-#' @param TDryBulb Dry-bulb temperature in °F [IP] or °C [SI]
+#' @param TDryBulb A numeric vector of dry-bulb temperature in °F [IP] or °C [SI]
 #'
-#' @return Vapor pressure of saturated air in Psi [IP] or Pa [SI]
+#' @return A numeric vector of vapor pressure of saturated air in Psi [IP] or Pa [SI]
 #'
 #' @references
 #' ASHRAE Handbook - Fundamentals (2017) ch. 1  eqn 5 & 6
@@ -73,10 +73,10 @@ GetSatVapPres <- function (TDryBulb) {
 
 #' Return humidity ratio of saturated air given dry-bulb temperature and pressure.
 #'
-#' @param TDryBulb Dry-bulb temperature in °F [IP] or °C [SI]
-#' @param Pressure Atmospheric pressure in Psi [IP] or Pa [SI]
+#' @param TDryBulb A numeric vector of dry-bulb temperature in °F [IP] or °C [SI]
+#' @param Pressure A numeric vector of atmospheric pressure in Psi [IP] or Pa [SI]
 #'
-#' @return Humidity ratio of saturated air in lb_H2O lb_Air-1 [IP] or kg_H2O kg_Air-1 [SI]
+#' @return A numeric vector of humidity ratio of saturated air in lb_H2O lb_Air-1 [IP] or kg_H2O kg_Air-1 [SI]
 #'
 #' @references
 #' ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 36, solved for W
@@ -101,10 +101,10 @@ GetSatHumRatio <- function (TDryBulb, Pressure) {
 
 #' Return saturated air enthalpy given dry-bulb temperature and pressure.
 #'
-#' @param TDryBulb Dry-bulb temperature in °F [IP] or °C [SI]
-#' @param Pressure Atmospheric pressure in Psi [IP] or Pa [SI]
+#' @param TDryBulb A numeric vector of dry-bulb temperature in °F [IP] or °C [SI]
+#' @param Pressure A numeric vector of atmospheric pressure in Psi [IP] or Pa [SI]
 #'
-#' @return Saturated air enthalpy in Btu lb-1 [IP] or J kg-1 [SI]
+#' @return A numeric vector of saturated air enthalpy in Btu lb-1 [IP] or J kg-1 [SI]
 #'
 #' @references
 #' ASHRAE Handbook - Fundamentals (2017) ch. 1

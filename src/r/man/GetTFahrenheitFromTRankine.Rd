@@ -8,10 +8,10 @@ given temperature in degree Rankine (°R).}
 GetTFahrenheitFromTRankine(TRankine)
 }
 \arguments{
-\item{TRankine}{Temperature in degree Rankine (°R)}
+\item{TRankine}{A numeric vector of temperature in degree Rankine (°R)}
 }
 \value{
-Temperature in degree Fahrenheit (°F)
+A numeric vector of temperature in degree Fahrenheit (°F)
 }
 \description{
 Utility function to convert temperature to degree Fahrenheit (°F)

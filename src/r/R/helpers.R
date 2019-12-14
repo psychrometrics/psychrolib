@@ -22,7 +22,8 @@ PSYCHROLIB_UNITS_OPTIONS <- c("IP", "SI")
 
 #' Set the system of units to use (SI or IP).
 #'
-#' @param units string indicating the system of units chosen ("SI" or "IP")
+#' @param units A string indicating the system of units chosen. Should be either
+#'        \code{"SI"} or \code{"IP"}
 #'
 #' @note
 #' The default unit system is "SI".
@@ -44,7 +45,7 @@ SetUnitSystem <- function (units) {
 
 #' Return system of units in use.
 #'
-#' @return string indicating system of units in use ("SI" or "IP")
+#' @return A string indicating system of units in use (\code{"SI"} or \code{"IP"})
 #' @export
 GetUnitSystem <- function () {
     PSYCHRO_OPT$UNITS
@@ -52,7 +53,7 @@ GetUnitSystem <- function () {
 
 #' Check whether the system in use is IP or SI.
 #'
-#' @return boolean TRUE if unit system is IP
+#' @return \code{TRUE} if unit system is IP
 #' @export
 isIP <- function () {
     if (is.na(PSYCHRO_OPT$UNITS)) {

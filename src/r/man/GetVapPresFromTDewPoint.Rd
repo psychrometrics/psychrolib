@@ -7,10 +7,10 @@
 GetVapPresFromTDewPoint(TDewPoint)
 }
 \arguments{
-\item{TDewPoint}{Dew-point temperature in °F [IP] or °C [SI]}
+\item{TDewPoint}{A numeric vector of dew-point temperature in °F [IP] or °C [SI]}
 }
 \value{
-Partial pressure of water vapor in moist air in Psi [IP] or Pa [SI]
+A numeric vector of partial pressure of water vapor in moist air in Psi [IP] or Pa [SI]
 }
 \description{
 Return vapor pressure given dew point temperature.

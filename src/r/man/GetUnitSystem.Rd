@@ -7,7 +7,7 @@
 GetUnitSystem()
 }
 \value{
-string indicating system of units in use ("SI" or "IP")
+A string indicating system of units in use (\code{"SI"} or \code{"IP"})
 }
 \description{
 Return system of units in use.

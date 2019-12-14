@@ -7,12 +7,12 @@
 GetDryAirVolume(TDryBulb, Pressure)
 }
 \arguments{
-\item{TDryBulb}{Dry-bulb temperature in °F [IP] or °C [SI]}
+\item{TDryBulb}{A numeric vector of dry-bulb temperature in °F [IP] or °C [SI]}
 
-\item{Pressure}{Atmospheric pressure in Psi [IP] or Pa [SI]}
+\item{Pressure}{A numeric vector of atmospheric pressure in Psi [IP] or Pa [SI]}
 }
 \value{
-Dry air volume in ft3 lb-1 [IP] or in m3 kg-1 [SI]
+A numeric vector of dry air volume in ft3 lb-1 [IP] or in m3 kg-1 [SI]
 }
 \description{
 Return dry-air volume given dry-bulb temperature and pressure.

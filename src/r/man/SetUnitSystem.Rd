@@ -7,7 +7,8 @@
 SetUnitSystem(units)
 }
 \arguments{
-\item{units}{string indicating the system of units chosen ("SI" or "IP")}
+\item{units}{A string indicating the system of units chosen. Should be either
+\code{"SI"} or \code{"IP"}}
 }
 \description{
 Set the system of units to use (SI or IP).

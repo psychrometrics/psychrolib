@@ -5,9 +5,9 @@
 #' Utility function to convert temperature to degree Rankine (°R)
 #' given temperature in degree Fahrenheit (°F).
 #'
-#' @param TFahrenheit Temperature in degree Fahrenheit (°F)
+#' @param TFahrenheit A numeric vector of temperature in degree Fahrenheit (°F)
 #'
-#' @return Temperature in degree Rankine (°R)
+#' @return A numeric vector of temperature in degree Rankine (°R)
 #'
 #' @section Notes:
 #' Exact conversion.
@@ -26,9 +26,9 @@ GetTRankineFromTFahrenheit <- function (TFahrenheit) {
 #' Utility function to convert temperature to degree Fahrenheit (°F)
 #' given temperature in degree Rankine (°R).
 #'
-#' @param TRankine Temperature in degree Rankine (°R)
+#' @param TRankine A numeric vector of temperature in degree Rankine (°R)
 #'
-#' @return Temperature in degree Fahrenheit (°F)
+#' @return A numeric vector of temperature in degree Fahrenheit (°F)
 #'
 #' @section Notes:
 #' Exact conversion.
@@ -47,9 +47,9 @@ GetTFahrenheitFromTRankine <- function (TRankine) {
 #' Utility function to convert temperature to Kelvin (K)
 #' given temperature in degree Celsius (°C).
 #'
-#' @param TCelsius Temperature in degree Celsius (°C)
+#' @param TCelsius A numeric vector of temperature in degree Celsius (°C)
 #'
-#' @return Temperature in Kelvin (K)
+#' @return A numeric vector of temperature in Kelvin (K)
 #'
 #' @section Notes:
 #' Exact conversion.
@@ -68,9 +68,9 @@ GetTKelvinFromTCelsius <- function (TCelsius) {
 #' Utility function to convert temperature to degree Celsius (°C)
 #' given temperature in Kelvin (K).
 #'
-#' @param TKelvin Temperature in degree Kelvin (K)
+#' @param TKelvin A numeric vector of temperature in degree Kelvin (K)
 #'
-#' @return Temperature in Celsius (°C)
+#' @return A numeric vector of temperature in Celsius (°C)
 #'
 #' @section Notes:
 #' Exact conversion.

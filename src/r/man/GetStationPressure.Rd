@@ -7,14 +7,14 @@
 GetStationPressure(SeaLevelPressure, Altitude, TDryBulb)
 }
 \arguments{
-\item{SeaLevelPressure}{Sea level barometric pressure in Psi [IP] or Pa [SI]}
+\item{SeaLevelPressure}{A numeric vector of sea level barometric pressure in Psi [IP] or Pa [SI]}
 
-\item{Altitude}{Altitude in ft [IP] or m [SI]}
+\item{Altitude}{A numeric vector of altitude in ft [IP] or m [SI]}
 
-\item{TDryBulb}{Dry-bulb temperature in °F [IP] or °C [SI]}
+\item{TDryBulb}{A numeric vector of dry-bulb temperature in °F [IP] or °C [SI]}
 }
 \value{
-Station pressure in Psi [IP] or Pa [SI]
+A numeric vector of station pressure in Psi [IP] or Pa [SI]
 }
 \description{
 Return station pressure from sea level pressure.

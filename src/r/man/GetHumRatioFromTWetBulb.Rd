@@ -7,14 +7,14 @@
 GetHumRatioFromTWetBulb(TDryBulb, TWetBulb, Pressure)
 }
 \arguments{
-\item{TDryBulb}{Dry-bulb temperature in °F [IP] or °C [SI]}
+\item{TDryBulb}{A numeric vector of dry-bulb temperature in °F [IP] or °C [SI]}
 
-\item{TWetBulb}{Wet-bulb temperature in °F [IP] or °C [SI]}
+\item{TWetBulb}{A numeric vector of wet-bulb temperature in °F [IP] or °C [SI]}
 
-\item{Pressure}{Atmospheric Pressure in Psi [IP] or Pa [SI]}
+\item{Pressure}{A numeric vector of atmospheric Pressure in Psi [IP] or Pa [SI]}
 }
 \value{
-Humidity ratio in lb_H2O lb_Air-1 [IP] or kg_H2O kg_Air-1 [SI]
+A numeric vector of humidity ratio in lb_H2O lb_Air-1 [IP] or kg_H2O kg_Air-1 [SI]
 }
 \description{
 Return humidity ratio given dry-bulb temperature, wet-bulb temperature, and pressure.

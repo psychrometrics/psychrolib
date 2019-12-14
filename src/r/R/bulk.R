@@ -8,9 +8,9 @@
 #' vapour pressure, moist air enthalpy, moist air volume, and degree of saturation of air given
 #' dry-bulb temperature, wet-bulb temperature, and pressure.
 #'
-#' @param TDryBulb Dry-bulb temperature in °F [IP] or °C [SI]
-#' @param TWetBulb Wet-bulb temperature in °F [IP] or °C [SI]
-#' @param Pressure Atmospheric pressure in Psi [IP] or Pa [SI]
+#' @param TDryBulb A numeric vector of dry-bulb temperature in °F [IP] or °C [SI]
+#' @param TWetBulb A numeric vector of wet-bulb temperature in °F [IP] or °C [SI]
+#' @param Pressure A numeric vector of atmospheric pressure in Psi [IP] or Pa [SI]
 #'
 #' @return A list with named components for each psychrometric value computed:
 #' \describe{
@@ -51,9 +51,9 @@ CalcPsychrometricsFromTWetBulb <- function (TDryBulb, TWetBulb, Pressure) {
 #' vapour pressure, moist air enthalpy, moist air volume, and degree of saturation of air given
 #' dry-bulb temperature, dew-point temperature, and pressure.
 #'
-#' @param TDryBulb Dry-bulb temperature in °F [IP] or °C [SI]
-#' @param TDewPoint Dew-point temperature in °F [IP] or °C [SI]
-#' @param Pressure Atmospheric pressure in Psi [IP] or Pa [SI]
+#' @param TDryBulb A numeric vector of dry-bulb temperature in °F [IP] or °C [SI]
+#' @param TDewPoint A numeric vector of dew-point temperature in °F [IP] or °C [SI]
+#' @param Pressure A numeric vector of atmospheric pressure in Psi [IP] or Pa [SI]
 #'
 #' @return A list with named components for each psychrometric value computed:
 #' \describe{
@@ -94,9 +94,9 @@ CalcPsychrometricsFromTDewPoint <- function (TDryBulb, TDewPoint, Pressure) {
 #' vapour pressure, moist air enthalpy, moist air volume, and degree of saturation of air given
 #' dry-bulb temperature, relative humidity and pressure.
 #'
-#' @param TDryBulb Dry-bulb temperature in °F [IP] or °C [SI]
-#' @param RelHum Relative humidity in range [0, 1]
-#' @param Pressure Atmospheric pressure in Psi [IP] or Pa [SI]
+#' @param TDryBulb A numeric vector of dry-bulb temperature in °F [IP] or °C [SI]
+#' @param RelHum A numeric vector of relative humidity in range [0, 1]
+#' @param Pressure A numeric vector of atmospheric pressure in Psi [IP] or Pa [SI]
 #'
 #' @return A list with named components for each psychrometric value computed:
 #' \describe{

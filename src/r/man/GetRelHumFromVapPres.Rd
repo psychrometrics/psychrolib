@@ -7,12 +7,12 @@
 GetRelHumFromVapPres(TDryBulb, VapPres)
 }
 \arguments{
-\item{TDryBulb}{Dry-bulb temperature in °F [IP] or °C [SI]}
+\item{TDryBulb}{A numeric vector of dry-bulb temperature in °F [IP] or °C [SI]}
 
-\item{VapPres}{Partial pressure of water vapor in moist air in Psi [IP] or Pa [SI]}
+\item{VapPres}{A numeric vector of partial pressure of water vapor in moist air in Psi [IP] or Pa [SI]}
 }
 \value{
-Relative humidity in range [0, 1]
+A numeric vector of relative humidity in range [0, 1]
 }
 \description{
 Return relative humidity given dry-bulb temperature and vapor pressure.

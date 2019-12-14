@@ -7,12 +7,12 @@
 GetSatAirEnthalpy(TDryBulb, Pressure)
 }
 \arguments{
-\item{TDryBulb}{Dry-bulb temperature in °F [IP] or °C [SI]}
+\item{TDryBulb}{A numeric vector of dry-bulb temperature in °F [IP] or °C [SI]}
 
-\item{Pressure}{Atmospheric pressure in Psi [IP] or Pa [SI]}
+\item{Pressure}{A numeric vector of atmospheric pressure in Psi [IP] or Pa [SI]}
 }
 \value{
-Saturated air enthalpy in Btu lb-1 [IP] or J kg-1 [SI]
+A numeric vector of saturated air enthalpy in Btu lb-1 [IP] or J kg-1 [SI]
 }
 \description{
 Return saturated air enthalpy given dry-bulb temperature and pressure.

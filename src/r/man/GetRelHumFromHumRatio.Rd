@@ -7,14 +7,14 @@
 GetRelHumFromHumRatio(TDryBulb, HumRatio, Pressure)
 }
 \arguments{
-\item{TDryBulb}{Dry-bulb temperature in °F [IP] or °C [SI]}
+\item{TDryBulb}{A numeric vector of dry-bulb temperature in °F [IP] or °C [SI]}
 
-\item{HumRatio}{Humidity ratio in lb_H2O lb_Air-1 [IP] or kg_H2O kg_Air-1 [SI]}
+\item{HumRatio}{A numeric vector of humidity ratio in lb_H2O lb_Air-1 [IP] or kg_H2O kg_Air-1 [SI]}
 
-\item{Pressure}{Atmospheric Pressure in Psi [IP] or Pa [SI]}
+\item{Pressure}{A numeric vector of atmospheric Pressure in Psi [IP] or Pa [SI]}
 }
 \value{
-Relative humidity in range [0, 1]
+A numeric vector of relative humidity in range [0, 1]
 }
 \description{
 Return relative humidity given dry-bulb temperature, humidity ratio, and pressure.

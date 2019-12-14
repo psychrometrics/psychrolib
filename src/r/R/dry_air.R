@@ -4,9 +4,9 @@
 
 #' Return dry-air enthalpy given dry-bulb temperature.
 #'
-#' @param TDryBulb Dry-bulb temperature in °F [IP] or °C [SI]
+#' @param TDryBulb A numeric vector of dry-bulb temperature in °F [IP] or °C [SI]
 #'
-#' @return Dry air enthalpy in Btu lb-1 [IP] or J kg-1 [SI]
+#' @return A numeric vector of dry air enthalpy in Btu lb-1 [IP] or J kg-1 [SI]
 #'
 #' @references
 #' ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 28
@@ -30,10 +30,10 @@ GetDryAirEnthalpy <- function (TDryBulb) {
 
 #' Return dry-air density given dry-bulb temperature and pressure.
 #'
-#' @param TDryBulb Dry-bulb temperature in °F [IP] or °C [SI]
-#' @param Pressure Atmospheric pressure in Psi [IP] or Pa [SI]
+#' @param TDryBulb A numeric vector of dry-bulb temperature in °F [IP] or °C [SI]
+#' @param Pressure A numeric vector of atmospheric pressure in Psi [IP] or Pa [SI]
 #'
-#' @return Dry air density in lb ft-3 [IP] or kg m-3 [SI]
+#' @return A numeric vector of dry air density in lb ft-3 [IP] or kg m-3 [SI]
 #'
 #' @references
 #' ASHRAE Handbook - Fundamentals (2017) ch. 1
@@ -64,10 +64,10 @@ GetDryAirDensity <- function (TDryBulb, Pressure) {
 
 #' Return dry-air volume given dry-bulb temperature and pressure.
 #'
-#' @param TDryBulb Dry-bulb temperature in °F [IP] or °C [SI]
-#' @param Pressure Atmospheric pressure in Psi [IP] or Pa [SI]
+#' @param TDryBulb A numeric vector of dry-bulb temperature in °F [IP] or °C [SI]
+#' @param Pressure A numeric vector of atmospheric pressure in Psi [IP] or Pa [SI]
 #'
-#' @return Dry air volume in ft3 lb-1 [IP] or in m3 kg-1 [SI]
+#' @return A numeric vector of dry air volume in ft3 lb-1 [IP] or in m3 kg-1 [SI]
 #'
 #' @references
 #' ASHRAE Handbook - Fundamentals (2017) ch. 1
@@ -98,10 +98,10 @@ GetDryAirVolume <- function (TDryBulb, Pressure) {
 
 #' Return dry bulb temperature from enthalpy and humidity ratio.
 #'
-#' @param MoistAirEnthalpy Moist air enthalpy in Btu lb-1 [IP] or J kg-1
-#' @param HumRatio Humidity ratio in lb_H2O lb_Air-1 [IP] or kg_H2O kg_Air-1 [SI]
+#' @param MoistAirEnthalpy A numeric vector of moist air enthalpy in Btu lb-1 [IP] or J kg-1
+#' @param HumRatio A numeric vector of humidity ratio in lb_H2O lb_Air-1 [IP] or kg_H2O kg_Air-1 [SI]
 #'
-#' @return Dry-bulb temperature in °F [IP] or °C [SI]
+#' @return A numeric vector of dry-bulb temperature in °F [IP] or °C [SI]
 #'
 #' @references
 #' ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 30
@@ -134,10 +134,10 @@ GetTDryBulbFromEnthalpyAndHumRatio <- function (MoistAirEnthalpy, HumRatio) {
 
 #' Return humidity ratio from enthalpy and dry-bulb temperature.
 #'
-#' @param MoistAirEnthalpy Moist air enthalpy in Btu lb-1 [IP] or J kg-1
-#' @param TDryBulb Dry-bulb temperature in °F [IP] or °C [SI]
+#' @param MoistAirEnthalpy A numeric vector of moist air enthalpy in Btu lb-1 [IP] or J kg-1
+#' @param TDryBulb A numeric vector of dry-bulb temperature in °F [IP] or °C [SI]
 #'
-#' @return Humidity ratio in lb_H2O lb_Air-1 [IP] or kg_H2O kg_Air-1 [SI]
+#' @return A numeric vector of humidity ratio in lb_H2O lb_Air-1 [IP] or kg_H2O kg_Air-1 [SI]
 #'
 #' @references
 #' ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 30.

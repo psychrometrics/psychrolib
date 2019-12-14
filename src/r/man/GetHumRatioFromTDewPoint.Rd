@@ -7,12 +7,12 @@
 GetHumRatioFromTDewPoint(TDewPoint, Pressure)
 }
 \arguments{
-\item{TDewPoint}{Dew-point temperature in °F [IP] or °C [SI]}
+\item{TDewPoint}{A numeric vector of dew-point temperature in °F [IP] or °C [SI]}
 
-\item{Pressure}{Atmospheric Pressure in Psi [IP] or Pa [SI]}
+\item{Pressure}{A numeric vector of atmospheric Pressure in Psi [IP] or Pa [SI]}
 }
 \value{
-Humidity ratio in lb_H2O lb_Air-1 [IP] or kg_H2O kg_Air-1 [SI]
+A numeric vector of humidity ratio in lb_H2O lb_Air-1 [IP] or kg_H2O kg_Air-1 [SI]
 }
 \description{
 Return humidity ratio given dew-point temperature and pressure.

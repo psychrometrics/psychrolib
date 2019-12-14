@@ -8,14 +8,14 @@ at the same temperature and pressure) given dry-bulb temperature, humidity ratio
 GetDegreeOfSaturation(TDryBulb, HumRatio, Pressure)
 }
 \arguments{
-\item{TDryBulb}{Dry-bulb temperature in °F [IP] or °C [SI]}
+\item{TDryBulb}{A numeric vector of dry-bulb temperature in °F [IP] or °C [SI]}
 
-\item{HumRatio}{Humidity ratio in lb_H2O lb_Air-1 [IP] or kg_H2O kg_Air-1 [SI]}
+\item{HumRatio}{A numeric vector of humidity ratio in lb_H2O lb_Air-1 [IP] or kg_H2O kg_Air-1 [SI]}
 
-\item{Pressure}{Atmospheric pressure in Psi [IP] or Pa [SI]}
+\item{Pressure}{A numeric vector of atmospheric pressure in Psi [IP] or Pa [SI]}
 }
 \value{
-Degree of saturation in arbitrary unit
+A numeric vector of degree of saturation in arbitrary unit
 }
 \description{
 Return the degree of saturation (i.e humidity ratio of the air / humidity ratio of the air at saturation

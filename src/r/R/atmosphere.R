@@ -4,9 +4,9 @@
 
 #' Return standard atmosphere barometric pressure, given the elevation (altitude).
 #'
-#' @param Altitude Altitude in ft [IP] or m [SI]
+#' @param Altitude A numeric vector of altitude in ft [IP] or m [SI]
 #'
-#' @return Standard atmosphere barometric pressure in Psi [IP] or Pa [SI]
+#' @return A numeric vector of standard atmosphere barometric pressure in Psi [IP] or Pa [SI]
 #'
 #' @references
 #' ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 3
@@ -29,9 +29,9 @@ GetStandardAtmPressure <- function (Altitude) {
 
 #' Return standard atmosphere temperature, given the elevation (altitude).
 #'
-#' @param Altitude Altitude in ft [IP] or m [SI]
+#' @param Altitude A numeric vector of altitude in ft [IP] or m [SI]
 #'
-#' @return Standard atmosphere dry-bulb temperature in °F [IP] or °C [SI]
+#' @return A numeric vector of standard atmosphere dry-bulb temperature in °F [IP] or °C [SI]
 #'
 #' @references
 #' ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 4
@@ -54,11 +54,11 @@ GetStandardAtmTemperature <- function (Altitude) {
 
 #' Return sea level pressure given dry-bulb temperature, altitude above sea level and pressure.
 #'
-#' @param StationPressure Observed station pressure in Psi [IP] or Pa [SI]
-#' @param Altitude Altitude in ft [IP] or m [SI]
-#' @param TDryBulb Dry-bulb temperature in °F [IP] or °C [SI]
+#' @param StationPressure A numeric vector of observed station pressure in Psi [IP] or Pa [SI]
+#' @param Altitude A numeric vector of altitude in ft [IP] or m [SI]
+#' @param TDryBulb A numeric vector of dry-bulb temperature in °F [IP] or °C [SI]
 #'
-#' @return Sea level barometric pressure in Psi [IP] or Pa [SI]
+#' @return A numeric vector of sea level barometric pressure in Psi [IP] or Pa [SI]
 #'
 #' @references
 #' Hess SL, Introduction to theoretical meteorology, Holt Rinehart and Winston, NY 1959,
@@ -102,11 +102,11 @@ GetSeaLevelPressure <- function (StationPressure, Altitude, TDryBulb) {
 
 #' Return station pressure from sea level pressure.
 #'
-#' @param SeaLevelPressure Sea level barometric pressure in Psi [IP] or Pa [SI]
-#' @param Altitude Altitude in ft [IP] or m [SI]
-#' @param TDryBulb Dry-bulb temperature in °F [IP] or °C [SI]
+#' @param SeaLevelPressure A numeric vector of sea level barometric pressure in Psi [IP] or Pa [SI]
+#' @param Altitude A numeric vector of altitude in ft [IP] or m [SI]
+#' @param TDryBulb A numeric vector of dry-bulb temperature in °F [IP] or °C [SI]
 #'
-#' @return Station pressure in Psi [IP] or Pa [SI]
+#' @return A numeric vector of station pressure in Psi [IP] or Pa [SI]
 #'
 #' @references See \code{\link{GetSeaLevelPressure}}.
 #'

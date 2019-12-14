@@ -7,14 +7,14 @@
 GetTWetBulbFromRelHum(TDryBulb, RelHum, Pressure)
 }
 \arguments{
-\item{TDryBulb}{Dry-bulb temperature in °F [IP] or °C [SI]}
+\item{TDryBulb}{A numeric vector of dry-bulb temperature in °F [IP] or °C [SI]}
 
-\item{RelHum}{Relative humidity in range [0, 1]}
+\item{RelHum}{A numeric vector of relative humidity in range [0, 1]}
 
-\item{Pressure}{Atmospheric pressure in Psi [IP] or Pa [SI]}
+\item{Pressure}{A numeric vector of atmospheric pressure in Psi [IP] or Pa [SI]}
 }
 \value{
-Wet-bulb temperature in °F [IP] or °C [SI]
+A numeric vector of wet-bulb temperature in °F [IP] or °C [SI]
 }
 \description{
 Return wet-bulb temperature given dry-bulb temperature, relative humidity, and pressure.

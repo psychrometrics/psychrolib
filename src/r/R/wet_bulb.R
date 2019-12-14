@@ -4,11 +4,11 @@
 
 #' Return wet-bulb temperature given dry-bulb temperature, humidity ratio, and pressure.
 #'
-#' @param TDryBulb Dry-bulb temperature in °F [IP] or °C [SI]
-#' @param HumRatio Humidity ratio in lb_H2O lb_Air-1 [IP] or kg_H2O kg_Air-1 [SI]
-#' @param Pressure Atmospheric Pressure in Psi [IP] or Pa [SI]
+#' @param TDryBulb A numeric vector of dry-bulb temperature in °F [IP] or °C [SI]
+#' @param HumRatio A numeric vector of humidity ratio in lb_H2O lb_Air-1 [IP] or kg_H2O kg_Air-1 [SI]
+#' @param Pressure A numeric vector of atmospheric Pressure in Psi [IP] or Pa [SI]
 #'
-#' @return Wet-bulb temperature in °F [IP] or °C [SI]
+#' @return A numeric vector of wet-bulb temperature in °F [IP] or °C [SI]
 #'
 #' @references
 #' ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 33 and 35 solved for Tstar
@@ -47,11 +47,11 @@ GetTWetBulbFromHumRatio <- function (TDryBulb, HumRatio, Pressure) {
 
 #' Return humidity ratio given dry-bulb temperature, wet-bulb temperature, and pressure.
 #'
-#' @param TDryBulb Dry-bulb temperature in °F [IP] or °C [SI]
-#' @param TWetBulb Wet-bulb temperature in °F [IP] or °C [SI]
-#' @param Pressure Atmospheric Pressure in Psi [IP] or Pa [SI]
+#' @param TDryBulb A numeric vector of dry-bulb temperature in °F [IP] or °C [SI]
+#' @param TWetBulb A numeric vector of wet-bulb temperature in °F [IP] or °C [SI]
+#' @param Pressure A numeric vector of atmospheric Pressure in Psi [IP] or Pa [SI]
 #'
-#' @return Humidity ratio in lb_H2O lb_Air-1 [IP] or kg_H2O kg_Air-1 [SI]
+#' @return A numeric vector of humidity ratio in lb_H2O lb_Air-1 [IP] or kg_H2O kg_Air-1 [SI]
 #'
 #' @references
 #' ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 33 and 35
@@ -109,11 +109,11 @@ GetHumRatioFromTWetBulb <- function (TDryBulb, TWetBulb, Pressure) {
 
 #' Return humidity ratio given dry-bulb temperature, relative humidity, and pressure.
 #'
-#' @param TDryBulb Dry-bulb temperature in °F [IP] or °C [SI]
-#' @param RelHum Relative humidity in range [0, 1]
-#' @param Pressure Atmospheric Pressure in Psi [IP] or Pa [SI]
+#' @param TDryBulb A numeric vector of dry-bulb temperature in °F [IP] or °C [SI]
+#' @param RelHum A numeric vector of relative humidity in range [0, 1]
+#' @param Pressure A numeric vector of atmospheric Pressure in Psi [IP] or Pa [SI]
 #'
-#' @return Humidity ratio in lb_H2O lb_Air-1 [IP] or kg_H2O kg_Air-1 [SI]
+#' @return A numeric vector of humidity ratio in lb_H2O lb_Air-1 [IP] or kg_H2O kg_Air-1 [SI]
 #'
 #' @references
 #' ASHRAE Handbook - Fundamentals (2017) ch. 1
@@ -136,11 +136,11 @@ GetHumRatioFromRelHum <- function (TDryBulb, RelHum, Pressure) {
 
 #' Return relative humidity given dry-bulb temperature, humidity ratio, and pressure.
 #'
-#' @param TDryBulb Dry-bulb temperature in °F [IP] or °C [SI]
-#' @param HumRatio Humidity ratio in lb_H2O lb_Air-1 [IP] or kg_H2O kg_Air-1 [SI]
-#' @param Pressure Atmospheric Pressure in Psi [IP] or Pa [SI]
+#' @param TDryBulb A numeric vector of dry-bulb temperature in °F [IP] or °C [SI]
+#' @param HumRatio A numeric vector of humidity ratio in lb_H2O lb_Air-1 [IP] or kg_H2O kg_Air-1 [SI]
+#' @param Pressure A numeric vector of atmospheric Pressure in Psi [IP] or Pa [SI]
 #'
-#' @return Relative humidity in range [0, 1]
+#' @return A numeric vector of relative humidity in range [0, 1]
 #'
 #' @references
 #' ASHRAE Handbook - Fundamentals (2017) ch. 1
@@ -162,10 +162,10 @@ GetRelHumFromHumRatio <- function (TDryBulb, HumRatio, Pressure) {
 
 #' Return humidity ratio given dew-point temperature and pressure.
 #'
-#' @param TDewPoint Dew-point temperature in °F [IP] or °C [SI]
-#' @param Pressure Atmospheric Pressure in Psi [IP] or Pa [SI]
+#' @param TDewPoint A numeric vector of dew-point temperature in °F [IP] or °C [SI]
+#' @param Pressure A numeric vector of atmospheric Pressure in Psi [IP] or Pa [SI]
 #'
-#' @return Humidity ratio in lb_H2O lb_Air-1 [IP] or kg_H2O kg_Air-1 [SI]
+#' @return A numeric vector of humidity ratio in lb_H2O lb_Air-1 [IP] or kg_H2O kg_Air-1 [SI]
 #'
 #' @references
 #' ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 13
@@ -185,11 +185,11 @@ GetHumRatioFromTDewPoint <- function (TDewPoint, Pressure) {
 
 #' Return dew-point temperature given dry-bulb temperature, humidity ratio, and pressure.
 #'
-#' @param TDryBulb Dry-bulb temperature in °F [IP] or °C [SI]
-#' @param HumRatio Humidity ratio in lb_H2O lb_Air-1 [IP] or kg_H2O kg_Air-1 [SI]
-#' @param Pressure Atmospheric Pressure in Psi [IP] or Pa [SI]
+#' @param TDryBulb A numeric vector of dry-bulb temperature in °F [IP] or °C [SI]
+#' @param HumRatio A numeric vector of humidity ratio in lb_H2O lb_Air-1 [IP] or kg_H2O kg_Air-1 [SI]
+#' @param Pressure A numeric vector of atmospheric Pressure in Psi [IP] or Pa [SI]
 #'
-#' @return Dew-point temperature in °F [IP] or °C [SI]
+#' @return A numeric vector of dew-point temperature in °F [IP] or °C [SI]
 #'
 #' @references
 #' ASHRAE Handbook - Fundamentals (2017) ch. 1

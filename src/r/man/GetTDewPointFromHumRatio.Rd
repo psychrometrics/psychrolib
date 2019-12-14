@@ -7,14 +7,14 @@
 GetTDewPointFromHumRatio(TDryBulb, HumRatio, Pressure)
 }
 \arguments{
-\item{TDryBulb}{Dry-bulb temperature in °F [IP] or °C [SI]}
+\item{TDryBulb}{A numeric vector of dry-bulb temperature in °F [IP] or °C [SI]}
 
-\item{HumRatio}{Humidity ratio in lb_H2O lb_Air-1 [IP] or kg_H2O kg_Air-1 [SI]}
+\item{HumRatio}{A numeric vector of humidity ratio in lb_H2O lb_Air-1 [IP] or kg_H2O kg_Air-1 [SI]}
 
-\item{Pressure}{Atmospheric Pressure in Psi [IP] or Pa [SI]}
+\item{Pressure}{A numeric vector of atmospheric Pressure in Psi [IP] or Pa [SI]}
 }
 \value{
-Dew-point temperature in °F [IP] or °C [SI]
+A numeric vector of dew-point temperature in °F [IP] or °C [SI]
 }
 \description{
 Return dew-point temperature given dry-bulb temperature, humidity ratio, and pressure.

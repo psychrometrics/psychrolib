@@ -7,14 +7,14 @@
 GetTDryBulbFromMoistAirVolumeAndHumRatio(MoistAirVolume, HumRatio, Pressure)
 }
 \arguments{
-\item{MoistAirVolume}{Specific volume of moist air in ft3 lb-1 of dry air [IP] or in m3 kg-1 of dry air [SI]}
+\item{MoistAirVolume}{A numeric vector of specific volume of moist air in ft3 lb-1 of dry air [IP] or in m3 kg-1 of dry air [SI]}
 
-\item{HumRatio}{Humidity ratio in lb_H2O lb_Air-1 [IP] or kg_H2O kg_Air-1 [SI]}
+\item{HumRatio}{A numeric vector of humidity ratio in lb_H2O lb_Air-1 [IP] or kg_H2O kg_Air-1 [SI]}
 
-\item{Pressure}{Atmospheric pressure in Psi [IP] or Pa [SI]}
+\item{Pressure}{A numeric vector of atmospheric pressure in Psi [IP] or Pa [SI]}
 }
 \value{
-TDryBulb : Dry-bulb temperature in °F [IP] or °C [SI]
+A numeric vector of tDryBulb : Dry-bulb temperature in °F [IP] or °C [SI]
 }
 \description{
 Return dry-bulb temperature given moist air specific volume, humidity ratio, and pressure.
