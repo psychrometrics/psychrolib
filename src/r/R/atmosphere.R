@@ -94,7 +94,7 @@ GetSeaLevelPressure <- function (StationPressure, Altitude, TDryBulb) {
 #'
 #' @export
 GetStationPressure <- function (SeaLevelPressure, Altitude, TDryBulb) {
-    CheckLength(StationPressure, Altitude, TDryBulb)
+    CheckLength(SeaLevelPressure, Altitude, TDryBulb)
 
     SeaLevelPressure / GetSeaLevelPressure(1, Altitude, TDryBulb)
 }
