@@ -177,7 +177,7 @@ double C_GetTDewPointFromVapPres(const double & TDryBulb, // (i) Dry bulb temper
         }
 
         index++;
-    } while (abs(TDewPoint - TDewPoint_iter) > TOLERANCE);
+    } while (std::abs(TDewPoint - TDewPoint_iter) > TOLERANCE);
 
     return std::min(TDewPoint, TDryBulb);
 }
