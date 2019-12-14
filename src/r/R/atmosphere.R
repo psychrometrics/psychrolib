@@ -57,6 +57,8 @@ GetStandardAtmTemperature <- function (Altitude) {
 #'
 #' @export
 GetSeaLevelPressure <- function (StationPressure, Altitude, TDryBulb) {
+    CheckLength(StationPressure, Altitude, TDryBulb)
+
     if (isIP()) {
         # Calculate average temperature in column of air, assuming a lapse rate
         # of 3.6 °F/1000ft
@@ -92,5 +94,7 @@ GetSeaLevelPressure <- function (StationPressure, Altitude, TDryBulb) {
 #'
 #' @export
 GetStationPressure <- function (SeaLevelPressure, Altitude, TDryBulb) {
+    CheckLength(StationPressure, Altitude, TDryBulb)
+
     SeaLevelPressure / GetSeaLevelPressure(1, Altitude, TDryBulb)
 }

@@ -1,3 +1,13 @@
+CheckLength <- function (...) {
+    nm <- sapply(substitute(alist(...))[-1], deparse)
+    l <- sapply(list(...), length)
+    names(l) <- nm
+
+    if (length(unique(l[l != 1L])) > 1L) {
+        stop(paste0("'", names(l[l != 1L]), "'", collapse = ", "), " do not have the same length")
+    }
+}
+
 CheckRelHum <- function (RelHum) {
     stopifnot(is.numeric(RelHum))
 

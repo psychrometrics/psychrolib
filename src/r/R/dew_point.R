@@ -14,6 +14,7 @@
 #'
 #' @export
 GetVapPresFromRelHum <- function (TDryBulb, RelHum) {
+    CheckLength(TDryBulb, RelHum)
     CheckRelHum(RelHum)
 
     RelHum * GetSatVapPres(TDryBulb)
@@ -31,6 +32,7 @@ GetVapPresFromRelHum <- function (TDryBulb, RelHum) {
 #'
 #' @export
 GetRelHumFromVapPres <- function (TDryBulb, VapPres) {
+    CheckLength(TDryBulb, VapPres)
     CheckVapPres(VapPres)
 
     VapPres / GetSatVapPres(TDryBulb)
@@ -106,6 +108,8 @@ dLnPws_ <- function (TDryBulb) {
 #'
 #' @export
 GetTDewPointFromVapPres <- function (TDryBulb, VapPres) {
+    CheckLength(TDryBulb, VapPres)
+
     if (isIP()) {
         BOUNDS <- c(-148, 392)
     } else {

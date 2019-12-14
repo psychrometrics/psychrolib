@@ -15,6 +15,7 @@
 #'
 #' @export
 GetVaporPressureDeficit <- function (TDryBulb, HumRatio, Pressure) {
+    CheckLength(TDryBulb, HumRatio, Pressure)
     CheckHumRatio(HumRatio)
 
     RelHum <- GetRelHumFromHumRatio(TDryBulb, HumRatio, Pressure)
@@ -38,6 +39,7 @@ GetVaporPressureDeficit <- function (TDryBulb, HumRatio, Pressure) {
 #'
 #' @export
 GetDegreeOfSaturation <- function (TDryBulb, HumRatio, Pressure) {
+    CheckLength(TDryBulb, HumRatio, Pressure)
     CheckHumRatio(HumRatio)
     BoundedHumRatio <- pmax(HumRatio, MIN_HUM_RATIO)
 
@@ -57,6 +59,7 @@ GetDegreeOfSaturation <- function (TDryBulb, HumRatio, Pressure) {
 #'
 #' @export
 GetMoistAirEnthalpy <- function (TDryBulb, HumRatio) {
+    CheckLength(TDryBulb, HumRatio)
     CheckHumRatio(HumRatio)
     BoundedHumRatio <- pmax(HumRatio, MIN_HUM_RATIO)
 
@@ -85,6 +88,7 @@ GetMoistAirEnthalpy <- function (TDryBulb, HumRatio) {
 #'
 #' @export
 GetMoistAirVolume <- function (TDryBulb, HumRatio, Pressure) {
+    CheckLength(TDryBulb, HumRatio, Pressure)
     CheckHumRatio(HumRatio)
     BoundedHumRatio <- pmax(HumRatio, MIN_HUM_RATIO)
 
@@ -117,6 +121,7 @@ GetMoistAirVolume <- function (TDryBulb, HumRatio, Pressure) {
 #'
 #' @export
 GetTDryBulbFromMoistAirVolumeAndHumRatio <- function (MoistAirVolume, HumRatio, Pressure) {
+    CheckLength(MoistAirVolume, HumRatio, Pressure)
     CheckHumRatio(HumRatio)
     BoundedHumRatio <- pmax(HumRatio, MIN_HUM_RATIO)
 
@@ -142,6 +147,7 @@ GetTDryBulbFromMoistAirVolumeAndHumRatio <- function (MoistAirVolume, HumRatio, 
 #'
 #' @export
 GetMoistAirDensity <- function (TDryBulb, HumRatio, Pressure) {
+    CheckLength(TDryBulb, HumRatio, Pressure)
     CheckHumRatio(HumRatio)
     BoundedHumRatio <- pmax(HumRatio, MIN_HUM_RATIO)
 

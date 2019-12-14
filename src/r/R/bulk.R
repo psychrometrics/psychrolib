@@ -25,6 +25,8 @@
 #'
 #' @export
 CalcPsychrometricsFromTWetBulb <- function (TDryBulb, TWetBulb, Pressure) {
+    CheckLength(TDryBulb, TWetBulb, Pressure)
+
     HumRatio <- GetHumRatioFromTWetBulb(TDryBulb, TWetBulb, Pressure)
     list(HumRatio = HumRatio,
          TDewPoint = GetTDewPointFromHumRatio(TDryBulb, HumRatio, Pressure),
@@ -59,6 +61,8 @@ CalcPsychrometricsFromTWetBulb <- function (TDryBulb, TWetBulb, Pressure) {
 #'
 #' @export
 CalcPsychrometricsFromTDewPoint <- function (TDryBulb, TDewPoint, Pressure) {
+    CheckLength(TDryBulb, TDewPoint, Pressure)
+
     HumRatio <- GetHumRatioFromTDewPoint(TDewPoint, Pressure)
     list(HumRatio = HumRatio,
          TWetBulb = GetTWetBulbFromHumRatio(TDryBulb, HumRatio, Pressure),
@@ -93,6 +97,8 @@ CalcPsychrometricsFromTDewPoint <- function (TDryBulb, TDewPoint, Pressure) {
 #'
 #' @export
 CalcPsychrometricsFromRelHum <- function (TDryBulb, RelHum, Pressure) {
+    CheckLength(TDryBulb, RelHum, Pressure)
+
     HumRatio <- GetHumRatioFromRelHum(TDryBulb, RelHum, Pressure)
     list(HumRatio = HumRatio,
          TWetBulb = GetTWetBulbFromHumRatio(TDryBulb, HumRatio, Pressure),

@@ -15,6 +15,7 @@
 #'
 #' @export
 GetTWetBulbFromTDewPoint <- function (TDryBulb, TDewPoint, Pressure) {
+    CheckLength(TDryBulb, TDewPoint, Pressure)
     CheckTDewPoint(TDewPoint, TDryBulb)
 
     HumRatio <- GetHumRatioFromTDewPoint(TDewPoint, Pressure)
@@ -34,6 +35,7 @@ GetTWetBulbFromTDewPoint <- function (TDryBulb, TDewPoint, Pressure) {
 #'
 #' @export
 GetTWetBulbFromRelHum <- function (TDryBulb, RelHum, Pressure) {
+    CheckLength(TDryBulb, RelHum, Pressure)
     CheckRelHum(RelHum)
 
     HumRatio <- GetHumRatioFromRelHum(TDryBulb, RelHum, Pressure)
@@ -52,6 +54,7 @@ GetTWetBulbFromRelHum <- function (TDryBulb, RelHum, Pressure) {
 #'
 #' @export
 GetRelHumFromTDewPoint <- function (TDryBulb, TDewPoint) {
+    CheckLength(TDryBulb, TDewPoint)
     CheckTDewPoint(TDewPoint, TDryBulb)
 
     VapPres <- GetSatVapPres(TDewPoint)
@@ -72,6 +75,7 @@ GetRelHumFromTDewPoint <- function (TDryBulb, TDewPoint) {
 #'
 #' @export
 GetRelHumFromTWetBulb <- function (TDryBulb, TWetBulb, Pressure) {
+    CheckLength(TDryBulb, TWetBulb, Pressure)
     CheckTWetPoint(TWetPoint, TDryBulb)
 
     HumRatio <- GetHumRatioFromTWetBulb(TDryBulb, TWetBulb, Pressure)
@@ -90,6 +94,7 @@ GetRelHumFromTWetBulb <- function (TDryBulb, TWetBulb, Pressure) {
 #'
 #' @export
 GetTDewPointFromRelHum <- function (TDryBulb, RelHum) {
+    CheckLength(TDryBulb, RelHum)
     CheckRelHum(RelHum)
 
     VapPres <- GetVapPresFromRelHum(TDryBulb, RelHum)
@@ -109,6 +114,7 @@ GetTDewPointFromRelHum <- function (TDryBulb, RelHum) {
 #'
 #' @export
 GetTDewPointFromTWetBulb <- function (TDryBulb, TWetBulb, Pressure) {
+    CheckLength(TDryBulb, TWetBulb, Pressure)
     CheckTWetPoint(TWetPoint, TDryBulb)
 
     HumRatio <- GetHumRatioFromTWetBulb(TDryBulb, TWetBulb, Pressure)

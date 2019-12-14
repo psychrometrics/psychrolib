@@ -14,6 +14,7 @@
 #'
 #' @export
 GetHumRatioFromVapPres <- function (VapPres, Pressure) {
+    CheckLength(VapPres, Pressure)
     CheckVapPres(VapPres)
 
     HumRatio <- 0.621945 * VapPres / (Pressure - VapPres)
@@ -34,6 +35,7 @@ GetHumRatioFromVapPres <- function (VapPres, Pressure) {
 #'
 #' @export
 GetVapPresFromHumRatio <- function (HumRatio, Pressure) {
+    CheckLength(HumRatio, Pressure)
     CheckHumRatio(HumRatio)
 
     BoundedHumRatio <- pmax(HumRatio, MIN_HUM_RATIO)

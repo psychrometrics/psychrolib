@@ -37,6 +37,8 @@ GetDryAirEnthalpy <- function (TDryBulb) {
 #'
 #' @export
 GetDryAirDensity <- function (TDryBulb, Pressure) {
+    CheckLength(TDryBulb, Pressure)
+
     if (isIP()) {
         # The factor 144 is for the conversion of Psi = lb in-2 to lb ft-2.
         (144 * Pressure) / R_DA_IP / GetTRankineFromTFahrenheit(TDryBulb)
@@ -62,6 +64,8 @@ GetDryAirDensity <- function (TDryBulb, Pressure) {
 #'
 #' @export
 GetDryAirVolume <- function (TDryBulb, Pressure) {
+    CheckLength(TDryBulb, Pressure)
+
     if (isIP()) {
         # The factor 144 is for the conversion of Psi = lb in-2 to lb ft-2.
         R_DA_IP * GetTRankineFromTFahrenheit(TDryBulb) / (144 * Pressure)
@@ -85,6 +89,7 @@ GetDryAirVolume <- function (TDryBulb, Pressure) {
 #'
 #' @export
 GetTDryBulbFromEnthalpyAndHumRatio <- function (MoistAirEnthalpy, HumRatio) {
+    CheckLength(MoistAirEnthalpy, HumRatio)
     CheckHumRatio(HumRatio)
 
     BoundedHumRatio <- pmax(HumRatio, MIN_HUM_RATIO)
@@ -111,6 +116,7 @@ GetTDryBulbFromEnthalpyAndHumRatio <- function (MoistAirEnthalpy, HumRatio) {
 #'
 #' @export
 GetHumRatioFromEnthalpyAndTDryBulb <- function (MoistAirEnthalpy, TDryBulb) {
+    CheckLength(MoistAirEnthalpy, TDryBulb)
 
     if (isIP()) {
         HumRatio <- (MoistAirEnthalpy - 0.240 * TDryBulb) / (1061.0 + 0.444 * TDryBulb)

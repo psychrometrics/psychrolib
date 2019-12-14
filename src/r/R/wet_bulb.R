@@ -15,6 +15,7 @@
 #'
 #' @export
 GetTWetBulbFromHumRatio <- function (TDryBulb, HumRatio, Pressure) {
+    CheckLength(TDryBulb, HumRatio, Pressure)
     CheckHumRatio(HumRatio)
 
     BoundedHumRatio <- pmax(HumRatio, MIN_HUM_RATIO)

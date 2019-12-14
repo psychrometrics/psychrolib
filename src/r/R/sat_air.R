@@ -76,6 +76,8 @@ GetSatVapPres <- function (TDryBulb) {
 #'
 #' @export
 GetSatHumRatio <- function (TDryBulb, Pressure) {
+    CheckLength(TDryBulb, Pressure)
+
     SatVaporPres <- GetSatVapPres(TDryBulb)
     SatHumRatio <- 0.621945 * SatVaporPres / (Pressure - SatVaporPres)
 
@@ -95,6 +97,8 @@ GetSatHumRatio <- function (TDryBulb, Pressure) {
 #'
 #' @export
 GetSatAirEnthalpy <- function (TDryBulb, Pressure) {
+    CheckLength(TDryBulb, Pressure)
+
     SatHumRatio <- GetSatHumRatio(TDryBulb, Pressure)
     GetMoistAirEnthalpy(TDryBulb, SatHumRatio)
 }
