@@ -140,9 +140,9 @@ GetTDewPointFromVapPres <- function (TDryBulb, VapPres) {
             TDewPoint <- max(TDewPoint, BOUNDS[1])
             TDewPoint <- min(TDewPoint, BOUNDS[2])
 
-            if ((abs(TDewPoint - TDewPoint_iter) <= PSYCHRO_ENV$TOLERANCE)) break
+            if ((abs(TDewPoint - TDewPoint_iter) <= PSYCHRO_OPT$TOLERANCE)) break
 
-            if (index > MAX_ITER_COUNT) {
+            if (index > PSYCHRO_OPT$MAX_ITER_COUNT) {
                 stop("Convergence not reached in GetTDewPointFromVapPres. Stopping.")
             }
 

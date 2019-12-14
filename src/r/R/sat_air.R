@@ -82,7 +82,7 @@ GetSatHumRatio <- function (TDryBulb, Pressure) {
     SatHumRatio <- 0.621945 * SatVaporPres / (Pressure - SatVaporPres)
 
     # Validity check.
-    pmax(SatHumRatio, MIN_HUM_RATIO)
+    pmax(SatHumRatio, PSYCHRO_OPT$MIN_HUM_RATIO)
 }
 
 #' Return saturated air enthalpy given dry-bulb temperature and pressure.

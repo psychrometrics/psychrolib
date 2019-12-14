@@ -38,13 +38,6 @@ R_DA_IP <- 53.350
 # ASHRAE Handbook - Fundamentals (2017) ch. 1
 R_DA_SI <- 287.042
 
-# Maximum number of iterations before exiting while loops.
-MAX_ITER_COUNT <- 100L
-
-# Minimum acceptable humidity ratio used/returned by any functions.
-# Any value above 0 or below the MIN_HUM_RATIO will be reset to this value.
-MIN_HUM_RATIO <- 1e-7
-
 # Freezing point of water in Fahrenheit.
 FREEZING_POINT_WATER_IP <- 32.0
 

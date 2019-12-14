@@ -20,7 +20,7 @@ GetHumRatioFromVapPres <- function (VapPres, Pressure) {
     HumRatio <- 0.621945 * VapPres / (Pressure - VapPres)
 
     # Validity check.
-    pmax(HumRatio, MIN_HUM_RATIO)
+    pmax(HumRatio, PSYCHRO_OPT$MIN_HUM_RATIO)
 }
 
 #' Return vapor Pressure given humidity ratio and pressure.
@@ -38,6 +38,6 @@ GetVapPresFromHumRatio <- function (HumRatio, Pressure) {
     CheckLength(HumRatio, Pressure)
     CheckHumRatio(HumRatio)
 
-    BoundedHumRatio <- pmax(HumRatio, MIN_HUM_RATIO)
+    BoundedHumRatio <- pmax(HumRatio, PSYCHRO_OPT$MIN_HUM_RATIO)
     Pressure * BoundedHumRatio / (0.621945 + BoundedHumRatio)
 }

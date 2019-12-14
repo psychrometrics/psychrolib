@@ -41,7 +41,7 @@ GetVaporPressureDeficit <- function (TDryBulb, HumRatio, Pressure) {
 GetDegreeOfSaturation <- function (TDryBulb, HumRatio, Pressure) {
     CheckLength(TDryBulb, HumRatio, Pressure)
     CheckHumRatio(HumRatio)
-    BoundedHumRatio <- pmax(HumRatio, MIN_HUM_RATIO)
+    BoundedHumRatio <- pmax(HumRatio, PSYCHRO_OPT$MIN_HUM_RATIO)
 
     SatHumRatio <- GetSatHumRatio(TDryBulb, Pressure)
     BoundedHumRatio / SatHumRatio
@@ -61,7 +61,7 @@ GetDegreeOfSaturation <- function (TDryBulb, HumRatio, Pressure) {
 GetMoistAirEnthalpy <- function (TDryBulb, HumRatio) {
     CheckLength(TDryBulb, HumRatio)
     CheckHumRatio(HumRatio)
-    BoundedHumRatio <- pmax(HumRatio, MIN_HUM_RATIO)
+    BoundedHumRatio <- pmax(HumRatio, PSYCHRO_OPT$MIN_HUM_RATIO)
 
     if (isIP()) {
         0.240 * TDryBulb + BoundedHumRatio * (1061 + 0.444 * TDryBulb)
@@ -90,7 +90,7 @@ GetMoistAirEnthalpy <- function (TDryBulb, HumRatio) {
 GetMoistAirVolume <- function (TDryBulb, HumRatio, Pressure) {
     CheckLength(TDryBulb, HumRatio, Pressure)
     CheckHumRatio(HumRatio)
-    BoundedHumRatio <- pmax(HumRatio, MIN_HUM_RATIO)
+    BoundedHumRatio <- pmax(HumRatio, PSYCHRO_OPT$MIN_HUM_RATIO)
 
     if (isIP()) {
         # R_DA_IP / 144 equals 0.370486 which is the coefficient appearing in eqn 26
@@ -123,7 +123,7 @@ GetMoistAirVolume <- function (TDryBulb, HumRatio, Pressure) {
 GetTDryBulbFromMoistAirVolumeAndHumRatio <- function (MoistAirVolume, HumRatio, Pressure) {
     CheckLength(MoistAirVolume, HumRatio, Pressure)
     CheckHumRatio(HumRatio)
-    BoundedHumRatio <- pmax(HumRatio, MIN_HUM_RATIO)
+    BoundedHumRatio <- pmax(HumRatio, PSYCHRO_OPT$MIN_HUM_RATIO)
 
     if (isIP()) {
         GetTFahrenheitFromTRankine(MoistAirVolume * (144 * Pressure)
@@ -149,7 +149,7 @@ GetTDryBulbFromMoistAirVolumeAndHumRatio <- function (MoistAirVolume, HumRatio, 
 GetMoistAirDensity <- function (TDryBulb, HumRatio, Pressure) {
     CheckLength(TDryBulb, HumRatio, Pressure)
     CheckHumRatio(HumRatio)
-    BoundedHumRatio <- pmax(HumRatio, MIN_HUM_RATIO)
+    BoundedHumRatio <- pmax(HumRatio, PSYCHRO_OPT$MIN_HUM_RATIO)
 
     MoistAirVolume <- GetMoistAirVolume(TDryBulb, BoundedHumRatio, Pressure)
     (1 + BoundedHumRatio) / MoistAirVolume

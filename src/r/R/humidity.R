@@ -15,7 +15,7 @@
 GetSpecificHumFromHumRatio <- function (HumRatio) {
     CheckHumRatio(HumRatio)
 
-    BoundedHumRatio <- pmax(HumRatio, MIN_HUM_RATIO)
+    BoundedHumRatio <- pmax(HumRatio, PSYCHRO_OPT$MIN_HUM_RATIO)
     BoundedHumRatio / (1.0 + BoundedHumRatio)
 }
 
@@ -35,5 +35,5 @@ GetHumRatioFromSpecificHum <- function (SpecificHum) {
     HumRatio <- SpecificHum / (1.0 - SpecificHum)
 
     # Validity check.
-    pmax(HumRatio, MIN_HUM_RATIO)
+    pmax(HumRatio, PSYCHRO_OPT$MIN_HUM_RATIO)
 }

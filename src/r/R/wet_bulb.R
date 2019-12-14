@@ -18,7 +18,7 @@ GetTWetBulbFromHumRatio <- function (TDryBulb, HumRatio, Pressure) {
     CheckLength(TDryBulb, HumRatio, Pressure)
     CheckHumRatio(HumRatio)
 
-    BoundedHumRatio <- pmax(HumRatio, MIN_HUM_RATIO)
+    BoundedHumRatio <- pmax(HumRatio, PSYCHRO_OPT$MIN_HUM_RATIO)
 
     TDewPoint <- GetTDewPointFromHumRatio(TDryBulb, BoundedHumRatio, Pressure)
 
@@ -31,7 +31,7 @@ GetTWetBulbFromHumRatio <- function (TDryBulb, HumRatio, Pressure) {
         TWetBulb <- (TWetBulbInf + TWetBulbSup) / 2
 
         # Bisection loop
-        while((TWetBulbSup - TWetBulbInf) > PSYCHRO_ENV$TOLERANCE) {
+        while((TWetBulbSup - TWetBulbInf) > PSYCHRO_OPT$TOLERANCE) {
 
             # Compute humidity ratio at temperature Tstar
             Wstar <- GetHumRatioFromTWetBulb(TDryBulb, TWetBulb, Pressure)
@@ -46,7 +46,7 @@ GetTWetBulbFromHumRatio <- function (TDryBulb, HumRatio, Pressure) {
             # New guess of wet bulb temperature
             TWetBulb <- (TWetBulbSup + TWetBulbInf) / 2
 
-            if (index >= MAX_ITER_COUNT) {
+            if (index >= PSYCHRO_OPT$MAX_ITER_COUNT) {
                 stop("Convergence not reached in GetTWetBulbFromHumRatio. Stopping.")
             }
 
@@ -111,7 +111,7 @@ GetHumRatioFromTWetBulb <- function (TDryBulb, TWetBulb, Pressure) {
     }
 
     # Validity check.
-    pmax(HumRatio, MIN_HUM_RATIO)
+    pmax(HumRatio, PSYCHRO_OPT$MIN_HUM_RATIO)
 }
 
 #' Return humidity ratio given dry-bulb temperature, relative humidity, and pressure.

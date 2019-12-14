@@ -1,5 +1,5 @@
 test_that("helper functions work sanely before initialization", {
-    PSYCHRO_ENV$UNITS <- NA_character_
+    PSYCHRO_OPT$UNITS <- NA_character_
     expect_true(is.na(GetUnitSystem()))
     expect_error(isIP())
 })

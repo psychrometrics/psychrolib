@@ -92,7 +92,7 @@ GetTDryBulbFromEnthalpyAndHumRatio <- function (MoistAirEnthalpy, HumRatio) {
     CheckLength(MoistAirEnthalpy, HumRatio)
     CheckHumRatio(HumRatio)
 
-    BoundedHumRatio <- pmax(HumRatio, MIN_HUM_RATIO)
+    BoundedHumRatio <- pmax(HumRatio, PSYCHRO_OPT$MIN_HUM_RATIO)
 
     if (isIP()) {
         (MoistAirEnthalpy - 1061.0 * BoundedHumRatio) / (0.240 + 0.444 * BoundedHumRatio)
@@ -125,5 +125,5 @@ GetHumRatioFromEnthalpyAndTDryBulb <- function (MoistAirEnthalpy, TDryBulb) {
     }
 
     # Validity check.
-    pmax(HumRatio, MIN_HUM_RATIO)
+    pmax(HumRatio, PSYCHRO_OPT$MIN_HUM_RATIO)
 }
