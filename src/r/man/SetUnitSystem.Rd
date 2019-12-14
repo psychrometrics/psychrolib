@@ -13,5 +13,5 @@ SetUnitSystem(units)
 Set the system of units to use (SI or IP).
 }
 \note{
-This function *HAS TO BE CALLED* before the library can be used
+The default unit system is "SI".
 }
