@@ -1,4 +1,4 @@
-Package: psychro
+Package: psychrolib
 Type: Package
 Title: Psychrometric Properties of Moist and Dry Air
 Version: 2.3.0

@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# psychro
+# psychrolib
 
 A port of the original python
 [psychrolib](https://github.com/psychrometrics/psychrolib) library
@@ -15,7 +15,7 @@ You can install the released version of psychro from
 [CRAN](https://CRAN.R-project.org) with:
 
 ``` r
-install.packages("psychro")
+install.packages("psychrolib")
 ```
 
 And the development version from [GitHub](https://github.com/) with:
@@ -30,7 +30,7 @@ remotes::install_github("psychrometrics/psychrolib", subdir = "src/r")
 This is a basic example which shows you how to solve a common problem:
 
 ``` r
-library(psychro)
+library(psychrolib)
 #> Setting unit system to 'SI'. See '?SetUnitSystem' for details.
 
 # Calculate the dew point temperature for a dry bulb temperature of 25 C and a relative humidity of 80%
