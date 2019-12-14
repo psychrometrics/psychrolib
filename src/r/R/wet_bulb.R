@@ -22,45 +22,20 @@ GetTWetBulbFromHumRatio <- function (TDryBulb, HumRatio, Pressure) {
 
     TDewPoint <- GetTDewPointFromHumRatio(TDryBulb, BoundedHumRatio, Pressure)
 
-    find_root <- function (TDryBulb, TDewPoint, BoundedHumRatio, Pressure) {
-        index <- 1L
+    l <- max(c(length(TDryBulb), length(BoundedHumRatio), length(Pressure)))
+    TDryBulb <- rep(TDryBulb, length.out = l)
+    BoundedHumRatio <- rep(BoundedHumRatio, length.out = l)
+    Pressure <- rep(Pressure, length.out = l)
+    TWetBulb <- numeric(l)
 
-        # Initial guesses
-        TWetBulbSup <- TDryBulb
-        TWetBulbInf <- TDewPoint
-        TWetBulb <- (TWetBulbInf + TWetBulbSup) / 2
-
-        # Bisection loop
-        while((TWetBulbSup - TWetBulbInf) > PSYCHRO_OPT$TOLERANCE) {
-
-            # Compute humidity ratio at temperature Tstar
-            Wstar <- GetHumRatioFromTWetBulb(TDryBulb, TWetBulb, Pressure)
-
-            # Get new boundds
-            if (Wstar > BoundedHumRatio) {
-                TWetBulbSup <- TWetBulb
-            } else {
-                TWetBulbInf <- TWetBulb
-            }
-
-            # New guess of wet bulb temperature
-            TWetBulb <- (TWetBulbSup + TWetBulbInf) / 2
-
-            if (index >= PSYCHRO_OPT$MAX_ITER_COUNT) {
-                stop("Convergence not reached in GetTWetBulbFromHumRatio. Stopping.")
-            }
-
-            index <- index + 1L
-        }
-
-        TWetBulb
+    for (i in seq_along(TDryBulb)) {
+        TWetBulb[[i]] <- C_GetTWetBulbFromHumRatio(
+            TDryBulb[[i]], TDewPoint[[i]], BoundedHumRatio[[i]], Pressure[[i]],
+            PSYCHRO_OPT$MIN_HUM_RATIO, PSYCHRO_OPT$MAX_ITER_COUNT, PSYCHRO_OPT$TOLERANCE, isIP()
+        )
     }
 
-    input <- list(TDryBulb = TDryBulb, TDewPoint = TDewPoint, BoundedHumRatio = BoundedHumRatio, Pressure = Pressure)
-    l <- max(sapply(input, length))
-    input <- lapply(input, function (x) rep(x, length.out = l))
-
-    vapply(seq.int(l), function (i) find_root(input$TDryBulb[i], input$TDewPoint[i], input$BoundedHumRatio[i], input$Pressure[i]), 0.0)
+    TWetBulb
 }
 
 #' Return humidity ratio given dry-bulb temperature, wet-bulb temperature, and pressure.

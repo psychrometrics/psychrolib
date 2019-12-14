@@ -121,40 +121,19 @@ GetTDewPointFromVapPres <- function (TDryBulb, VapPres) {
         stop("Partial pressure of water vapor is outside range of validity of equations")
     }
 
-    # We use NR to approximate the solution.
-    # First guess
-    TDewPoint <- TDryBulb        # Calculated value of dew point temperatures, solved for iteratively
-    lnVP <- log(VapPres)         # Partial pressure of water vapor in moist air
+    l <- max(c(length(TDryBulb), length(VapPres)))
+    TDryBulb <- rep(TDryBulb, length.out = l)
+    VapPres <- rep(VapPres, length.out = l)
+    TDewPoint <- numeric(l)
 
-    find_root <- function (TDewPoint) {
-        index <- 1L
-        while (TRUE) {
-            TDewPoint_iter <- TDewPoint   # TDewPoint used in NR calculation
-            lnVP_iter <- log(GetSatVapPres(TDewPoint_iter))
-
-            # Derivative of function, calculated analytically
-            d_lnVP <- dLnPws_(TDewPoint_iter)
-
-            # New estimate, bounded by the search domain defined above
-            TDewPoint <- TDewPoint_iter - (lnVP_iter - lnVP) / d_lnVP
-            TDewPoint <- max(TDewPoint, BOUNDS[1])
-            TDewPoint <- min(TDewPoint, BOUNDS[2])
-
-            if ((abs(TDewPoint - TDewPoint_iter) <= PSYCHRO_OPT$TOLERANCE)) break
-
-            if (index > PSYCHRO_OPT$MAX_ITER_COUNT) {
-                stop("Convergence not reached in GetTDewPointFromVapPres. Stopping.")
-            }
-
-            index <- index + 1L
-        }
-
-        TDewPoint
+    for (i in seq_along(TDryBulb)) {
+        TDewPoint[[i]] <- C_GetTDewPointFromVapPres(
+            TDryBulb[[i]], VapPres[[i]], BOUNDS[[1]], BOUNDS[[2]],
+            PSYCHRO_OPT$MAX_ITER_COUNT, PSYCHRO_OPT$TOLERANCE, isIP()
+        )
     }
 
-    TDewPoint <- vapply(TDewPoint, find_root, 0.0)
-
-    pmin(TDewPoint, TDryBulb)
+    TDewPoint
 }
 
 #' Return vapor pressure given dew point temperature.
