@@ -31,9 +31,9 @@ matrix:
         - release
         - devel
       script:
-        - |
-          R CMD build .
-          R CMD check psychrolib*tar.gz
+        - cd src/r
+        - R CMD build .
+        - R CMD check psychrolib*tar.gz
       after_success:
         - Rscript -e 'covr::codecov()'
 
