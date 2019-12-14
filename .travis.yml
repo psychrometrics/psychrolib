@@ -30,8 +30,9 @@ matrix:
       r:
         - release
         - devel
+      before_install:
+        - cd $TRAVIS_BUILD_DIR/src/r
       script:
-        - cd src/r
         - R CMD build .
         - R CMD check psychrolib*tar.gz
       after_success:
