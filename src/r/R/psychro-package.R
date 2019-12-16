@@ -16,6 +16,13 @@
 #' units. The functions are based of formulae from the 2017 ASHRAE Handbook —
 #' Fundamentals, Chapter 1, SI and IP editions.
 #'
+#' @section Pakcage options:
+#'
+#' \itemize{
+#'   \item \code{psychrolib.unitsystem} The default unit system. Should be
+#'         either be \code{"SI"} or \code{"IP"}.
+#' }
+#'
 #' @importFrom Rcpp sourceCpp
 #' @useDynLib psychrolib, .registration = TRUE
 #' @author

@@ -23,6 +23,15 @@ moist and dry air, working in both metric (SI) and imperial (IP) systems of
 units. The functions are based of formulae from the 2017 ASHRAE Handbook —
 Fundamentals, Chapter 1, SI and IP editions.
 }
+\section{Pakcage options}{
+
+
+\itemize{
+  \item \code{psychrolib.unitsystem} The default unit system. Should be
+        either be \code{"SI"} or \code{"IP"}.
+}
+}
+
 \seealso{
 Useful links:
 \itemize{

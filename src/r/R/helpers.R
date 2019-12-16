@@ -5,7 +5,7 @@
 PSYCHRO_OPT <- new.env(parent = emptyenv())
 
 # The system of units in use
-PSYCHRO_OPT$UNITS <- NA_character_
+PSYCHRO_OPT$UNITS <- getOption("psychrolib.units", NA_character_)
 
 # Tolerance of temperature calculations
 PSYCHRO_OPT$TOLERANCE <- NA_real_
