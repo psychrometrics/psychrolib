@@ -13,6 +13,3 @@ SetUnitSystem(units)
 \description{
 Set the system of units to use (SI or IP).
 }
-\note{
-The default unit system is "SI".
-}

@@ -25,9 +25,6 @@ PSYCHROLIB_UNITS_OPTIONS <- c("IP", "SI")
 #' @param units A string indicating the system of units chosen. Should be either
 #'        \code{"SI"} or \code{"IP"}
 #'
-#' @note
-#' The default unit system is "SI".
-#'
 #' @export
 SetUnitSystem <- function (units) {
 
