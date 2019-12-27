@@ -35,8 +35,8 @@ CheckRelHum <- function (RelHum) {
 CheckSpecificHum <- function (SpecificHum) {
     stopifnot(is.numeric(SpecificHum))
 
-    if (any(SpecificHum < 0.0 | SpecificHum > 1.0)) {
-        stop("Specific humidity is outside range [0, 1]")
+    if (any(SpecificHum < 0.0 | SpecificHum >= 1.0)) {
+        stop("Specific humidity is outside range [0, 1)")
     }
 
     SpecificHum
