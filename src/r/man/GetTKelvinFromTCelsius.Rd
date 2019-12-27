@@ -3,19 +3,19 @@
 \name{GetTKelvinFromTCelsius}
 \alias{GetTKelvinFromTCelsius}
 \title{Utility function to convert temperature to Kelvin (K)
-given temperature in degree Celsius (°C).}
+given temperature in degree Celsius (degreeC).}
 \usage{
 GetTKelvinFromTCelsius(TCelsius)
 }
 \arguments{
-\item{TCelsius}{A numeric vector of temperature in degree Celsius (°C)}
+\item{TCelsius}{A numeric vector of temperature in degree Celsius (degreeC)}
 }
 \value{
 A numeric vector of temperature in Kelvin (K)
 }
 \description{
 Utility function to convert temperature to Kelvin (K)
-given temperature in degree Celsius (°C).
+given temperature in degree Celsius (degreeC).
 }
 \section{Notes}{
 

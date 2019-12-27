@@ -14,7 +14,7 @@ GetTDryBulbFromMoistAirVolumeAndHumRatio(MoistAirVolume, HumRatio, Pressure)
 \item{Pressure}{A numeric vector of atmospheric pressure in Psi [IP] or Pa [SI]}
 }
 \value{
-A numeric vector of tDryBulb : Dry-bulb temperature in °F [IP] or °C [SI]
+A numeric vector of tDryBulb : Dry-bulb temperature in degreeF [IP] or degreeC [SI]
 }
 \description{
 Return dry-bulb temperature given moist air specific volume, humidity ratio, and pressure.

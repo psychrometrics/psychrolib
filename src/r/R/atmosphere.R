@@ -31,7 +31,7 @@ GetStandardAtmPressure <- function (Altitude) {
 #'
 #' @param Altitude A numeric vector of altitude in ft [IP] or m [SI]
 #'
-#' @return A numeric vector of standard atmosphere dry-bulb temperature in °F [IP] or °C [SI]
+#' @return A numeric vector of standard atmosphere dry-bulb temperature in degreeF [IP] or degreeC [SI]
 #'
 #' @references
 #' ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 4
@@ -56,7 +56,7 @@ GetStandardAtmTemperature <- function (Altitude) {
 #'
 #' @param StationPressure A numeric vector of observed station pressure in Psi [IP] or Pa [SI]
 #' @param Altitude A numeric vector of altitude in ft [IP] or m [SI]
-#' @param TDryBulb A numeric vector of dry-bulb temperature in °F [IP] or °C [SI]
+#' @param TDryBulb A numeric vector of dry-bulb temperature in degreeF [IP] or degreeC [SI]
 #'
 #' @return A numeric vector of sea level barometric pressure in Psi [IP] or Pa [SI]
 #'
@@ -82,14 +82,14 @@ GetSeaLevelPressure <- function (StationPressure, Altitude, TDryBulb) {
 
     if (isIP()) {
         # Calculate average temperature in column of air, assuming a lapse rate
-        # of 3.6 °F/1000ft
+        # of 3.6 degreeF/1000ft
         TColumn <- TDryBulb + 0.0036 * Altitude / 2
 
         # Determine the scale height
         H <- 53.351 * GetTRankineFromTFahrenheit(TColumn)
     } else {
         # Calculate average temperature in column of air, assuming a lapse rate
-        # of 6.5 °C/km
+        # of 6.5 degreeC/km
         TColumn <- TDryBulb + 0.0065 * Altitude / 2
 
         # Determine the scale height
@@ -104,7 +104,7 @@ GetSeaLevelPressure <- function (StationPressure, Altitude, TDryBulb) {
 #'
 #' @param SeaLevelPressure A numeric vector of sea level barometric pressure in Psi [IP] or Pa [SI]
 #' @param Altitude A numeric vector of altitude in ft [IP] or m [SI]
-#' @param TDryBulb A numeric vector of dry-bulb temperature in °F [IP] or °C [SI]
+#' @param TDryBulb A numeric vector of dry-bulb temperature in degreeF [IP] or degreeC [SI]
 #'
 #' @return A numeric vector of station pressure in Psi [IP] or Pa [SI]
 #'

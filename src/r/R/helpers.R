@@ -14,7 +14,7 @@ PSYCHRO_OPT$TOLERANCE <- NA_real_
 PSYCHRO_OPT$MAX_ITER_COUNT <- 100L
 
 # Minimum acceptable humidity ratio used/returned by any functions.
-# Any value above 0 or below the MIN_HUM_RATIO will be reset to this value.
+# Any value above 0 and below the MIN_HUM_RATIO will be reset to this value.
 PSYCHRO_OPT$MIN_HUM_RATIO <- 1e-7
 
 # The options for PSYCHROLIB_UNITS

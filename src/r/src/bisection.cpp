@@ -2,10 +2,10 @@
 using namespace Rcpp;
 
 // Constants
-#define ZERO_FAHRENHEIT_AS_RANKINE 459.67  // Zero degree Fahrenheit (°F) expressed as degree Rankine (°R).
+#define ZERO_FAHRENHEIT_AS_RANKINE 459.67  // Zero degree Fahrenheit (degreeF) expressed as degree Rankine (degreeR).
                                            // Reference: ASHRAE Handbook - Fundamentals (2017) ch. 39.
 
-#define ZERO_CELSIUS_AS_KELVIN 273.15      // Zero degree Celsius (°C) expressed as Kelvin (K).
+#define ZERO_CELSIUS_AS_KELVIN 273.15      // Zero degree Celsius (degreeC) expressed as Kelvin (K).
                                            // Reference: ASHRAE Handbook - Fundamentals (2017) ch. 39.
 
 #define FREEZING_POINT_WATER_IP 32.0       // Freezing point of water in Fahrenheit.
@@ -25,7 +25,7 @@ using namespace Rcpp;
 // GetTDewPointFromVapPres, which inverts the present function, does not converge properly around
 // the freezing point.
 // (o) Vapor Pressure of saturated air in Psi [IP] or Pa [SI]
-double C_GetSatVapPres(const double & TDryBulb, // (i) Dry bulb temperature in °F [IP] or °C [SI]
+double C_GetSatVapPres(const double & TDryBulb, // (i) Dry bulb temperature in degreeF [IP] or degreeC [SI]
                        const bool & inIP) {
     double LnPws, T;
 
@@ -56,7 +56,7 @@ double C_GetSatVapPres(const double & TDryBulb, // (i) Dry bulb temperature in �
 // as a function of dry-bulb temperature.
 // Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn. 5 & 6
 // (o) Derivative of natural log of vapor pressure of saturated air in Psi [IP] or Pa [SI]
-double C_dLnPws(const double & TDryBulb, // (i) Dry bulb temperature in °F [IP] or °C [SI]
+double C_dLnPws(const double & TDryBulb, // (i) Dry bulb temperature in degreeF [IP] or degreeC [SI]
                 const bool & inIP) {
     double dLnPws, T;
 
@@ -86,7 +86,7 @@ double C_dLnPws(const double & TDryBulb, // (i) Dry bulb temperature in °F [IP]
 // Return humidity ratio of saturated air given dry-bulb temperature and pressure.
 // Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 36, solved for W
 // (o) Humidity ratio of saturated air in lb_H2O lb_Air-1 [IP] or kg_H2O kg_Air-1 [SI]
-double C_GetSatHumRatio(const double & TDryBulb, // (i) Dry bulb temperature in °F [IP] or °C [SI]
+double C_GetSatHumRatio(const double & TDryBulb, // (i) Dry bulb temperature in degreeF [IP] or degreeC [SI]
                         const double & Pressure, // (i) Atmospheric pressure in Psi [IP] or Pa [SI]
                         const double & MIN_HUM_RATIO,
                         const bool & inIP) {
@@ -102,8 +102,8 @@ double C_GetSatHumRatio(const double & TDryBulb, // (i) Dry bulb temperature in 
 // Return humidity ratio given dry-bulb temperature, wet-bulb temperature, and pressure.
 // Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 33 and 35
 // (o) Humidity Ratio in lb_H2O lb_Air-1 [IP] or kg_H2O kg_Air-1 [SI]
-double C_GetHumRatioFromTWetBulb(const double & TDryBulb, // (i) Dry bulb temperature in °F [IP] or °C [SI]
-                                 const double & TWetBulb, // (i) Wet bulb temperature in °F [IP] or °C [SI]
+double C_GetHumRatioFromTWetBulb(const double & TDryBulb, // (i) Dry bulb temperature in degreeF [IP] or degreeC [SI]
+                                 const double & TWetBulb, // (i) Wet bulb temperature in degreeF [IP] or degreeC [SI]
                                  const double & Pressure, // (i) Atmospheric pressure in Psi [IP] or Pa [SI],
                                  const double & MIN_HUM_RATIO,
                                  const bool & inIP) {
@@ -142,9 +142,9 @@ double C_GetHumRatioFromTWetBulb(const double & TDryBulb, // (i) Dry bulb temper
 // pressure as a function of temperature, which is a very smooth function
 // Convergence is usually achieved in 3 to 5 iterations.
 // TDryBulb is not really needed here, just used for convenience.
-// (o) Dew Point temperature in °F [IP] or °C [SI]
+// (o) Dew Point temperature in degreeF [IP] or degreeC [SI]
 // [[Rcpp::export]]
-double C_GetTDewPointFromVapPres(const double & TDryBulb, // (i) Dry bulb temperature in °F [IP] or °C [SI]
+double C_GetTDewPointFromVapPres(const double & TDryBulb, // (i) Dry bulb temperature in degreeF [IP] or degreeC [SI]
                                  const double & VapPres,  // (i) Partial pressure of water vapor in moist air in Psi [IP] or Pa [SI]
                                  const double & BOUNDS_Lower,
                                  const double & BOUNDS_Upper,
@@ -153,7 +153,7 @@ double C_GetTDewPointFromVapPres(const double & TDryBulb, // (i) Dry bulb temper
                                  const bool & inIP) {
     // We use NR to approximate the solution.
     // First guess
-    double TDewPoint = TDryBulb;  // Calculated value of dew point temperatures, solved for iteratively in °F [IP] or °C [SI]
+    double TDewPoint = TDryBulb;  // Calculated value of dew point temperatures, solved for iteratively in degreeF [IP] or degreeC [SI]
     double lnVP = log(VapPres);   // Natural logarithm of partial pressure of water vapor pressure in moist air
 
     double TDewPoint_iter;        // Value of TDewPoint used in NR calculation
@@ -184,10 +184,10 @@ double C_GetTDewPointFromVapPres(const double & TDryBulb, // (i) Dry bulb temper
 
 // Return wet-bulb temperature given dry-bulb temperature, humidity ratio, and pressure.
 // Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 33 and 35 solved for Tstar
-// (o) Wet bulb temperature in °F [IP] or °C [SI]
+// (o) Wet bulb temperature in degreeF [IP] or degreeC [SI]
 // [[Rcpp::export]]
-double C_GetTWetBulbFromHumRatio(const double & TDryBulb,        // (i) Dry bulb temperature in °F [IP] or °C [SI]
-                                 const double & TDewPoint,       // (i) Dew point temperature in °F [IP] or °C [SI]
+double C_GetTWetBulbFromHumRatio(const double & TDryBulb,        // (i) Dry bulb temperature in degreeF [IP] or degreeC [SI]
+                                 const double & TDewPoint,       // (i) Dew point temperature in degreeF [IP] or degreeC [SI]
                                  const double & BoundedHumRatio, // (i) Humidity ratio in lb_H2O lb_Air-1 [IP] or kg_H2O kg_Air-1 [SI]
                                  const double & Pressure,        // (i) Atmospheric pressure in Psi [IP] or Pa [SI]
                                  const double & MIN_HUM_RATIO,

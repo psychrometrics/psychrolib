@@ -2,20 +2,20 @@
 % Please edit documentation in R/temp.R
 \name{GetTFahrenheitFromTRankine}
 \alias{GetTFahrenheitFromTRankine}
-\title{Utility function to convert temperature to degree Fahrenheit (°F)
-given temperature in degree Rankine (°R).}
+\title{Utility function to convert temperature to degree Fahrenheit (degreeF)
+given temperature in degree Rankine (degreeR).}
 \usage{
 GetTFahrenheitFromTRankine(TRankine)
 }
 \arguments{
-\item{TRankine}{A numeric vector of temperature in degree Rankine (°R)}
+\item{TRankine}{A numeric vector of temperature in degree Rankine (degreeR)}
 }
 \value{
-A numeric vector of temperature in degree Fahrenheit (°F)
+A numeric vector of temperature in degree Fahrenheit (degreeF)
 }
 \description{
-Utility function to convert temperature to degree Fahrenheit (°F)
-given temperature in degree Rankine (°R).
+Utility function to convert temperature to degree Fahrenheit (degreeF)
+given temperature in degree Rankine (degreeR).
 }
 \section{Notes}{
 

@@ -7,7 +7,7 @@
 GetDryAirEnthalpy(TDryBulb)
 }
 \arguments{
-\item{TDryBulb}{A numeric vector of dry-bulb temperature in °F [IP] or °C [SI]}
+\item{TDryBulb}{A numeric vector of dry-bulb temperature in degreeF [IP] or degreeC [SI]}
 }
 \value{
 A numeric vector of dry air enthalpy in Btu lb-1 [IP] or J kg-1 [SI]

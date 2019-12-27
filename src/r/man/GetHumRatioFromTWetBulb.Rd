@@ -7,9 +7,9 @@
 GetHumRatioFromTWetBulb(TDryBulb, TWetBulb, Pressure)
 }
 \arguments{
-\item{TDryBulb}{A numeric vector of dry-bulb temperature in °F [IP] or °C [SI]}
+\item{TDryBulb}{A numeric vector of dry-bulb temperature in degreeF [IP] or degreeC [SI]}
 
-\item{TWetBulb}{A numeric vector of wet-bulb temperature in °F [IP] or °C [SI]}
+\item{TWetBulb}{A numeric vector of wet-bulb temperature in degreeF [IP] or degreeC [SI]}
 
 \item{Pressure}{A numeric vector of atmospheric Pressure in Psi [IP] or Pa [SI]}
 }

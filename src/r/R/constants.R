@@ -2,16 +2,16 @@
 # Global constants
 #######################################################################################################
 
-# Zero degree Fahrenheit (°F) expressed as degree Rankine (°R)
+# Zero degree Fahrenheit (degreeF) expressed as degree Rankine (degreeR)
 #
 # Units:
-# °R
+# degreeR
 #
 # Reference:
 # ASHRAE Handbook - Fundamentals (2017) ch. 39
 ZERO_FAHRENHEIT_AS_RANKINE <- 459.67
 
-# Zero degree Celsius (°C) expressed as Kelvin (K)
+# Zero degree Celsius (degreeC) expressed as Kelvin (K)
 #
 # Units:
 # K

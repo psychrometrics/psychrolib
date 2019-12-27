@@ -7,7 +7,7 @@
 GetSatVapPres(TDryBulb)
 }
 \arguments{
-\item{TDryBulb}{A numeric vector of dry-bulb temperature in °F [IP] or °C [SI]}
+\item{TDryBulb}{A numeric vector of dry-bulb temperature in degreeF [IP] or degreeC [SI]}
 }
 \value{
 A numeric vector of vapor pressure of saturated air in Psi [IP] or Pa [SI]

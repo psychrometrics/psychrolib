@@ -7,7 +7,7 @@
 GetRelHumFromVapPres(TDryBulb, VapPres)
 }
 \arguments{
-\item{TDryBulb}{A numeric vector of dry-bulb temperature in °F [IP] or °C [SI]}
+\item{TDryBulb}{A numeric vector of dry-bulb temperature in degreeF [IP] or degreeC [SI]}
 
 \item{VapPres}{A numeric vector of partial pressure of water vapor in moist air in Psi [IP] or Pa [SI]}
 }

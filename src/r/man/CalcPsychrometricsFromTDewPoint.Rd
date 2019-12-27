@@ -7,9 +7,9 @@
 CalcPsychrometricsFromTDewPoint(TDryBulb, TDewPoint, Pressure)
 }
 \arguments{
-\item{TDryBulb}{A numeric vector of dry-bulb temperature in °F [IP] or °C [SI]}
+\item{TDryBulb}{A numeric vector of dry-bulb temperature in degreeF [IP] or degreeC [SI]}
 
-\item{TDewPoint}{A numeric vector of dew-point temperature in °F [IP] or °C [SI]}
+\item{TDewPoint}{A numeric vector of dew-point temperature in degreeF [IP] or degreeC [SI]}
 
 \item{Pressure}{A numeric vector of atmospheric pressure in Psi [IP] or Pa [SI]}
 }
@@ -17,7 +17,7 @@ CalcPsychrometricsFromTDewPoint(TDryBulb, TDewPoint, Pressure)
 A list with named components for each psychrometric value computed:
 \describe{
   \item{HumRatio}{Humidity ratio in lb_H2O lb_Air-1 [IP] or kg_H2O kg_Air-1 [SI]}
-  \item{TWetBulb}{Wet-bulb temperature in °F [IP] or °C [SI]}
+  \item{TWetBulb}{Wet-bulb temperature in degreeF [IP] or degreeC [SI]}
   \item{RelHum}{Relative humidity in range [0, 1]}
   \item{VapPres}{Partial pressure of water vapor in moist air in Psi [IP] or Pa [SI]}
   \item{MoistAirEnthalpy}{Moist air enthalpy in Btu lb-1 [IP] or J kg-1 [SI]}

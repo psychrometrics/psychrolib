@@ -7,12 +7,12 @@
 GetTDewPointFromVapPres(TDryBulb, VapPres)
 }
 \arguments{
-\item{TDryBulb}{A numeric vector of dry-bulb temperature in °F [IP] or °C [SI]}
+\item{TDryBulb}{A numeric vector of dry-bulb temperature in degreeF [IP] or degreeC [SI]}
 
 \item{VapPres}{A numeric vector of partial pressure of water vapor in moist air in Psi [IP] or Pa [SI]}
 }
 \value{
-A numeric vector of dew-point temperature in °F [IP] or °C [SI]
+A numeric vector of dew-point temperature in degreeF [IP] or degreeC [SI]
 }
 \description{
 Return dew-point temperature given dry-bulb temperature and vapor pressure.

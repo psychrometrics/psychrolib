@@ -2,12 +2,12 @@
 # Conversion between temperature units
 #######################################################################################################
 
-#' Utility function to convert temperature to degree Rankine (°R)
-#' given temperature in degree Fahrenheit (°F).
+#' Utility function to convert temperature to degree Rankine (degreeR)
+#' given temperature in degree Fahrenheit (degreeF).
 #'
-#' @param TFahrenheit A numeric vector of temperature in degree Fahrenheit (°F)
+#' @param TFahrenheit A numeric vector of temperature in degree Fahrenheit (degreeF)
 #'
-#' @return A numeric vector of temperature in degree Rankine (°R)
+#' @return A numeric vector of temperature in degree Rankine (degreeR)
 #'
 #' @section Notes:
 #' Exact conversion.
@@ -23,12 +23,12 @@ GetTRankineFromTFahrenheit <- function (TFahrenheit) {
     TFahrenheit + ZERO_FAHRENHEIT_AS_RANKINE
 }
 
-#' Utility function to convert temperature to degree Fahrenheit (°F)
-#' given temperature in degree Rankine (°R).
+#' Utility function to convert temperature to degree Fahrenheit (degreeF)
+#' given temperature in degree Rankine (degreeR).
 #'
-#' @param TRankine A numeric vector of temperature in degree Rankine (°R)
+#' @param TRankine A numeric vector of temperature in degree Rankine (degreeR)
 #'
-#' @return A numeric vector of temperature in degree Fahrenheit (°F)
+#' @return A numeric vector of temperature in degree Fahrenheit (degreeF)
 #'
 #' @section Notes:
 #' Exact conversion.
@@ -45,9 +45,9 @@ GetTFahrenheitFromTRankine <- function (TRankine) {
 }
 
 #' Utility function to convert temperature to Kelvin (K)
-#' given temperature in degree Celsius (°C).
+#' given temperature in degree Celsius (degreeC).
 #'
-#' @param TCelsius A numeric vector of temperature in degree Celsius (°C)
+#' @param TCelsius A numeric vector of temperature in degree Celsius (degreeC)
 #'
 #' @return A numeric vector of temperature in Kelvin (K)
 #'
@@ -65,12 +65,12 @@ GetTKelvinFromTCelsius <- function (TCelsius) {
     TCelsius + ZERO_CELSIUS_AS_KELVIN
 }
 
-#' Utility function to convert temperature to degree Celsius (°C)
+#' Utility function to convert temperature to degree Celsius (degreeC)
 #' given temperature in Kelvin (K).
 #'
 #' @param TKelvin A numeric vector of temperature in degree Kelvin (K)
 #'
-#' @return A numeric vector of temperature in Celsius (°C)
+#' @return A numeric vector of temperature in Celsius (degreeC)
 #'
 #' @section Notes:
 #' Exact conversion.

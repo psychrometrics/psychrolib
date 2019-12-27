@@ -7,7 +7,7 @@
 GetSatHumRatio(TDryBulb, Pressure)
 }
 \arguments{
-\item{TDryBulb}{A numeric vector of dry-bulb temperature in °F [IP] or °C [SI]}
+\item{TDryBulb}{A numeric vector of dry-bulb temperature in degreeF [IP] or degreeC [SI]}
 
 \item{Pressure}{A numeric vector of atmospheric pressure in Psi [IP] or Pa [SI]}
 }

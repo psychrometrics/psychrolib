@@ -2,7 +2,7 @@
 % Please edit documentation in R/temp.R
 \name{GetTCelsiusFromTKelvin}
 \alias{GetTCelsiusFromTKelvin}
-\title{Utility function to convert temperature to degree Celsius (°C)
+\title{Utility function to convert temperature to degree Celsius (degreeC)
 given temperature in Kelvin (K).}
 \usage{
 GetTCelsiusFromTKelvin(TKelvin)
@@ -11,10 +11,10 @@ GetTCelsiusFromTKelvin(TKelvin)
 \item{TKelvin}{A numeric vector of temperature in degree Kelvin (K)}
 }
 \value{
-A numeric vector of temperature in Celsius (°C)
+A numeric vector of temperature in Celsius (degreeC)
 }
 \description{
-Utility function to convert temperature to degree Celsius (°C)
+Utility function to convert temperature to degree Celsius (degreeC)
 given temperature in Kelvin (K).
 }
 \section{Notes}{

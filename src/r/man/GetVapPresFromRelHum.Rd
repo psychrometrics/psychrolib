@@ -7,7 +7,7 @@
 GetVapPresFromRelHum(TDryBulb, RelHum)
 }
 \arguments{
-\item{TDryBulb}{A numeric vector of dry-bulb temperature in °F [IP] or °C [SI]}
+\item{TDryBulb}{A numeric vector of dry-bulb temperature in degreeF [IP] or degreeC [SI]}
 
 \item{RelHum}{A numeric vector of relative humidity in range [0, 1]}
 }

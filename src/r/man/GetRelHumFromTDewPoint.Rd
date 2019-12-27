@@ -7,9 +7,9 @@
 GetRelHumFromTDewPoint(TDryBulb, TDewPoint)
 }
 \arguments{
-\item{TDryBulb}{A numeric vector of dry-bulb temperature in °F [IP] or °C [SI]}
+\item{TDryBulb}{A numeric vector of dry-bulb temperature in degreeF [IP] or degreeC [SI]}
 
-\item{TDewPoint}{A numeric vector of dew-point temperature in °F [IP] or °C [SI]}
+\item{TDewPoint}{A numeric vector of dew-point temperature in degreeF [IP] or degreeC [SI]}
 }
 \value{
 A numeric vector of relative humidity in range [0, 1]

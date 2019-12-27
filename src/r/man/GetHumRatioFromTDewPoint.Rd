@@ -7,7 +7,7 @@
 GetHumRatioFromTDewPoint(TDewPoint, Pressure)
 }
 \arguments{
-\item{TDewPoint}{A numeric vector of dew-point temperature in °F [IP] or °C [SI]}
+\item{TDewPoint}{A numeric vector of dew-point temperature in degreeF [IP] or degreeC [SI]}
 
 \item{Pressure}{A numeric vector of atmospheric Pressure in Psi [IP] or Pa [SI]}
 }

@@ -7,7 +7,7 @@
 CalcPsychrometricsFromRelHum(TDryBulb, RelHum, Pressure)
 }
 \arguments{
-\item{TDryBulb}{A numeric vector of dry-bulb temperature in °F [IP] or °C [SI]}
+\item{TDryBulb}{A numeric vector of dry-bulb temperature in degreeF [IP] or degreeC [SI]}
 
 \item{RelHum}{A numeric vector of relative humidity in range [0, 1]}
 
@@ -17,8 +17,8 @@ CalcPsychrometricsFromRelHum(TDryBulb, RelHum, Pressure)
 A list with named components for each psychrometric value computed:
 \describe{
   \item{HumRatio}{Humidity ratio in lb_H2O lb_Air-1 [IP] or kg_H2O kg_Air-1 [SI]}
-  \item{TWetBulb}{Wet-bulb temperature in °F [IP] or °C [SI]}
-  \item{TDewPoint}{Dew-point temperature in °F [IP] or °C [SI]}
+  \item{TWetBulb}{Wet-bulb temperature in degreeF [IP] or degreeC [SI]}
+  \item{TDewPoint}{Dew-point temperature in degreeF [IP] or degreeC [SI]}
   \item{VapPres}{Partial pressure of water vapor in moist air in Psi [IP] or Pa [SI]}
   \item{MoistAirEnthalpy}{Moist air enthalpy in Btu lb-1 [IP] or J kg-1 [SI]}
   \item{MoistAirVolume}{Specific volume of moist air in ft3 lb-1 [IP] or in m3 kg-1 [SI]}

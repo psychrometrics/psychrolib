@@ -4,7 +4,7 @@
 
 #' Return saturation vapor pressure given dry-bulb temperature.
 #'
-#' @param TDryBulb A numeric vector of dry-bulb temperature in °F [IP] or °C [SI]
+#' @param TDryBulb A numeric vector of dry-bulb temperature in degreeF [IP] or degreeC [SI]
 #'
 #' @return A numeric vector of vapor pressure of saturated air in Psi [IP] or Pa [SI]
 #'
@@ -73,7 +73,7 @@ GetSatVapPres <- function (TDryBulb) {
 
 #' Return humidity ratio of saturated air given dry-bulb temperature and pressure.
 #'
-#' @param TDryBulb A numeric vector of dry-bulb temperature in °F [IP] or °C [SI]
+#' @param TDryBulb A numeric vector of dry-bulb temperature in degreeF [IP] or degreeC [SI]
 #' @param Pressure A numeric vector of atmospheric pressure in Psi [IP] or Pa [SI]
 #'
 #' @return A numeric vector of humidity ratio of saturated air in lb_H2O lb_Air-1 [IP] or kg_H2O kg_Air-1 [SI]
@@ -101,7 +101,7 @@ GetSatHumRatio <- function (TDryBulb, Pressure) {
 
 #' Return saturated air enthalpy given dry-bulb temperature and pressure.
 #'
-#' @param TDryBulb A numeric vector of dry-bulb temperature in °F [IP] or °C [SI]
+#' @param TDryBulb A numeric vector of dry-bulb temperature in degreeF [IP] or degreeC [SI]
 #' @param Pressure A numeric vector of atmospheric pressure in Psi [IP] or Pa [SI]
 #'
 #' @return A numeric vector of saturated air enthalpy in Btu lb-1 [IP] or J kg-1 [SI]

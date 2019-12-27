@@ -4,7 +4,7 @@
 
 #' Return partial pressure of water vapor as a function of relative humidity and temperature.
 #'
-#' @param TDryBulb A numeric vector of dry-bulb temperature in °F [IP] or °C [SI]
+#' @param TDryBulb A numeric vector of dry-bulb temperature in degreeF [IP] or degreeC [SI]
 #' @param RelHum A numeric vector of relative humidity in range [0, 1]
 #'
 #' @return A numeric vector of partial pressure of water vapor in moist air in Psi [IP] or Pa [SI]
@@ -29,7 +29,7 @@ GetVapPresFromRelHum <- function (TDryBulb, RelHum) {
 
 #' Return relative humidity given dry-bulb temperature and vapor pressure.
 #'
-#' @param TDryBulb A numeric vector of dry-bulb temperature in °F [IP] or °C [SI]
+#' @param TDryBulb A numeric vector of dry-bulb temperature in degreeF [IP] or degreeC [SI]
 #' @param VapPres A numeric vector of partial pressure of water vapor in moist air in Psi [IP] or Pa [SI]
 #'
 #' @return A numeric vector of relative humidity in range [0, 1]
@@ -55,7 +55,7 @@ GetRelHumFromVapPres <- function (TDryBulb, VapPres) {
 #' Helper function returning the derivative of the natural log of the saturation vapor pressure
 #' as a function of dry-bulb temperature.
 #'
-#' @param TDryBulb A numeric vector of dry-bulb temperature in °F [IP] or °C [SI]
+#' @param TDryBulb A numeric vector of dry-bulb temperature in degreeF [IP] or degreeC [SI]
 #'
 #' @return A numeric vector of derivative of natural log of vapor pressure of saturated air in Psi [IP] or Pa [SI]
 #'
@@ -100,10 +100,10 @@ dLnPws_ <- function (TDryBulb) {
 
 #' Return dew-point temperature given dry-bulb temperature and vapor pressure.
 #'
-#' @param TDryBulb A numeric vector of dry-bulb temperature in °F [IP] or °C [SI]
+#' @param TDryBulb A numeric vector of dry-bulb temperature in degreeF [IP] or degreeC [SI]
 #' @param VapPres A numeric vector of partial pressure of water vapor in moist air in Psi [IP] or Pa [SI]
 #'
-#' @return A numeric vector of dew-point temperature in °F [IP] or °C [SI]
+#' @return A numeric vector of dew-point temperature in degreeF [IP] or degreeC [SI]
 #'
 #' @references
 #' ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn. 5 and 6
@@ -159,7 +159,7 @@ GetTDewPointFromVapPres <- function (TDryBulb, VapPres) {
 
 #' Return vapor pressure given dew point temperature.
 #'
-#' @param TDewPoint A numeric vector of dew-point temperature in °F [IP] or °C [SI]
+#' @param TDewPoint A numeric vector of dew-point temperature in degreeF [IP] or degreeC [SI]
 #'
 #' @return A numeric vector of partial pressure of water vapor in moist air in Psi [IP] or Pa [SI]
 #'

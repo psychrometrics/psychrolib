@@ -10,7 +10,7 @@ GetStandardAtmTemperature(Altitude)
 \item{Altitude}{A numeric vector of altitude in ft [IP] or m [SI]}
 }
 \value{
-A numeric vector of standard atmosphere dry-bulb temperature in °F [IP] or °C [SI]
+A numeric vector of standard atmosphere dry-bulb temperature in degreeF [IP] or degreeC [SI]
 }
 \description{
 Return standard atmosphere temperature, given the elevation (altitude).

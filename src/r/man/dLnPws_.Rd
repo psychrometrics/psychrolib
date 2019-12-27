@@ -8,7 +8,7 @@ as a function of dry-bulb temperature.}
 dLnPws_(TDryBulb)
 }
 \arguments{
-\item{TDryBulb}{A numeric vector of dry-bulb temperature in °F [IP] or °C [SI]}
+\item{TDryBulb}{A numeric vector of dry-bulb temperature in degreeF [IP] or degreeC [SI]}
 }
 \value{
 A numeric vector of derivative of natural log of vapor pressure of saturated air in Psi [IP] or Pa [SI]
