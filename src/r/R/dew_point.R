@@ -52,52 +52,6 @@ GetRelHumFromVapPres <- function (TDryBulb, VapPres) {
     VapPres / GetSatVapPres(TDryBulb)
 }
 
-#' Helper function returning the derivative of the natural log of the saturation vapor pressure
-#' as a function of dry-bulb temperature.
-#'
-#' @param TDryBulb A numeric vector of dry-bulb temperature in degreeF [IP] or degreeC [SI]
-#'
-#' @return A numeric vector of derivative of natural log of vapor pressure of saturated air in Psi [IP] or Pa [SI]
-#'
-#' @references
-#' ASHRAE Handbook - Fundamentals (2017) ch. 1  eqn 5 & 6
-#'
-#' @keywords internal
-dLnPws_ <- function (TDryBulb) {
-    dLnPws <- numeric(length(TDryBulb))
-
-    if (isIP()) {
-        TR <- GetTRankineFromTFahrenheit(TDryBulb)
-        idx <- TDryBulb <= TRIPLE_POINT_WATER_IP
-
-        if (any(idx)) {
-            dLnPws[idx] <- 1.0214165E+04 / TR[idx] ^ 2.0 - 5.3765794E-03 + 2 * 1.9202377E-07 * TR[idx] +
-                2.0 * 3.5575832E-10 * TR[idx] ^ 2.0 - 4 * 9.0344688E-14 * TR[idx] ^ 3.0 + 4.1635019 / TR[idx]
-        }
-
-        if (any(!idx)) {
-            dLnPws[!idx] <- 1.0440397E+04 / TR[!idx] ^ 2.0 - 2.7022355E-02 + 2 * 1.2890360E-05 * TR[!idx] +
-                -3.0 * 2.4780681E-09 * TR[!idx] ^ 2.0 + 6.5459673 / TR[!idx]
-        }
-
-    } else {
-        TK <- GetTKelvinFromTCelsius(TDryBulb)
-        idx <- TDryBulb <= TRIPLE_POINT_WATER_SI
-
-        if (any(idx)) {
-            dLnPws[idx] <- 5.6745359E+03 / TK[idx] ^ 2.0 - 9.677843E-03 + 2 * 6.2215701E-07 * TK[idx] +
-                3.0 * 2.0747825E-09 * TK[idx] ^ 2.0 - 4 * 9.484024E-13 * TK[idx] ^ 3.0 + 4.1635019 / TK[idx]
-        }
-
-        if (any(!idx)) {
-            dLnPws[!idx] <- 5.8002206E+03 / TK[!idx] ^ 2.0 - 4.8640239E-02 + 2 * 4.1764768E-05 * TK[!idx] +
-                -3.0 * 1.4452093E-08 * TK[!idx] ^ 2.0 + 6.5459673 / TK[!idx]
-        }
-    }
-
-    dLnPws
-}
-
 #' Return dew-point temperature given dry-bulb temperature and vapor pressure.
 #'
 #' @param TDryBulb A numeric vector of dry-bulb temperature in degreeF [IP] or degreeC [SI]
