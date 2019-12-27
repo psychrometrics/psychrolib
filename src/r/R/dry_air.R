@@ -110,8 +110,6 @@ GetDryAirVolume <- function (TDryBulb, Pressure) {
 #' Based on the \code{\link{GetMoistAirEnthalpy}} function, rearranged for temperature.
 #'
 #' @examples
-#'
-#' @examples
 #' SetUnitSystem("IP")
 #' GetTDryBulbFromEnthalpyAndHumRatio(42.6168, seq(0.01, 0.02, 0.001))
 #'
