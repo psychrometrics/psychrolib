@@ -354,14 +354,10 @@ GetTDewPointFromVapPres <- function (TDryBulb, VapPres) {
     VapPres <- rep(VapPres, length.out = l)
     TDewPoint <- numeric(l)
 
-    for (i in seq_along(TDryBulb)) {
-        TDewPoint[[i]] <- C_GetTDewPointFromVapPres(
-            TDryBulb[[i]], VapPres[[i]], BOUNDS[[1]], BOUNDS[[2]],
-            PSYCHRO_OPT$MAX_ITER_COUNT, PSYCHRO_OPT$TOLERANCE, isIP()
-        )
-    }
-
-    TDewPoint
+    CV_GetTDewPointFromVapPres(
+        TDryBulb, VapPres, BOUNDS[[1]], BOUNDS[[2]],
+        PSYCHRO_OPT$MAX_ITER_COUNT, PSYCHRO_OPT$TOLERANCE, isIP()
+    )
 }
 
 #' Return vapor pressure given dew point temperature.
@@ -422,14 +418,10 @@ GetTWetBulbFromHumRatio <- function (TDryBulb, HumRatio, Pressure) {
     Pressure <- rep(Pressure, length.out = l)
     TWetBulb <- numeric(l)
 
-    for (i in seq_along(TDryBulb)) {
-        TWetBulb[[i]] <- C_GetTWetBulbFromHumRatio(
-            TDryBulb[[i]], TDewPoint[[i]], BoundedHumRatio[[i]], Pressure[[i]],
-            PSYCHRO_OPT$MIN_HUM_RATIO, PSYCHRO_OPT$MAX_ITER_COUNT, PSYCHRO_OPT$TOLERANCE, isIP()
-        )
-    }
-
-    TWetBulb
+    CV_GetTWetBulbFromHumRatio(
+        TDryBulb, TDewPoint, BoundedHumRatio, Pressure,
+        PSYCHRO_OPT$MIN_HUM_RATIO, PSYCHRO_OPT$MAX_ITER_COUNT, PSYCHRO_OPT$TOLERANCE, isIP()
+    )
 }
 
 #' Return humidity ratio given dry-bulb temperature, wet-bulb temperature, and pressure.

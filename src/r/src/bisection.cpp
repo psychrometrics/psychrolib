@@ -182,6 +182,28 @@ double C_GetTDewPointFromVapPres(const double & TDryBulb, // (i) Dry bulb temper
     return std::min(TDewPoint, TDryBulb);
 }
 
+// A wrapper of C_GetTDewPointFromVapPres that takes vector inputs
+// [[Rcpp::export]]
+NumericVector CV_GetTDewPointFromVapPres(const NumericVector & TDryBulb, // (i) Dry bulb temperature in degreeF [IP] or degreeC [SI]
+                                         const NumericVector & VapPres,  // (i) Partial pressure of water vapor in moist air in Psi [IP] or Pa [SI]
+                                         const double & BOUNDS_Lower,
+                                         const double & BOUNDS_Upper,
+                                         const int & MAX_ITER_COUNT,
+                                         const double & TOLERANCE,
+                                         const bool & inIP) {
+    int n = TDryBulb.size();
+    NumericVector TDewPoint(n);
+
+    for (int i = 0; i < n; ++i) {
+        TDewPoint[i] = C_GetTDewPointFromVapPres(
+            TDryBulb[i], VapPres[i], BOUNDS_Lower, BOUNDS_Upper,
+            MAX_ITER_COUNT, TOLERANCE, inIP
+        );
+    }
+
+    return TDewPoint;
+}
+
 // Return wet-bulb temperature given dry-bulb temperature, humidity ratio, and pressure.
 // Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 33 and 35 solved for Tstar
 // (o) Wet bulb temperature in degreeF [IP] or degreeC [SI]
@@ -227,3 +249,27 @@ double C_GetTWetBulbFromHumRatio(const double & TDryBulb,        // (i) Dry bulb
 
     return TWetBulb;
 }
+
+// A wrapper of C_GetTWetBulbFromHumRatio that takes vector inputs
+// [[Rcpp::export]]
+NumericVector CV_GetTWetBulbFromHumRatio(const NumericVector & TDryBulb, // (i) Dry bulb temperature in degreeF [IP] or degreeC [SI]
+                                         const NumericVector & TDewPoint,// (i) Dew point temperature in degreeF [IP] or degreeC [SI]
+                                         const NumericVector & BoundedHumRatio, // (i) Humidity ratio in lb_H2O lb_Air-1 [IP] or kg_H2O kg_Air-1 [SI]
+                                         const NumericVector & Pressure,        // (i) Atmospheric pressure in Psi [IP] or Pa [SI]
+                                         const double & MIN_HUM_RATIO,
+                                         const int & MAX_ITER_COUNT,
+                                         const double & TOLERANCE,
+                                         const bool & inIP) {
+    int n = TDryBulb.size();
+    NumericVector TWetBulb(n);
+
+    for (int i = 0; i < n; ++i) {
+        TWetBulb[i] = C_GetTWetBulbFromHumRatio(
+            TDryBulb[i], TDewPoint[i], BoundedHumRatio[i], Pressure[i],
+            MIN_HUM_RATIO, MAX_ITER_COUNT, TOLERANCE, inIP
+        );
+    }
+
+    return TWetBulb;
+}
+

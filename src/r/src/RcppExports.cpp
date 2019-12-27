@@ -22,6 +22,23 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// CV_GetTDewPointFromVapPres
+NumericVector CV_GetTDewPointFromVapPres(const NumericVector& TDryBulb, const NumericVector& VapPres, const double& BOUNDS_Lower, const double& BOUNDS_Upper, const int& MAX_ITER_COUNT, const double& TOLERANCE, const bool& inIP);
+RcppExport SEXP _psychrolib_CV_GetTDewPointFromVapPres(SEXP TDryBulbSEXP, SEXP VapPresSEXP, SEXP BOUNDS_LowerSEXP, SEXP BOUNDS_UpperSEXP, SEXP MAX_ITER_COUNTSEXP, SEXP TOLERANCESEXP, SEXP inIPSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const NumericVector& >::type TDryBulb(TDryBulbSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type VapPres(VapPresSEXP);
+    Rcpp::traits::input_parameter< const double& >::type BOUNDS_Lower(BOUNDS_LowerSEXP);
+    Rcpp::traits::input_parameter< const double& >::type BOUNDS_Upper(BOUNDS_UpperSEXP);
+    Rcpp::traits::input_parameter< const int& >::type MAX_ITER_COUNT(MAX_ITER_COUNTSEXP);
+    Rcpp::traits::input_parameter< const double& >::type TOLERANCE(TOLERANCESEXP);
+    Rcpp::traits::input_parameter< const bool& >::type inIP(inIPSEXP);
+    rcpp_result_gen = Rcpp::wrap(CV_GetTDewPointFromVapPres(TDryBulb, VapPres, BOUNDS_Lower, BOUNDS_Upper, MAX_ITER_COUNT, TOLERANCE, inIP));
+    return rcpp_result_gen;
+END_RCPP
+}
 // C_GetTWetBulbFromHumRatio
 double C_GetTWetBulbFromHumRatio(const double& TDryBulb, const double& TDewPoint, const double& BoundedHumRatio, const double& Pressure, const double& MIN_HUM_RATIO, const int& MAX_ITER_COUNT, const double& TOLERANCE, const bool& inIP);
 RcppExport SEXP _psychrolib_C_GetTWetBulbFromHumRatio(SEXP TDryBulbSEXP, SEXP TDewPointSEXP, SEXP BoundedHumRatioSEXP, SEXP PressureSEXP, SEXP MIN_HUM_RATIOSEXP, SEXP MAX_ITER_COUNTSEXP, SEXP TOLERANCESEXP, SEXP inIPSEXP) {
@@ -40,10 +57,30 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// CV_GetTWetBulbFromHumRatio
+NumericVector CV_GetTWetBulbFromHumRatio(const NumericVector& TDryBulb, const NumericVector& TDewPoint, const NumericVector& BoundedHumRatio, const NumericVector& Pressure, const double& MIN_HUM_RATIO, const int& MAX_ITER_COUNT, const double& TOLERANCE, const bool& inIP);
+RcppExport SEXP _psychrolib_CV_GetTWetBulbFromHumRatio(SEXP TDryBulbSEXP, SEXP TDewPointSEXP, SEXP BoundedHumRatioSEXP, SEXP PressureSEXP, SEXP MIN_HUM_RATIOSEXP, SEXP MAX_ITER_COUNTSEXP, SEXP TOLERANCESEXP, SEXP inIPSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const NumericVector& >::type TDryBulb(TDryBulbSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type TDewPoint(TDewPointSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type BoundedHumRatio(BoundedHumRatioSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type Pressure(PressureSEXP);
+    Rcpp::traits::input_parameter< const double& >::type MIN_HUM_RATIO(MIN_HUM_RATIOSEXP);
+    Rcpp::traits::input_parameter< const int& >::type MAX_ITER_COUNT(MAX_ITER_COUNTSEXP);
+    Rcpp::traits::input_parameter< const double& >::type TOLERANCE(TOLERANCESEXP);
+    Rcpp::traits::input_parameter< const bool& >::type inIP(inIPSEXP);
+    rcpp_result_gen = Rcpp::wrap(CV_GetTWetBulbFromHumRatio(TDryBulb, TDewPoint, BoundedHumRatio, Pressure, MIN_HUM_RATIO, MAX_ITER_COUNT, TOLERANCE, inIP));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_psychrolib_C_GetTDewPointFromVapPres", (DL_FUNC) &_psychrolib_C_GetTDewPointFromVapPres, 7},
+    {"_psychrolib_CV_GetTDewPointFromVapPres", (DL_FUNC) &_psychrolib_CV_GetTDewPointFromVapPres, 7},
     {"_psychrolib_C_GetTWetBulbFromHumRatio", (DL_FUNC) &_psychrolib_C_GetTWetBulbFromHumRatio, 8},
+    {"_psychrolib_CV_GetTWetBulbFromHumRatio", (DL_FUNC) &_psychrolib_CV_GetTWetBulbFromHumRatio, 8},
     {NULL, NULL, 0}
 };
 

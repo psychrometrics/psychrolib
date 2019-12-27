@@ -5,7 +5,15 @@ C_GetTDewPointFromVapPres <- function(TDryBulb, VapPres, BOUNDS_Lower, BOUNDS_Up
     .Call(`_psychrolib_C_GetTDewPointFromVapPres`, TDryBulb, VapPres, BOUNDS_Lower, BOUNDS_Upper, MAX_ITER_COUNT, TOLERANCE, inIP)
 }
 
+CV_GetTDewPointFromVapPres <- function(TDryBulb, VapPres, BOUNDS_Lower, BOUNDS_Upper, MAX_ITER_COUNT, TOLERANCE, inIP) {
+    .Call(`_psychrolib_CV_GetTDewPointFromVapPres`, TDryBulb, VapPres, BOUNDS_Lower, BOUNDS_Upper, MAX_ITER_COUNT, TOLERANCE, inIP)
+}
+
 C_GetTWetBulbFromHumRatio <- function(TDryBulb, TDewPoint, BoundedHumRatio, Pressure, MIN_HUM_RATIO, MAX_ITER_COUNT, TOLERANCE, inIP) {
     .Call(`_psychrolib_C_GetTWetBulbFromHumRatio`, TDryBulb, TDewPoint, BoundedHumRatio, Pressure, MIN_HUM_RATIO, MAX_ITER_COUNT, TOLERANCE, inIP)
+}
+
+CV_GetTWetBulbFromHumRatio <- function(TDryBulb, TDewPoint, BoundedHumRatio, Pressure, MIN_HUM_RATIO, MAX_ITER_COUNT, TOLERANCE, inIP) {
+    .Call(`_psychrolib_CV_GetTWetBulbFromHumRatio`, TDryBulb, TDewPoint, BoundedHumRatio, Pressure, MIN_HUM_RATIO, MAX_ITER_COUNT, TOLERANCE, inIP)
 }
 
