@@ -13,10 +13,25 @@
 #' \href{https://github.com/psychrometrics/psychrolib}{psychrolib} library for
 #' R.
 #'
+#' @note
+#' We have made every effort to ensure that the code is adequate, however, we
+#' make no representation with respect to its accuracy. Use at your own risk.
+#' Should you notice an error, or if you have a suggestion, please notify us
+#' through GitHub at https://github.com/psychrometrics/psychrolib/issues.
+#'
+#' @examples
+#' library(psychrolib)
+#' # Set the unit system, for example to SI (can be either SI or IP)
+#' SetUnitSystem("SI")
+#'
+#' # Calculate the dew point temperature for a dry bulb temperature of 25 C
+#' # and a relative humidity of 80%
+#' GetTDewPointFromRelHum(25.0, 0.80)
+#'
 #' @section Pakcage options:
 #'
 #' \itemize{
-#'   \item \code{psychrolib.unitsystem} The default unit system. Should be
+#'   \item \code{psychrolib.units} The default unit system. Should be
 #'         either be \code{"SI"} or \code{"IP"}.
 #' }
 #'
@@ -26,5 +41,8 @@
 #' \itemize{
 #'   \item Hongyuan Jia and Jason Banfelder for R implementation.
 #'   \item D. Thevenard and D. Meyer for the core library implementations.
+#'   \item Equations and coefficients published ASHRAE Handbook — Fundamentals,
+#'         Chapter 1 Copyright (c) 2017 ASHRAE Handbook — Fundamentals
+#'         (https://www.ashrae.org)
 #' }
 "_PACKAGE"
