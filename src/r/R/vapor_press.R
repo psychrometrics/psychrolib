@@ -1,11 +1,11 @@
 #######################################################################################################
-# Conversions between humidity ratio and vapor Pressure
+# Conversions between humidity ratio and vapor pressure
 #######################################################################################################
 
-#' Return humidity ratio given water vapor Pressure and atmospheric pressure.
+#' Return humidity ratio given water vapor pressure and atmospheric pressure.
 #'
-#' @param VapPres A numeric vector of partial Pressure of water vapor in moist air in Psi [IP] or Pa [SI]
-#' @param Pressure A numeric vector of atmospheric Pressure in Psi [IP] or Pa [SI]
+#' @param VapPres A numeric vector of partial pressure of water vapor in moist air in Psi [IP] or Pa [SI]
+#' @param Pressure A numeric vector of atmospheric pressure in Psi [IP] or Pa [SI]
 #'
 #' @return A numeric vector of humidity ratio in lb_H2O lb_Air-1 [IP] or kg_H2O kg_Air-1 [SI]
 #'
@@ -30,12 +30,12 @@ GetHumRatioFromVapPres <- function (VapPres, Pressure) {
     pmax(HumRatio, PSYCHRO_OPT$MIN_HUM_RATIO)
 }
 
-#' Return vapor Pressure given humidity ratio and pressure.
+#' Return vapor pressure given humidity ratio and pressure.
 #'
 #' @param HumRatio A numeric vector of humidity ratio in lb_H2O lb_Air-1 [IP] or kg_H2O kg_Air-1 [SI]
-#' @param Pressure A numeric vector of atmospheric Pressure in Psi [IP] or Pa [SI]
+#' @param Pressure A numeric vector of atmospheric pressure in Psi [IP] or Pa [SI]
 #'
-#' @return A numeric vector of partial Pressure of water vapor in moist air in Psi [IP] or Pa [SI]
+#' @return A numeric vector of partial pressure of water vapor in moist air in Psi [IP] or Pa [SI]
 #'
 #' @references
 #' ASHRAE Handbook - Fundamentals (2017) ch. 1 eqn 20 solved for pw

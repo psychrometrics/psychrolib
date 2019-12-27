@@ -2,20 +2,20 @@
 % Please edit documentation in R/vapor_press.R
 \name{GetVapPresFromHumRatio}
 \alias{GetVapPresFromHumRatio}
-\title{Return vapor Pressure given humidity ratio and pressure.}
+\title{Return vapor pressure given humidity ratio and pressure.}
 \usage{
 GetVapPresFromHumRatio(HumRatio, Pressure)
 }
 \arguments{
 \item{HumRatio}{A numeric vector of humidity ratio in lb_H2O lb_Air-1 [IP] or kg_H2O kg_Air-1 [SI]}
 
-\item{Pressure}{A numeric vector of atmospheric Pressure in Psi [IP] or Pa [SI]}
+\item{Pressure}{A numeric vector of atmospheric pressure in Psi [IP] or Pa [SI]}
 }
 \value{
-A numeric vector of partial Pressure of water vapor in moist air in Psi [IP] or Pa [SI]
+A numeric vector of partial pressure of water vapor in moist air in Psi [IP] or Pa [SI]
 }
 \description{
-Return vapor Pressure given humidity ratio and pressure.
+Return vapor pressure given humidity ratio and pressure.
 }
 \examples{
 SetUnitSystem("IP")
