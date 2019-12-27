@@ -1,20 +1,17 @@
 #' psychrolib: Psychrometric Properties of Moist and Dry Air
 #'
-#' Psychrometrics are the study of physical and thermodynamic properties of
-#' moist air. These properties include, for example, the air's dew point
-#' temperature, its wet bulb temperature, relative humidity, humidity ratio,
-#' enthalpy.
+#' Contains functions for calculating thermodynamic properties of gas-vapor
+#' mixtures and standard atmosphere suitable for most engineering, physical and
+#' meteorological applications.
 #'
-#' The estimation of these properties is critical in several engineering and
-#' scientific applications such as heating, ventilation, and air conditioning
-#' (HVAC) and meteorology.
+#' Most of the functions are an implementation of the formulae found in the
+#' 2017 ASHRAE Handbook - Fundamentals, in both International System (SI), and
+#' Imperial (IP) units. Please refer to the information included in each
+#' function for their respective reference.
 #'
 #' psychroLib is a port of the
 #' \href{https://github.com/psychrometrics/psychrolib}{psychrolib} library for
-#' R. It provides functions to enable calculating psychrometric properties of
-#' moist and dry air, working in both metric (SI) and imperial (IP) systems of
-#' units. The functions are based of formulae from the 2017 ASHRAE Handbook —
-#' Fundamentals, Chapter 1, SI and IP editions.
+#' R.
 #'
 #' @section Pakcage options:
 #'
