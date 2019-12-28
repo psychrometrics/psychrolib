@@ -476,7 +476,7 @@ function Psychrometrics() {
   // Return humidity ratio given dry-bulb temperature, relative humidity, and pressure.
   // Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1
   this.GetHumRatioFromRelHum = function // (o) Humidity Ratio in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]
-    ( TDryBulb                          // (i) Dry bulb temperature [F]
+    ( TDryBulb                          // (i) Dry bulb temperature in °F [IP] or °C [SI]
     , RelHum                            // (i) Relative humidity [0-1]
     , Pressure                          // (i) Atmospheric pressure in Psi [IP] or Pa [SI]
     ) {
