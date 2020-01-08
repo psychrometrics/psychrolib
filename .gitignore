@@ -388,3 +388,8 @@ __pycache__/
 *.o
 *.so
 *.dll
+src/r/NAMESPACE
+src/r/src/RcppExports.cpp
+src/r/R/RcppExports.R
+src/r/man
+src/r/LICENSE.txt
