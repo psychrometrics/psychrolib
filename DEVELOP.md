@@ -19,8 +19,9 @@ This project uses [semantic versioning](https://semver.org/).
 
 We use two branches to record the history of the project. The `master` branch stores the official release history while the `develop` branch serves as an integration branch for features and bug fixes. All new releases are tagged with a version number in `master`.
 
+## Deployment
 
-## How to create and upload a new version to Pypi
+### Python 
 
 From the command prompt, navigate to `src/python`. Then you can create and upload a new release with the following commands:
 
@@ -29,6 +30,12 @@ python3 setup.py sdist --formats=zip
 python3 -m pip install --user --upgrade twine
 python3 -m twine upload dist/*
 ```
+
+### R
+
+Fist to create the PsychroLib R package, navigate to `src/r` and type `build_package.sh` (assuming you are on Linux, have `R` in your PATH and have the `devtools` installed).
+
+Then, to upload the package on CRAN TODO:
 
 ## Testing
 

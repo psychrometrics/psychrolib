@@ -34,9 +34,16 @@ If you are using PsychroLib, please cite the specific version you are using (htt
 If you are looking to contribute, please read our [Contributors' guide](CONTRIBUTING.md) for details.
 
 
+## Development
+
+If you would like to know more about specific development guidelines and testing, please refer to our [development notes](DEVELOP.md).
+
+
 ## Copyright and license
 
-Copyright 2018-2020 D. Thevenard and D. Meyer for the current library implementation. Copyright 2017 ASHRAE Handbook — Fundamentals (https://www.ashrae.org) for equations and coefficients published ASHRAE Handbook — Fundamentals Chapter 1.
+Copyright 2018-2020 D. Thevenard and D. Meyer for the current library implementation. 
+
+Copyright 2017 ASHRAE Handbook — Fundamentals (https://www.ashrae.org) for equations and coefficients published ASHRAE Handbook — Fundamentals Chapter 1.
 
 Software licensed under the [MIT License](LICENSE.txt).
 
