@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -ex
 
-# Creates the PsychroLib package repository to deploy locally or on CRAN.
+# Creates the PsychroLib package repository to deploy locally.
 # Usage: build_package.sh
 
 if [ ! -d R ]; then
@@ -9,5 +9,7 @@ if [ ! -d R ]; then
     exit 1
 fi
 
-R -e 'library(devtools);document()'
+R -e 'devtools::document()'
 cp ../../LICENSE.txt .
+R -e 'devtools::install()'
+rm -rf man

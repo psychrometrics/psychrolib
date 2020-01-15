@@ -33,9 +33,19 @@ python3 -m twine upload dist/*
 
 ### R
 
-Fist to create the PsychroLib R package, navigate to `src/r` and type `build_package.sh` (assuming you are on Linux, have `R` in your PATH and have the `devtools` installed).
+From the command prompt, navigate to `src/r`. Open R and run:
 
-Then, to upload the package on CRAN TODO:
+```r
+devtools::document()
+devtools::install()
+unlink("man")
+```
+
+Alternately, for Linux users, we provide a [build_package.sh](src/r/build_package.sh) to automatically handle the above process. In terminal, run
+
+```bash
+./build_package.sh
+```
 
 ## Testing
 
