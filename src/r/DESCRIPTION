@@ -4,8 +4,8 @@ Title: Psychrometric Properties of Moist and Dry Air
 Version: 2.3.0
 Authors@R: c(person("Hongyuan", "Jia", email = "hongyuan.jia@bears-berkeley.sg", role = c("aut", "cre"), comment = c(ORCID = "0000-0002-0075-8183")),
              person("Jason", "Banfelder", email = "jason@banfelder.net", role = "aut"),
-             person("D.", "Meyer", role = "aut"),
-             person("D.", "Thevenard", role = "aut"))
+             person("D.", "Meyer", role = "aut", comment = c(ORCID = "0000-0002-7071-7547")),
+             person("D.", "Thevenard", role = "aut", comment = c(ORCID = "0000-0002-0749-6841")))
 Description:
     A port of the original python 'psychrolib'
     (<https://github.com/psychrometrics/psychrolib>) library written by D. Meyer &
