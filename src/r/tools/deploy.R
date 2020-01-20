@@ -11,7 +11,7 @@ copy_file <- function () {
     message("Copy README and logo")
     status <- file.copy("../../README.md", ".", overwrite = TRUE)
     if (!status) stop("Failed to copy README.md.")
-    if (!dir.exists("man/figures")) dir.create("man/figures")
+    if (!dir.exists("man/figures")) dir.create("man/figures", recursive = TRUE)
     status <- file.copy("../../assets/psychrolib_logo.svg", "man/figures", overwrite = TRUE)
     if (!status) stop("Failed to copy psychrolib library logo.")
 
