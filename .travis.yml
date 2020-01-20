@@ -31,9 +31,9 @@ matrix:
         - release
         - devel
       before_install:
-        - R -e 'install.packages("devtools", dependencies = TRUE)'
+        - Rscript -e 'install.packages("devtools", dependencies = TRUE)'
         - cd $TRAVIS_BUILD_DIR/src/r
-        - ./build_package.sh
+        - Rscript -e tools/deploy.R
       script:
         - R CMD build .
         - R CMD check psychrolib*tar.gz
