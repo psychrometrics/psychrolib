@@ -1,0 +1,32 @@
+citHeader("Meyer (2019) article for the summary paper; the other one for the software implementation.")
+
+year <- sub("-.*", "", meta$Date)
+note <- sprintf("R package version %s", meta$Version)
+
+bibentry(
+    bibtype = "Article",
+    title = "{PsychroLib}: a library of psychrometric functions to calculate thermodynamic properties of air",
+    author = c(person("D.", "Meyer", role = "aut", comment = c(ORCID = "0000-0002-7071-7547")),
+               person("D.", "Thevenard", role = "aut", comment = c(ORCID = "0000-0002-0749-6841"))),
+    journal = "Journal of Open Source Software",
+    publisher = "The Open Journal",
+    volume = "4",
+    number = "33",
+    pages = "1137",
+    year = "2019",
+    doi = "https://doi.org/10.21105/joss.01137",
+    textVersion = "Meyer et al., (2019). PsychroLib: a library of psychrometric functions to calculate thermodynamic properties of air. Journal of Open Source Software, 4(33), 1137, https://doi.org/10.21105/joss.01137"
+)
+
+bibentry(
+    bibtype = "Manual",
+    title = "PsychroLib: a library of psychrometric functions to calculate thermodynamic properties of air",
+    author = c(person("D.", "Meyer", role = "aut", comment = c(ORCID = "0000-0002-7071-7547")),
+               person("D.", "Thevenard", role = "aut", comment = c(ORCID = "0000-0002-0749-6841"))),
+    publisher = Zenodo,
+    year = year,
+    note = note,
+    doi = "10.5281/zenodo.3550023",
+    textVersion = paste0("Meyer, D., & Thevenard, D. (", format(meta$Date, "%Y, %B %d"), "). PsychroLib: a library of psychrometric functions to calculate thermodynamic properties of air (", meta$Version, "). Zenodo. http://doi.org/10.5281/zenodo.3550023")
+)
+
