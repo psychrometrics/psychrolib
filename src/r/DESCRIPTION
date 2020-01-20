@@ -7,11 +7,10 @@ Authors@R: c(person("Hongyuan", "Jia", email = "hongyuan.jia@bears-berkeley.sg",
              person("D.", "Meyer", role = "aut", comment = c(ORCID = "0000-0002-7071-7547")),
              person("D.", "Thevenard", role = "aut", comment = c(ORCID = "0000-0002-0749-6841")))
 Description:
-    A port of the original python 'psychrolib'
-    (<https://github.com/psychrometrics/psychrolib>) library written by D. Meyer &
-    D. Thevenard, which provides functions to enable the calculation of
-    psychrometric properties of moist and dry air. The library works in both
-    metric (SI) and imperial (IP) systems of units.
+    R implementation of 'PsychroLib'
+    <https://github.com/psychrometrics/psychrolib> to calculate psychrometric
+    properties of moist and dry air available in both metric (SI) and imperial
+    (IP) systems of units.
 Depends:
     R (>= 3.0.0)
 Imports:
