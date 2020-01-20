@@ -15,10 +15,6 @@ The followings are minimal guidelines for new contributors aiming to contribute 
 This project uses [semantic versioning](https://semver.org/).
 
 
-## Default branches
-
-We use two branches to record the history of the project. The `master` branch stores the official release history while the `develop` branch serves as an integration branch for features and bug fixes. All new releases are tagged with a version number in `master`.
-
 ## Deployment
 
 ### Python 
