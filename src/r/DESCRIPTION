@@ -12,12 +12,14 @@ Description:
     D. Thevenard, which provides functions to enable the calculation of
     psychrometric properties of moist and dry air. The library works in both
     metric (SI) and imperial (IP) systems of units.
-License: MIT + file LICENSE
+Depends:
+    R (>= 3.0.0)
 Imports:
     Rcpp
 Suggests:
     testthat (>= 2.1.0),
     covr
+License: MIT + file LICENSE
 URL: https://github.com/psychrometrics/psychrolib
 BugReports: https://github.com/psychrometrics/psychrolib/issues
 LinkingTo: Rcpp

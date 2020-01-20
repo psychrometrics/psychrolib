@@ -29,19 +29,33 @@ python3 -m twine upload dist/*
 
 ### R
 
-From the command prompt, navigate to `src/r`. Open R and run:
+From the command prompt, navigate to `src/r`. To install the package, open R and run:
 
 ```r
-devtools::document()
-devtools::install()
-unlink("man")
+source("tools/deploy.R")
 ```
 
-Alternately, for Linux users, we provide a [build_package.sh](src/r/build_package.sh) to automatically handle the above process. In terminal, run
+It will copy LICENSE, README.md from the main repo into `src/r`, create package documentation and install psychrolib for you.
 
-```bash
-./build_package.sh
-```
+If you are a package developer, you can get more options by running:
+
+* Windows:
+  ```
+  Rscript.exe tools/deploy.R [OPTION]
+  ```
+* Mac OS or Linux:
+  ```
+  Rscript.exe tools/deploy.R [OPTION]
+  ```
+
+Where `[OPTION]` can be one of:
+
+* `--prepare` or `-p`: copy LICENSE.txt, README.md and update links in README.md
+* `--doc` or `-d`: create/update package documentation
+* `--install` or `-i`: create/update package documentation and install package
+* `--help` or `-h`: show help messages
+
+*NOTE*: In order to run command above, `Rscript.exe` or `Rscript` should be in system `PATH`.
 
 ## Testing
 
@@ -54,6 +68,7 @@ PsychroLib is automatically tested at each commit using continuous integration. 
 - Node.js 10.x or greater
 - Microsoft Excel
 - Microsoft .NET Core SDK
+- R version 3.0.0 or greater
 
 
 ### Dependencies
@@ -95,3 +110,12 @@ For VBA/Excel, navigate to `tests/vba` and open `test_psychrolib_ip.xlsm` and `t
 
 ![VBA/Excel Test](assets/excel_test.png)
 
+
+#### R
+
+Navigate to `src/r`, run:
+
+```
+R CMD build .
+R CMD check psychrolib*tar.gz
+```
