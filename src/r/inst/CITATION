@@ -23,7 +23,7 @@ bibentry(
     title = "PsychroLib: a library of psychrometric functions to calculate thermodynamic properties of air",
     author = c(person("D.", "Meyer", role = "aut", comment = c(ORCID = "0000-0002-7071-7547")),
                person("D.", "Thevenard", role = "aut", comment = c(ORCID = "0000-0002-0749-6841"))),
-    publisher = Zenodo,
+    publisher = "Zenodo",
     year = year,
     note = note,
     doi = "10.5281/zenodo.3550023",
