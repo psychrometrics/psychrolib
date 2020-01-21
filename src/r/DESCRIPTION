@@ -4,12 +4,12 @@ Title: Psychrometric Properties of Moist and Dry Air
 Version: 2.3.0
 Authors@R: c(person("Hongyuan", "Jia", email = "hongyuan.jia@bears-berkeley.sg", role = c("aut", "cre"), comment = c(ORCID = "0000-0002-0075-8183")),
              person("Jason", "Banfelder", email = "jason@banfelder.net", role = "aut"),
-             person("D.", "Meyer", role = "aut", comment = c(ORCID = "0000-0002-7071-7547")),
-             person("D.", "Thevenard", role = "aut", comment = c(ORCID = "0000-0002-0749-6841")))
+             person("David", "Meyer", role = "aut", comment = c(ORCID = "0000-0002-7071-7547")),
+             person("Didier", "Thevenard", role = "aut", comment = c(ORCID = "0000-0002-0749-6841")))
 Description:
     R implementation of 'PsychroLib'
     <https://github.com/psychrometrics/psychrolib> to calculate psychrometric
-    properties of moist and dry air available in both metric (SI) and imperial
+    properties of moist and dry air in both metric (SI) and imperial
     (IP) systems of units.
 Depends:
     R (>= 3.0.0)

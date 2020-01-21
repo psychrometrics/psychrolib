@@ -39,13 +39,14 @@ It will copy LICENSE, README.md from the main repo into `src/r`, create package 
 
 If you are a package developer, you can get more options by running:
 
-* Windows:
+- On Windows:
   ```
   Rscript.exe tools/deploy.R [OPTION]
   ```
-* Mac OS or Linux:
+
+- On Linux or MacOS:
   ```
-  Rscript.exe tools/deploy.R [OPTION]
+  Rscript tools/deploy.R [OPTION]
   ```
 
 Where `[OPTION]` can be one of:
