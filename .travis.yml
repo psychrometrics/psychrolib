@@ -36,7 +36,7 @@ matrix:
         - Rscript tools/deploy.R
       script:
         - R CMD build .
-        - R CMD check psychrolib*tar.gz
+        - R CMD check --as-cran psychrolib*tar.gz
       after_success:
         - Rscript -e 'covr::codecov()'
 
