@@ -18,17 +18,15 @@ Examples on how to use PsychroLib in all the supported languages are described i
 ## Installing
 
 - Python: from the [Python Package Index (PyPI)](https://pypi.org/project/PsychroLib/).
-
 - C# (.NET): from the [NuGet package](https://www.nuget.org/packages/PsychroLib/) manager or clone the repository, and bundle according to your requirements.
-
 - C, Fortran and JavaScript: clone the repository, and bundle according to your requirements.
-
 - VBA/Excel: download the ready-made spreadsheets from the [release tab](https://github.com/psychrometrics/psychrolib/releases).
+- R: from the [Comprehensive R Archive Network (CRAN)](https://cran.r-project.org/package=psychrolib).
 
 
 ## Citing
 
-If you are using PsychroLib, please cite the specific version you are using (https://doi.org/10.5281/zenodo.2537945), and the summary paper (https://doi.org/10.21105/joss.01137).
+If you are using PsychroLib, please cite the specific version you are using (select from the list at https://doi.org/10.5281/zenodo.2537945) and the summary paper (https://doi.org/10.21105/joss.01137).
 
 
 ## Contributing
@@ -36,15 +34,25 @@ If you are using PsychroLib, please cite the specific version you are using (htt
 If you are looking to contribute, please read our [Contributors' guide](CONTRIBUTING.md) for details.
 
 
+## Development
+
+If you would like to know more about specific development guidelines and testing, please refer to our [development notes](DEVELOP.md).
+
+
 ## Copyright and license
 
-Copyright 2018 D. Thevenard and D. Meyer for the current library implementation.
+Copyright 2018-2020 [The PsychroLib Contributors](https://github.com/psychrometrics/psychrolib/graphs/contributors) for the current library implementation.
 
 Copyright 2017 ASHRAE Handbook — Fundamentals (https://www.ashrae.org) for equations and coefficients published ASHRAE Handbook — Fundamentals Chapter 1.
 
-Licensed under the [MIT License](LICENSE.txt).
+Software licensed under the [MIT License](LICENSE.txt).
 
 
 ## Acknowledgements
 
-Many thanks to [@tom--](https://github.com/tom--) for his suggestions with the original JavaScript library implementation and [@DJGosnell](https://github.com/DJGosnell) for the C# port.
+Special thanks to:
+- [@tom--](https://github.com/tom--) for his suggestions with the original JavaScript library implementation
+- [@DJGosnell](https://github.com/DJGosnell) for the C# port.
+- [@hongyuanjia](https://github.com/hongyuanjia) and [@banfelder](https://github.com/banfelder) for the R port.
+
+For the full list of contributors, please see the [contributors page](https://github.com/psychrometrics/psychrolib/graphs/contributors).

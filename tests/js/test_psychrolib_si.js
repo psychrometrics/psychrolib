@@ -1,4 +1,6 @@
-// Copyright (c) 2018 D. Thevenard and D. Meyer. Licensed under the MIT License.
+// PsychroLib (version 2.3.0) (https://github.com/psychrometrics/psychrolib).
+// Copyright (c) 2018-2020 The PsychroLib Contributors. Licensed under the MIT License.
+
 // Test of PsychroLib in SI units.
 
 const assert = require('assert');
