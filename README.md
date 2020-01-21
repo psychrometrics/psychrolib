@@ -26,7 +26,7 @@ Examples on how to use PsychroLib in all the supported languages are described i
 
 ## Citing
 
-If you are using PsychroLib, please cite the specific version you are using (https://doi.org/10.5281/zenodo.2537945), and the summary paper (https://doi.org/10.21105/joss.01137).
+If you are using PsychroLib, please cite the specific version you are using (select from the list at https://doi.org/10.5281/zenodo.2537945) and the summary paper (https://doi.org/10.21105/joss.01137).
 
 
 ## Contributing
@@ -41,7 +41,7 @@ If you would like to know more about specific development guidelines and testing
 
 ## Copyright and license
 
-Copyright 2018-2020 D. Thevenard and D. Meyer for the current library implementation. 
+Copyright 2018-2020 [The PsychroLib Contributors](https://github.com/psychrometrics/psychrolib/graphs/contributors) for the current library implementation.
 
 Copyright 2017 ASHRAE Handbook — Fundamentals (https://www.ashrae.org) for equations and coefficients published ASHRAE Handbook — Fundamentals Chapter 1.
 

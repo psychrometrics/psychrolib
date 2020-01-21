@@ -1,7 +1,7 @@
-/**
- * PsychroLib (version 2.3.0) (https://github.com/psychrometrics/psychrolib)
- * Copyright (c) 2018 D. Thevenard and D. Meyer for the current library implementation
- * Copyright (c) 2017 ASHRAE Handbook — Fundamentals for ASHRAE equations and coefficients
+/*
+ * PsychroLib (version 2.3.0) (https://github.com/psychrometrics/psychrolib).
+ * Copyright (c) 2018-2020 The PsychroLib Contributors for the current library implementation.
+ * Copyright (c) 2017 ASHRAE Handbook — Fundamentals for ASHRAE equations and coefficients.
  * Licensed under the MIT License.
  */
 
@@ -29,7 +29,7 @@ function Psychrometrics() {
    *
    * Copyright
    *  - For the current library implementation
-   *     Copyright (c) 2018 D. Thevenard and D. Meyer.
+   *     Copyright (c) 2018-2020 The PsychroLib Contributors.
    *  - For equations and coefficients published ASHRAE Handbook — Fundamentals, Chapter 1
    *     Copyright (c) 2017 ASHRAE Handbook — Fundamentals (https://www.ashrae.org)
    *
@@ -476,7 +476,7 @@ function Psychrometrics() {
   // Return humidity ratio given dry-bulb temperature, relative humidity, and pressure.
   // Reference: ASHRAE Handbook - Fundamentals (2017) ch. 1
   this.GetHumRatioFromRelHum = function // (o) Humidity Ratio in lb_H₂O lb_Air⁻¹ [IP] or kg_H₂O kg_Air⁻¹ [SI]
-    ( TDryBulb                          // (i) Dry bulb temperature [F]
+    ( TDryBulb                          // (i) Dry bulb temperature in °F [IP] or °C [SI]
     , RelHum                            // (i) Relative humidity [0-1]
     , Pressure                          // (i) Atmospheric pressure in Psi [IP] or Pa [SI]
     ) {
