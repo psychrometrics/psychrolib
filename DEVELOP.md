@@ -39,15 +39,9 @@ It will copy LICENSE, README.md from the main repo into `src/r`, create package 
 
 If you are a package developer, you can get more options by running:
 
-- On Windows:
-  ```
-  Rscript.exe tools/deploy.R [OPTION]
-  ```
-
-- On Linux or MacOS:
-  ```
-  Rscript tools/deploy.R [OPTION]
-  ```
+```
+Rscript tools/deploy.R [OPTION]
+```
 
 Where `[OPTION]` can be one of:
 
@@ -56,7 +50,7 @@ Where `[OPTION]` can be one of:
 * `--install` or `-i`: create/update package documentation and install package
 * `--help` or `-h`: show help messages
 
-*NOTE*: In order to run command above, `Rscript.exe` or `Rscript` should be in system `PATH`.
+*NOTE*: In order to run command above, `Rscript.exe` (on Windows) or `Rscript` (on Linux and MacOS) should be in system `PATH`.
 
 ## Testing
 
