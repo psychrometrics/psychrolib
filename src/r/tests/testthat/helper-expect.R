@@ -1,3 +1,6 @@
+# PsychroLib (version 2.3.0) (https://github.com/psychrometrics/psychrolib).
+# Copyright (c) 2018-2020 The PsychroLib Contributors. Licensed under the MIT License.
+
 # Behave like pytest.approx when used with rel option
 expect_equal_rel <- function (object, expected, rel) {
     expect_equal(object, expected, scale = abs(expected), tolerance = rel)

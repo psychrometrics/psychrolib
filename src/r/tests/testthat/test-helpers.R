@@ -1,3 +1,7 @@
+# PsychroLib (version 2.3.0) (https://github.com/psychrometrics/psychrolib).
+# Copyright (c) 2018-2020 The PsychroLib Contributors. Licensed under the MIT License.
+
+
 test_that("helper functions work sanely before initialization", {
     PSYCHRO_OPT$UNITS <- NA_character_
     expect_true(is.na(GetUnitSystem()))

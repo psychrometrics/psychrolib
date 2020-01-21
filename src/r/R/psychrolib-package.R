@@ -1,4 +1,9 @@
-#' psychrolib: Psychrometric Properties of Moist and Dry Air
+# PsychroLib (version 2.3.0) (https://github.com/psychrometrics/psychrolib).
+# Copyright (c) 2018-2020 The PsychroLib Contributors for the current library implementation.
+# Copyright (c) 2017 ASHRAE Handbook — Fundamentals for ASHRAE equations and coefficients.
+# Licensed under the MIT License.
+
+#' PsychroLib: Psychrometric Properties of Moist and Dry Air
 #'
 #' Contains functions for calculating thermodynamic properties of gas-vapor
 #' mixtures and standard atmosphere suitable for most engineering, physical and
