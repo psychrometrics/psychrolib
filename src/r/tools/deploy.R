@@ -21,7 +21,7 @@ update_license <- function () {
     lic <- readLines("LICENSE", warn = FALSE)
     re <- "Copyright \\(c\\) (\\d{4}) (.*?)(?:\\.)*$"
     m <- regexec(re, lic, perl = TRUE)
-    if (all(sapply(l, length) == 1L)) stop("Failed to locate copyright field in LICENSE")
+    if (all(sapply(m, length) == 1L)) stop("Failed to locate copyright field in LICENSE")
 
     r <- Filter(function (x) length(x) > 0L, regmatches(lic, m))
 
