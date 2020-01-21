@@ -17,6 +17,42 @@ copy_file <- function () {
 
 }
 
+update_license <- function () {
+    lic <- readLines("LICENSE", warn = FALSE)
+    re <- "Copyright \\(c\\) (\\d{4}) (.*?)(?:\\.)*$"
+    m <- regexec(re, lic, perl = TRUE)
+    if (all(sapply(l, length) == 1L)) stop("Failed to locate copyright field in LICENSE")
+
+    r <- Filter(function (x) length(x) > 0L, regmatches(lic, m))
+
+    year <- as.integer(sapply(r, "[[", 2L))
+    auth <- unlist(strsplit(sapply(r, "[[", 3L), "\\s*(,|and)\\s*"))
+
+    # multiple years
+    if (length(year) > 1L) {
+        year <- paste(min(year), max(year), sep = "-")
+    }
+
+    # multiple authors
+    if (length(auth) > 1L) {
+        if (length(auth) == 2L) {
+            auth <- paste(auth, collapse = " and ")
+        } else {
+            auth <- paste(
+                paste(auth[-length(auth)], collapse = " ,"),
+                "and", auth[length(auth)]
+            )
+        }
+    }
+
+    lic <- c(
+        paste("Year:", year),
+        paste("COPYRIGHT HOLDER:", auth)
+    )
+
+    writeLines(lic, "LICENSE")
+}
+
 update_links <- function () {
     # update links
     message("Update README links")
@@ -47,6 +83,7 @@ if (length(args) > 1L) stop("Only one argument is accepted")
 
 if (!length(args)) {
     copy_file()
+    update_license()
     update_links()
     check_devtools()
     devtools::install_deps()
@@ -55,6 +92,7 @@ if (!length(args)) {
     message("Completed")
 } else if (args %in% c("--prepare", "-p")) {
     copy_file()
+    update_license()
     update_links()
     message("Completed")
 } else if (args %in% c("--doc", "-d")) {
