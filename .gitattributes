@@ -4,6 +4,9 @@
 # Ignore all vba and cs files in tests to make Python the main language used in this repo.
 tests/vba/* linguist-vendored
 tests/c_sharp/* linguist-vendored
+src/r/tests/* linguist-vendored
+src/r/tools/* linguist-vendored
+src/r/src/* linguist-vendored
 
 ###############################################################################
 # Set default behavior to automatically normalize line endings.
