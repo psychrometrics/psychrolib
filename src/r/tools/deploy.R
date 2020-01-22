@@ -70,7 +70,7 @@ update_links <- function () {
     ## files
     repo <- "https://github.com/psychrometrics/psychrolib"
     readme <- gsub("(\\[.+\\])\\(LICENSE.txt\\)", "\\1(LICENSE)", readme)
-    readme <- gsub("(\\[.+\\])\\((.+\\.md)\\)", paste0("\\1(", repo, "\\2)"), readme)
+    readme <- gsub("(\\[.+\\])\\((.+\\.md)\\)", paste0("\\1(", repo, "/blob/master/\\2)"), readme)
     writeLines(readme, "README.md")
 }
 
