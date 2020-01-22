@@ -22,13 +22,13 @@ copy_file <- function () {
 
 update_license <- function () {
     lic <- readLines("LICENSE", warn = FALSE)
-    re <- "Copyright \\(c\\) (\\d{4}) (.*?)(?:\\.)*$"
+    re <- "Copyright \\(c\\) ((?:\\d{4})\\s*(?:-\\s*\\d{4})*) (.*?)(?:\\.)*$"
     m <- regexec(re, lic, perl = TRUE)
     if (all(sapply(m, length) == 1L)) stop("Failed to locate copyright field in LICENSE")
 
     r <- Filter(function (x) length(x) > 0L, regmatches(lic, m))
 
-    year <- as.integer(sapply(r, "[[", 2L))
+    year <- as.integer(unlist(strsplit(sapply(r, "[[", 2L), "\\s*-\\s*")))
     auth <- unlist(strsplit(sapply(r, "[[", 3L), "\\s*(,|and)\\s*"))
 
     # multiple years
