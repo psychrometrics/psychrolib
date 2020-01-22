@@ -15,12 +15,9 @@ The followings are minimal guidelines for new contributors aiming to contribute 
 This project uses [semantic versioning](https://semver.org/).
 
 
-## Default branches
+## Deployment
 
-We use two branches to record the history of the project. The `master` branch stores the official release history while the `develop` branch serves as an integration branch for features and bug fixes. All new releases are tagged with a version number in `master`.
-
-
-## How to create and upload a new version to Pypi
+### Python 
 
 From the command prompt, navigate to `src/python`. Then you can create and upload a new release with the following commands:
 
@@ -29,6 +26,31 @@ python3 setup.py sdist --formats=zip
 python3 -m pip install --user --upgrade twine
 python3 -m twine upload dist/*
 ```
+
+### R
+
+From the command prompt, navigate to `src/r`. To install the package, open R and run:
+
+```r
+source("tools/deploy.R")
+```
+
+It will copy LICENSE, README.md from the main repo into `src/r`, create package documentation and install psychrolib for you.
+
+If you are a package developer, you can get more options by running:
+
+```
+Rscript tools/deploy.R [OPTION]
+```
+
+Where `[OPTION]` can be one of:
+
+* `--prepare` or `-p`: copy LICENSE.txt, README.md and update links in README.md
+* `--doc` or `-d`: create/update package documentation
+* `--install` or `-i`: create/update package documentation and install package
+* `--help` or `-h`: show help messages
+
+*NOTE*: In order to run command above, `Rscript.exe` (on Windows) or `Rscript` (on Linux and MacOS) should be in system `PATH`.
 
 ## Testing
 
@@ -41,6 +63,7 @@ PsychroLib is automatically tested at each commit using continuous integration. 
 - Node.js 10.x or greater
 - Microsoft Excel
 - Microsoft .NET Core SDK
+- R version 3.0.0 or greater
 
 
 ### Dependencies
@@ -82,3 +105,12 @@ For VBA/Excel, navigate to `tests/vba` and open `test_psychrolib_ip.xlsm` and `t
 
 ![VBA/Excel Test](assets/excel_test.png)
 
+
+#### R
+
+Navigate to `src/r`, run:
+
+```
+R CMD build .
+R CMD check psychrolib*tar.gz
+```

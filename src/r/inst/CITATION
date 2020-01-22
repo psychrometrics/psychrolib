@@ -1,0 +1,16 @@
+citHeader('To cite package "PsychroLib" in publications use:')
+
+bibentry(
+    bibtype = "Article",
+    title = "{PsychroLib}: a library of psychrometric functions to calculate thermodynamic properties of air",
+    author = c(person("D.", "Meyer", role = "aut", comment = c(ORCID = "0000-0002-7071-7547")),
+               person("D.", "Thevenard", role = "aut", comment = c(ORCID = "0000-0002-0749-6841"))),
+    journal = "Journal of Open Source Software",
+    publisher = "The Open Journal",
+    volume = "4",
+    number = "33",
+    pages = "1137",
+    year = "2019",
+    doi = "doi.org/10.21105/joss.01137",
+    textVersion = "Meyer, D., & Thevenard, D.  (2019). PsychroLib: a library of psychrometric functions to calculate thermodynamic properties of air. Journal of Open Source Software, 4(33), 1137, https://doi.org/10.21105/joss.01137"
+)
