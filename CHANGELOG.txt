@@ -1,3 +1,7 @@
+2.4.0
+- Add R language support (#49).
+- General `README.md`/docs improvements.
+
 2.3.0
 - Add `GetTDryBulbFromMoistAirVolumeAndHumRatio`.
 - Add `GetTFahrenheitFromTRankine` and `GetTCelsiusFromTKelvin`.
