@@ -11,6 +11,6 @@ bibentry(
     number = "33",
     pages = "1137",
     year = "2019",
-    doi = "doi.org/10.21105/joss.01137",
+    doi = "10.21105/joss.01137",
     textVersion = "Meyer, D., & Thevenard, D.  (2019). PsychroLib: a library of psychrometric functions to calculate thermodynamic properties of air. Journal of Open Source Software, 4(33), 1137, https://doi.org/10.21105/joss.01137"
 )

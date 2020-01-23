@@ -49,7 +49,7 @@ update_license <- function () {
     }
 
     lic <- c(
-        paste("Year:", year),
+        paste("YEAR:", year),
         paste("COPYRIGHT HOLDER:", auth)
     )
 
