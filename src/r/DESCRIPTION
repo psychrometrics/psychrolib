@@ -7,7 +7,7 @@ Authors@R: c(person("Hongyuan", "Jia", email = "hongyuan.jia@bears-berkeley.sg",
              person("David", "Meyer", role = "aut", comment = c(ORCID = "0000-0002-7071-7547")),
              person("Didier", "Thevenard", role = "aut", comment = c(ORCID = "0000-0002-0749-6841")))
 Description:
-    R implementation of 'PsychroLib'
+    Implementation of 'PsychroLib'
     <https://github.com/psychrometrics/psychrolib> to calculate psychrometric
     properties of moist and dry air in both metric (SI) and imperial
     (IP) systems of units.
