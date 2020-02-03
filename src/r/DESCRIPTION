@@ -5,7 +5,7 @@ Version: 2.4.0
 Authors@R: c(
       person(family = "The PsychroLib Contributors", role = c("ctb", "cph"),
              comment = "Authors listed at https://github.com/psychrometrics/psychrolib/graphs/contributors"),
-      person(family = "ASHRAE", role = c("cph")
+      person(family = "ASHRAE", role = c("cph"),
              comment = "Copyright 2017 ASHRAE Handbook  Fundamentals (https://www.ashrae.org) for equations and coefficients published ASHRAE Handbook  Fundamentals Chapter 1."))
 Maintainer: Hongyuan Jia <hongyuan.jia@bears-berkeley.sg>
 Description:
