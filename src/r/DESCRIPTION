@@ -2,15 +2,17 @@ Package: psychrolib
 Type: Package
 Title: Psychrometric Properties of Moist and Dry Air
 Version: 2.4.0
-Authors@R: c(person("Hongyuan", "Jia", email = "hongyuan.jia@bears-berkeley.sg", role = c("aut", "cre"), comment = c(ORCID = "0000-0002-0075-8183")),
-             person("Jason", "Banfelder", email = "jason@banfelder.net", role = "aut"),
-             person("David", "Meyer", role = "aut", comment = c(ORCID = "0000-0002-7071-7547")),
-             person("Didier", "Thevenard", role = "aut", comment = c(ORCID = "0000-0002-0749-6841")))
+Authors@R: c(
+      person(family = "The PsychroLib Contributors", role = c("ctb", "cph"),
+             comment = "Authors listed at https://github.com/psychrometrics/psychrolib/graphs/contributors"),
+      person(family = "ASHRAE", role = c("cph")
+             comment = "Copyright 2017 ASHRAE Handbook  Fundamentals (https://www.ashrae.org) for equations and coefficients published ASHRAE Handbook  Fundamentals Chapter 1."))
+Maintainer: Hongyuan Jia <hongyuan.jia@bears-berkeley.sg>
 Description:
-    'PsychroLib'
-    <https://github.com/psychrometrics/psychrolib> to calculate psychrometric
-    properties of moist and dry air in both metric (SI) and imperial
-    (IP) systems of units. References: Meyer, D. and Thevenard, D (2019) <doi.org/10.21105/joss.01137>.
+    'PsychroLib' <https://github.com/psychrometrics/psychrolib> is a library of
+    functions to enable the calculation properties of moist and dry air in both
+    metric (SI) and imperial (IP) systems of units. References: Meyer, D. and
+    Thevenard, D (2019) <doi.org/10.21105/joss.01137>.
 Depends:
     R (>= 3.0.0)
 Imports:
