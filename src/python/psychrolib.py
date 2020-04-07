@@ -1459,3 +1459,24 @@ def CalcPsychrometricsFromRelHum(TDryBulb: float, RelHum: float, Pressure: float
     MoistAirVolume = GetMoistAirVolume(TDryBulb, HumRatio, Pressure)
     DegreeOfSaturation = GetDegreeOfSaturation(TDryBulb, HumRatio, Pressure)
     return HumRatio, TWetBulb, TDewPoint, VapPres, MoistAirEnthalpy, MoistAirVolume, DegreeOfSaturation
+
+
+from inspect import isfunction
+
+func_list = []
+for func in list(globals().items()):
+    if isfunction(func[1]) and func[0].startswith(('Get', 'Calc', 'dLnPws_')) and func != 'GetUnitSystem':
+        func_list.append(func)
+
+try:
+    from numba import vectorize, njit
+    isIP = njit(isIP)
+except ImportError:
+    try:
+        from numpy import vectorize
+    except ImportError:
+        vectorize = None
+
+if vectorize:
+    for func in func_list:
+        globals()[func[0]] = vectorize(func[1])
