@@ -1,5 +1,6 @@
 2.4.0
-- Add R language support (#49).
+- Add R language support (#49, #53, #54).
+- Update licence headers.
 - General `README.md`/docs improvements.
 
 2.3.0
