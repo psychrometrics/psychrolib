@@ -36,8 +36,6 @@ matrix:
       script:
         - R CMD build .
         - R CMD check --as-cran psychrolib*tar.gz
-      after_success:
-        - Rscript -e 'covr::codecov()'
 
 deploy:
  provider: pages
