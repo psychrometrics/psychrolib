@@ -91,6 +91,7 @@ if (!length(args)) {
     check_devtools()
     devtools::install_deps()
     devtools::document()
+    Rcpp::compileAttributes()
     devtools::install()
     message("Completed")
 } else if (args %in% c("--prepare", "-p")) {
@@ -102,11 +103,13 @@ if (!length(args)) {
     check_devtools()
     devtools::install_deps()
     devtools::document()
+    Rcpp::compileAttributes()
     message("Completed")
 } else if (args %in% c("--install", "-i")) {
     check_devtools()
     devtools::install_deps()
     devtools::document()
+    Rcpp::compileAttributes()
     devtools::install()
     message("Completed")
 } else if (args %in% c("--help", "-h")) {
