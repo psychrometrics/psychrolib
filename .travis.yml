@@ -29,7 +29,7 @@ matrix:
     - language: r
       r: release
       before_install:
-        - Rscript -e 'install.packages("devtools", dependencies = TRUE)'
+        - Rscript -e 'options(repos = c(CRAN = "https://demo.rstudiopm.com/all/latest")); install.packages("devtools", dependencies = TRUE)'
         - cd $TRAVIS_BUILD_DIR/src/r
         - Rscript tools/deploy.R
       script:
