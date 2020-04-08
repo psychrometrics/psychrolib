@@ -10,7 +10,8 @@ Authors@R: c(
              comment = "Copyright 2017 ASHRAE Handbook Fundamentals (https://www.ashrae.org) for equations and coefficients published ASHRAE Handbook Fundamentals Chapter 1."))
 Maintainer: Hongyuan Jia <hongyuan.jia@bears-berkeley.sg>
 Description:
-    'PsychroLib' <https://github.com/psychrometrics/psychrolib> is a library of
+    Implementation of 'PsychroLib'
+    <https://github.com/psychrometrics/psychrolib> library which contains
     functions to enable the calculation properties of moist and dry air in both
     metric (SI) and imperial (IP) systems of units. References: Meyer, D. and
     Thevenard, D (2019) <doi.org/10.21105/joss.01137>.
