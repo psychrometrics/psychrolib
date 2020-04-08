@@ -29,14 +29,12 @@ matrix:
     - language: r
       r: release
       before_install:
-        - Rscript -e 'install.packages("devtools", dependencies = TRUE)'
+        - Rscript -e 'install.packages("devtools")'
         - cd $TRAVIS_BUILD_DIR/src/r
         - Rscript tools/deploy.R
       script:
         - R CMD build .
         - R CMD check --as-cran psychrolib*tar.gz
-      after_success:
-        - Rscript -e 'covr::codecov()'
 
 deploy:
  provider: pages
