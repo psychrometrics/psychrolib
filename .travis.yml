@@ -29,7 +29,7 @@ matrix:
     - language: r
       r: release
       before_install:
-        - Rscript -e 'options(repos = c(CRAN = "https://demo.rstudiopm.com/all/__linux__/xenial/latest")); install.packages("devtools")'
+        - Rscript -e 'install.packages("devtools")'
         - cd $TRAVIS_BUILD_DIR/src/r
         - Rscript tools/deploy.R
       script:
