@@ -172,6 +172,13 @@ def SetUnitSystem(Units: UnitSystem) -> None:
     else:
         PSYCHROLIB_TOLERANCE = 0.001
 
+    if has_numba:
+        # Recompile all functions
+        # https://numba.pydata.org/numba-doc/dev/user/faq.html#numba-doesn-t-seem-to-care-when-i-modify-a-global-variable
+        globals()['isIP'] = njit(isIP.py_func)
+        for func in func_list:
+            globals()[func[0]] = vectorize(func[1])
+
 def GetUnitSystem() -> Optional[UnitSystem]:
     """
     Return system of units in use.
@@ -1471,7 +1478,9 @@ for func in list(globals().items()):
 try:
     from numba import vectorize, njit
     isIP = njit(isIP)
+    has_numba = True
 except ImportError:
+    has_numba = False
     try:
         from numpy import vectorize
     except ImportError:
