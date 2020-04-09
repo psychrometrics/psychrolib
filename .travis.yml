@@ -15,11 +15,19 @@ jobs:
       python: 3.7
       env:
         - VECTORIZE=numpy
+      addons:
+        apt:
+          packages:
+            - gfortran
 
     - language: python
       python: 3.7
       env:
         - VECTORIZE=numba
+      addons:
+        apt:
+          packages:
+            - gfortran
 
     - language: csharp
 
@@ -29,7 +37,18 @@ before_install:
   - | 
     set -x
     if [[ "$TRAVIS_PYTHON_VERSION" ]]; then
+          if [[ "$VECTORIZE" == "no" ]]; then
+            pip install Sphinx==2.4.* sphinx_bootstrap_theme sphinx-autodoc-typehints m2r cffi
+            pip uninstall -y numpy
+          fi
+          if [[ "$VECTORIZE" == "numpy" ]]; then
+            # Numpy is already installed
+          fi
+          if [[ "$VECTORIZE" == "numba" ]]; then
+            pip install numba
+          fi
       pip install Sphinx==2.4.* sphinx_bootstrap_theme sphinx-autodoc-typehints m2r cffi
+
     fi
     if [[ "$TRAVIS_R_VERSION" ]]; then
       Rscript -e 'install.packages("devtools")'
@@ -52,14 +71,15 @@ script:
       cd $TRAVIS_BUILD_DIR
       # See https://stackoverflow.com/a/34140498 for why "python -m" is needed.
       python3 -m pytest -v -s
+      # Javascript tests
       cd tests/js && npm test
-    elif [[ "$TRAVIS_R_VERSION" ]]; then
+    if [[ "$TRAVIS_R_VERSION" ]]; then
       R CMD build .
       R CMD check --as-cran psychrolib*tar.gz
-    else
-      cd $TRAVIS_BUILD_DIR
-      cd src/c_sharp && dotnet-sdk.dotnet test
-    fi
+    # fi
+    #   cd $TRAVIS_BUILD_DIR
+    #   cd src/c_sharp && dotnet-sdk.dotnet test
+    # fi
 
 deploy:
   provider: pages
