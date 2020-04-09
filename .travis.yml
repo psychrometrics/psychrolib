@@ -38,7 +38,7 @@ before_install:
       if [[ "$USE_NUMBA" == "no" ]]; then
         pip install Sphinx==2.4.* sphinx_bootstrap_theme sphinx-autodoc-typehints m2r
       fi
-      if [[ "$USE_NUMBA" == "numba" ]]; then
+      if [[ "$USE_NUMBA" == "yes" ]]; then
         pip install numba
       fi
     fi
