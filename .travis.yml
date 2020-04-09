@@ -5,15 +5,6 @@ jobs:
     - language: python
       python: 3.8
       env:
-        - VECTORIZE=no
-      addons:
-        apt:
-          packages:
-            - gfortran
-
-    - language: python
-      python: 3.8
-      env:
         - VECTORIZE=numpy
       addons:
         apt:
@@ -43,13 +34,9 @@ before_install:
   - | 
     set -x
     if [[ "$TRAVIS_PYTHON_VERSION" ]]; then
-      pip install cffi # This is common for all
-      if [[ "$VECTORIZE" == "no" ]]; then
-        pip install Sphinx==2.4.* sphinx_bootstrap_theme sphinx-autodoc-typehints m2r
-        pip uninstall -y numpy
-      fi
+      pip install cffi # Common to both
       if [[ "$VECTORIZE" == "numpy" ]]; then
-        echo "Do nothing. Numpy is already installed"
+        pip install Sphinx==2.4.* sphinx_bootstrap_theme sphinx-autodoc-typehints m2r
       fi
       if [[ "$VECTORIZE" == "numba" ]]; then
         pip install numba
@@ -95,4 +82,4 @@ deploy:
   local_dir: build/html
   on:
     branch: master
-    condition: $VECTORIZE == "no"
+    condition: $VECTORIZE == "numpy"
