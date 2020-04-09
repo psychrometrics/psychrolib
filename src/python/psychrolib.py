@@ -1468,24 +1468,18 @@ def CalcPsychrometricsFromRelHum(TDryBulb: float, RelHum: float, Pressure: float
     return HumRatio, TWetBulb, TDewPoint, VapPres, MoistAirEnthalpy, MoistAirVolume, DegreeOfSaturation
 
 
-from inspect import isfunction
-
-func_list = []
-for func in list(globals().items()):
-    if isfunction(func[1]) and func[0].startswith(('Get', 'dLnPws_')) and func != 'GetUnitSystem':
-        func_list.append(func)
-
 try:
+    from inspect import isfunction
     from numba import vectorize, njit
-    isIP = njit(isIP)
+
     has_numba = True
+    isIP = njit(isIP)
+
+    func_list = []
+    for func in list(globals().items()):
+        if isfunction(func[1]) and func[0].startswith(('Get', 'dLnPws_')) and func != 'GetUnitSystem':
+            globals()[func[0]] = vectorize(func[1])
+            func_list.append(func)
 except ImportError:
     has_numba = False
-    try:
-        from numpy import vectorize
-    except ImportError:
-        vectorize = None
-
-if vectorize:
-    for func in func_list:
-        globals()[func[0]] = vectorize(func[1])
+    vectorize = None
