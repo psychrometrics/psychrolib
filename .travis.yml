@@ -42,8 +42,9 @@ before_install:
   - | 
     set -x
     if [[ "$TRAVIS_PYTHON_VERSION" ]]; then
+      pip install cffi # This is common for all
       if [[ "$VECTORIZE" == "no" ]]; then
-        pip install Sphinx==2.4.* sphinx_bootstrap_theme sphinx-autodoc-typehints m2r cffi
+        pip install Sphinx==2.4.* sphinx_bootstrap_theme sphinx-autodoc-typehints m2r
         pip uninstall -y numpy
       fi
       if [[ "$VECTORIZE" == "numpy" ]]; then
