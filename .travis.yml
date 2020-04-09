@@ -5,7 +5,7 @@ jobs:
     - language: python
       python: 3.8
       env:
-        - VECTORIZE=numpy
+        - USE_NUMBA=no
       addons:
         apt:
           packages:
@@ -14,7 +14,7 @@ jobs:
     - language: python
       python: 3.8
       env:
-        - VECTORIZE=numba
+        - USE_NUMBA=yes
       addons:
         apt:
           packages:
@@ -35,10 +35,10 @@ before_install:
     set -x
     if [[ "$TRAVIS_PYTHON_VERSION" ]]; then
       pip install cffi # Common to both
-      if [[ "$VECTORIZE" == "numpy" ]]; then
+      if [[ "$USE_NUMBA" == "no" ]]; then
         pip install Sphinx==2.4.* sphinx_bootstrap_theme sphinx-autodoc-typehints m2r
       fi
-      if [[ "$VECTORIZE" == "numba" ]]; then
+      if [[ "$USE_NUMBA" == "numba" ]]; then
         pip install numba
       fi
     fi
@@ -82,4 +82,4 @@ deploy:
   local_dir: build/html
   on:
     branch: master
-    condition: $VECTORIZE == "numpy"
+    condition: $USE_NUMBA == "no"
