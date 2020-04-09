@@ -6,6 +6,10 @@ jobs:
       python: 3.7
       env:
         - VECTORIZE=no
+      addons:
+        apt:
+          packages:
+            - gfortran
 
     - language: python
       python: 3.7
