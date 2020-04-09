@@ -26,7 +26,7 @@ jobs:
             - name: dotnet-sdk
               confinement: classic
       env:
-        - CSHARP=yes
+        - C_SHARP=yes
 
     - language: r
 
@@ -70,7 +70,7 @@ script:
       R CMD build .
       R CMD check --as-cran psychrolib*tar.gz
     fi
-    if [[ "$CSHARP" ]]; then
+    if [[ "$C_SHARP" ]]; then
       cd $TRAVIS_BUILD_DIR
       cd src/c_sharp && dotnet-sdk.dotnet test
     fi
