@@ -172,6 +172,13 @@ def SetUnitSystem(Units: UnitSystem) -> None:
     else:
         PSYCHROLIB_TOLERANCE = 0.001
 
+    if has_numba:
+        # Recompile all functions
+        # https://numba.pydata.org/numba-doc/dev/user/faq.html#numba-doesn-t-seem-to-care-when-i-modify-a-global-variable
+        globals()['isIP'] = njit(isIP.py_func)
+        for func in func_list:
+            globals()[func[0]] = vectorize(func[1])
+
 def GetUnitSystem() -> Optional[UnitSystem]:
     """
     Return system of units in use.
@@ -1459,3 +1466,20 @@ def CalcPsychrometricsFromRelHum(TDryBulb: float, RelHum: float, Pressure: float
     MoistAirVolume = GetMoistAirVolume(TDryBulb, HumRatio, Pressure)
     DegreeOfSaturation = GetDegreeOfSaturation(TDryBulb, HumRatio, Pressure)
     return HumRatio, TWetBulb, TDewPoint, VapPres, MoistAirEnthalpy, MoistAirVolume, DegreeOfSaturation
+
+
+try:
+    from inspect import isfunction
+    from numba import vectorize, njit
+
+    has_numba = True
+    isIP = njit(isIP)
+
+    func_list = []
+    for func in list(globals().items()):
+        if isfunction(func[1]) and func[0].startswith(('Get', 'dLnPws_')) and func != 'GetUnitSystem':
+            globals()[func[0]] = vectorize(func[1])
+            func_list.append(func)
+except ImportError:
+    has_numba = False
+    vectorize = None
