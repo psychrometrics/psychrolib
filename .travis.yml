@@ -29,7 +29,12 @@ jobs:
           packages:
             - gfortran
 
-    - language: csharp
+    - language: minimal
+      addons:
+        snaps:
+          - dotnet-sdk --classic
+      env:
+        - CSHARP=yes
 
     - language: r
 
@@ -47,8 +52,6 @@ before_install:
           if [[ "$VECTORIZE" == "numba" ]]; then
             pip install numba
           fi
-      pip install Sphinx==2.4.* sphinx_bootstrap_theme sphinx-autodoc-typehints m2r cffi
-
     fi
     if [[ "$TRAVIS_R_VERSION" ]]; then
       Rscript -e 'install.packages("devtools")'
@@ -76,10 +79,11 @@ script:
     if [[ "$TRAVIS_R_VERSION" ]]; then
       R CMD build .
       R CMD check --as-cran psychrolib*tar.gz
-    # fi
-    #   cd $TRAVIS_BUILD_DIR
-    #   cd src/c_sharp && dotnet-sdk.dotnet test
-    # fi
+    fi
+    if [[ "$CSHARP" ]]; then
+      cd $TRAVIS_BUILD_DIR
+      cd src/c_sharp && dotnet-sdk.dotnet test
+    fi
 
 deploy:
   provider: pages
