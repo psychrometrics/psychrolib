@@ -1465,7 +1465,7 @@ from inspect import isfunction
 
 func_list = []
 for func in list(globals().items()):
-    if isfunction(func[1]) and func[0].startswith(('Get', 'Calc', 'dLnPws_')) and func != 'GetUnitSystem':
+    if isfunction(func[1]) and func[0].startswith(('Get', 'dLnPws_')) and func != 'GetUnitSystem':
         func_list.append(func)
 
 try:
