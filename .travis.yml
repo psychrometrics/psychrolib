@@ -3,7 +3,7 @@ dist: xenial
 jobs:
   include:
     - language: python
-      python: 3.7
+      python: 3.8
       env:
         - VECTORIZE=no
       addons:
@@ -12,7 +12,7 @@ jobs:
             - gfortran
 
     - language: python
-      python: 3.7
+      python: 3.8
       env:
         - VECTORIZE=numpy
       addons:
@@ -21,7 +21,7 @@ jobs:
             - gfortran
 
     - language: python
-      python: 3.7
+      python: 3.8
       env:
         - VECTORIZE=numba
       addons:
