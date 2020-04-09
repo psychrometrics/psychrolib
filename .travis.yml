@@ -42,20 +42,20 @@ before_install:
   - | 
     set -x
     if [[ "$TRAVIS_PYTHON_VERSION" ]]; then
-          if [[ "$VECTORIZE" == "no" ]]; then
-            pip install Sphinx==2.4.* sphinx_bootstrap_theme sphinx-autodoc-typehints m2r cffi
-            pip uninstall -y numpy
-          fi
-          if [[ "$VECTORIZE" == "numpy" ]]; then
-            # Numpy is already installed
-          fi
-          if [[ "$VECTORIZE" == "numba" ]]; then
-            pip install numba
-          fi
+      if [[ "$VECTORIZE" == "no" ]]; then
+        pip install Sphinx==2.4.* sphinx_bootstrap_theme sphinx-autodoc-typehints m2r cffi
+        pip uninstall -y numpy
+      fi
+      if [[ "$VECTORIZE" == "numpy" ]]; then
+        echo "Do nothing. Numpy is already installed"
+      fi
+      if [[ "$VECTORIZE" == "numba" ]]; then
+        pip install numba
+      fi
     fi
     if [[ "$TRAVIS_R_VERSION" ]]; then
       Rscript -e 'install.packages("devtools")'
-      cd $TRAVIS_BUILD_DIR/src/r
+      cd "$TRAVIS_BUILD_DIR/src/r" || exit
       Rscript tools/deploy.R
     fi
 install:
