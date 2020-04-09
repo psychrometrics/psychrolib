@@ -1,45 +1,67 @@
 dist: xenial
-sudo: required
 
-# TODO: blend Python and R together.
-
-matrix:
+jobs:
   include:
     - language: python
       python: 3.7
-      before_install:
-        - pip freeze
-        - sudo apt-get install gfortran
-        - pip install Sphinx==2.4.* sphinx_bootstrap_theme sphinx-autodoc-typehints m2r cffi
-        - sudo apt install snapd
-        - sudo snap install dotnet-sdk --classic
-      install:
-        - sphinx-build docs/sphinx build/html
-        - touch build/html/.nojekyll # https://help.github.com/articles/files-that-start-with-an-underscore-are-missing/
-        - cd tests/js && npm install
-        - cd $TRAVIS_BUILD_DIR
-      script:
-        # See https://stackoverflow.com/a/34140498 for why "python -m" is needed.
-        - python3 -m pytest -v -s
-        - cd tests/js && npm test
-        - cd $TRAVIS_BUILD_DIR
-        - cd src/c_sharp && dotnet-sdk.dotnet test
-        - cd $TRAVIS_BUILD_DIR
+      env:
+        - VECTORIZE=no
+
+    - language: python
+      python: 3.7
+      env:
+        - VECTORIZE=numpy
+
+    - language: python
+      python: 3.7
+      env:
+        - VECTORIZE=numba
+
+    - language: csharp
+
     - language: r
-      r: release
-      before_install:
-        - Rscript -e 'install.packages("devtools")'
-        - cd $TRAVIS_BUILD_DIR/src/r
-        - Rscript tools/deploy.R
-      script:
-        - R CMD build .
-        - R CMD check --as-cran psychrolib*tar.gz
+
+   before_install:
+    - | 
+      set -x
+      if [[ "$TRAVIS_PYTHON_VERSION" ]]; then
+        pip install Sphinx==2.4.* sphinx_bootstrap_theme sphinx-autodoc-typehints m2r cffi
+      fi
+      if [[ "$TRAVIS_R_VERSION" ]]; then
+        Rscript -e 'install.packages("devtools")'
+        cd $TRAVIS_BUILD_DIR/src/r
+        Rscript tools/deploy.R
+      fi
+  install:
+    - | 
+      set -x
+      if [[ "$TRAVIS_PYTHON_VERSION" ]]; then
+        sphinx-build docs/sphinx build/html
+        touch build/html/.nojekyll # https://help.github.com/articles/files-that-start-with-an-underscore-are-missing/
+        cd tests/js && npm install
+        cd $TRAVIS_BUILD_DIR
+      fi
+  script:
+    - | 
+      set -x
+      if [[ "$TRAVIS_PYTHON_VERSION" ]]; then
+        cd $TRAVIS_BUILD_DIR
+        # See https://stackoverflow.com/a/34140498 for why "python -m" is needed.
+        python3 -m pytest -v -s
+        cd tests/js && npm test
+      elif [[ "$TRAVIS_R_VERSION" ]]; then
+        R CMD build .
+        R CMD check --as-cran psychrolib*tar.gz
+      else
+        cd $TRAVIS_BUILD_DIR
+        cd src/c_sharp && dotnet-sdk.dotnet test
+      fi
 
 deploy:
- provider: pages
- skip_cleanup: true
- github_token: $GITHUB_TOKEN
- local_dir: build/html
- on:
-   branch: master
-   condition: $TRAVIS_PYTHON_VERSION == 3.6
+  provider: pages
+  skip_cleanup: true
+  github_token: $GITHUB_TOKEN
+  local_dir: build/html
+  on:
+    branch: master
+    condition: [[ $VECTORIZE == "no" ]]
