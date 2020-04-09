@@ -31,8 +31,9 @@ jobs:
 
     - language: minimal
       addons:
-        snaps:
-          - dotnet-sdk --classic
+          snaps:
+            - name: dotnet-sdk
+              confinement: classic
       env:
         - CSHARP=yes
 
