@@ -597,7 +597,7 @@ function Psychrometrics() {
     var HumRatio;
 
     if (!(SpecificHum >= 0.0 && SpecificHum < 1.0))
-      throw new Error("Specific humidity is outside range [0, 1[");
+      throw new Error("Specific humidity is outside range [0, 1)");
 
     HumRatio = SpecificHum / (1.0 - SpecificHum);
 

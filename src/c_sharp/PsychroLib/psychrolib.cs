@@ -647,7 +647,7 @@ namespace PsychroLib
         public double GetHumRatioFromSpecificHum(double specificHum)
         {
             if (!(specificHum >= 0.0 && specificHum < 1.0))
-                throw new InvalidOperationException("Specific humidity is outside range [0, 1]");
+                throw new InvalidOperationException("Specific humidity is outside range [0, 1)");
 
             var humRatio = specificHum / (1.0 - specificHum);
 
