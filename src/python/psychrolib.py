@@ -1484,4 +1484,3 @@ try:
             func_list.append(func)
 except ImportError:
     has_numba = False
-    vectorize = None
