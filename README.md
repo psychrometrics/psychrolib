@@ -1,32 +1,46 @@
-# <img src="assets/psychrolib_logo.svg" alt="PsychroLib Logo" height="40" width="40"> PsychroLib [![PyPI](https://img.shields.io/pypi/v/psychrolib)](https://pypi.org/project/PsychroLib) [![NuGet](https://img.shields.io/nuget/v/PsychroLib.svg?maxAge=600)](https://www.nuget.org/packages/PsychroLib) [![CRAN](http://www.r-pkg.org/badges/version/psychrolib)](https://cran.r-project.org/package=psychrolib)
+<div align="center">
+<img src="assets/psychrolib_logo.svg" alt="PsychroLib Logo" height="80" width="80"> 
+
+<!-- omit in toc -->
+# PsychroLib
+
+[![PyPI](https://img.shields.io/pypi/v/psychrolib)](https://pypi.org/project/PsychroLib) [![NuGet](https://img.shields.io/nuget/v/PsychroLib.svg?maxAge=600)](https://www.nuget.org/packages/PsychroLib) [![CRAN](https://www.r-pkg.org/badges/version/psychrolib)](https://cran.r-project.org/package=psychrolib) [![Build Status](https://travis-ci.com/psychrometrics/psychrolib.svg?branch=master)](https://travis-ci.com/psychrometrics/psychrolib) [![DOI](https://joss.theoj.org/papers/10.21105/joss.01137/status.svg)](https://doi.org/10.21105/joss.01137) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.2537945.svg)](https://doi.org/10.5281/zenodo.2537945)
+
+[Overview](#overview) | [Documentation](#documentation) | [Installation](#installation) | [How to cite](#how-to-cite) | [Contributing](#contributing) | [Development](#development) | [Copyright and license](#copyright-and-license) | [Acknowledgements](#acknowledgements)
+
+</div>
 
 
-|CI and Tests | Paper DOI | Software DOI |
-|---|---|------|
-[![Build Status](https://travis-ci.com/psychrometrics/psychrolib.svg?branch=master)](https://travis-ci.com/psychrometrics/psychrolib) | [![DOI](https://joss.theoj.org/papers/10.21105/joss.01137/status.svg)](https://doi.org/10.21105/joss.01137) | [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.2537945.svg)](https://doi.org/10.5281/zenodo.2537945)|
+## Overview
 
-PsychroLib is a library of functions to enable the calculation of psychrometric properties of moist and dry air. Versions of PsychroLib are available for Python, C, C#, Fortran, R, JavaScript, Microsoft Excel Visual Basic for Applications (VBA). The library works in both metric (SI) and imperial (IP) systems of units. For a general overview and a list of currently available functions, please see the [overview page](docs/overview.md).
+PsychroLib is a software library to enable the calculation of psychrometric properties of moist and dry air. Versions of PsychroLib are available for Python, C, C#, Fortran, R, JavaScript, Microsoft Excel Visual Basic for Applications (VBA). PsychroLib works in both metric (SI) and imperial (IP) systems of units. For a general overview and a list of currently available functions, please see the [overview page](docs/overview.md).
 
 
 ## Documentation
 
-The API documentation is available [here](https://psychrometrics.github.io/psychrolib/api_docs.html). Please note that although the API describes the Python version of the library, the API is common across all the supported language implementations. In R please note that (1) constants, like `ZERO_FAHRENHEIT_AS_RANKINE` are not exported (i.e. not directly accessible to users), (2) functions accept a vector, not a scalar (3) bulk calculations, like `CalcPsychrometricsFromRelHum` return a list.
+Please see the [Python API documentation](https://psychrometrics.github.io/psychrolib/api_docs.html) for the common API across all the supported language implementations. In Python, array support and improved runtime performance can be optionally enabled by installing [Numba](https://numba.pydata.org/). In R (1) constants, like `ZERO_FAHRENHEIT_AS_RANKINE` are not exported (i.e. not directly accessible to users), (2) functions accept a vector, not a scalar (3) bulk calculations, like `CalcPsychrometricsFromRelHum` return a list.
 
 Examples on how to use PsychroLib in all the supported languages are described in [this guide](docs/examples.md).
 
 
-## Installing
+## Installation
 
-- Python: from the [Python Package Index (PyPI)](https://pypi.org/project/PsychroLib/).
+- Python: from the [Python Package Index (PyPI)](https://pypi.org/project/PsychroLib/). [Numba](https://numba.pydata.org/) can be optionally installed to enable array support and faster runtime performance.
 - C# (.NET): from the [NuGet package](https://www.nuget.org/packages/PsychroLib/) manager or clone the repository, and bundle according to your requirements.
 - C, Fortran and JavaScript: clone the repository, and bundle according to your requirements.
 - VBA/Excel: download the ready-made spreadsheets from the [release tab](https://github.com/psychrometrics/psychrolib/releases).
 - R: from the [Comprehensive R Archive Network (CRAN)](https://cran.r-project.org/package=psychrolib).
 
 
-## Citing
+## How to cite
 
-If you are using PsychroLib, please cite the the summary paper (https://doi.org/10.21105/joss.01137) *together* with the specific version of PsychroLib you are using (see [list on Zenodo](https://doi.org/10.5281/zenodo.2537945) for all available versions).
+When using PsychroLib, please cite the software summary paper and software version using the following Digital Object Identifiers (DOIs) to [generate citations in your preferred style](https://citation.crosscite.org/):
+
+| Software summary paper                                                                                                  | Software version*                                                                                                  |
+| ----------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| [![DOI](https://joss.theoj.org/papers/10.21105/joss.01137/status.svg)](https://doi.org/10.21105/joss.01137) | [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.2537945.svg)](https://doi.org/10.5281/zenodo.2537945) |
+
+*please make sure to cite the same version you are using with the correct DOI. For a list of all available versions see see [more on Zenodo]((https://doi.org/10.5281/zenodo.2537945)).
 
 
 ## Contributing
