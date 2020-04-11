@@ -853,7 +853,7 @@ def GetHumRatioFromSpecificHum(SpecificHum: float) -> float:
 
     """
     if SpecificHum < 0.0 or SpecificHum >= 1.0:
-        raise ValueError("Specific humidity is outside range [0, 1[")
+        raise ValueError("Specific humidity is outside range [0, 1)")
 
     HumRatio = SpecificHum / (1.0 - SpecificHum)
 

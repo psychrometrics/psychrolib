@@ -860,7 +860,7 @@ module psychrolib
       !+ Humidity ratio in lb_H₂O lb_Dry_Air⁻¹ [IP] or kg_H₂O kg_Dry_Air⁻¹ [SI]
 
     if (SpecificHum < 0.0 .or. SpecificHum >= 1.0) then
-      error stop "Error: specific humidity is outside range [0, 1["
+      error stop "Error: specific humidity is outside range [0, 1)"
     end if
 
     HumRatio = SpecificHum / (1.0 - SpecificHum)

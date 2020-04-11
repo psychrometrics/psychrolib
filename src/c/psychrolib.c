@@ -637,7 +637,7 @@ double GetHumRatioFromSpecificHum // (o) Humidity ratio in lb_Hâ‚‚O lb_Dry_Airâ
 {
   double HumRatio;
 
-  ASSERT (SpecificHum >= 0.0 && SpecificHum < 1.0, "Specific humidity is outside range [0,1[")
+  ASSERT (SpecificHum >= 0.0 && SpecificHum < 1.0, "Specific humidity is outside range [0, 1)")
 
   HumRatio = SpecificHum / (1.0 - SpecificHum);
 
