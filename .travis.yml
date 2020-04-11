@@ -24,6 +24,7 @@ jobs:
       addons:
           snaps:
             - name: dotnet-sdk
+              confinement: classic
       env:
         - C_SHARP=yes
 
