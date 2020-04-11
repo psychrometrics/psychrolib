@@ -1,7 +1,7 @@
 Package: psychrolib
 Type: Package
 Title: Psychrometric Properties of Moist and Dry Air
-Version: 2.4.0
+Version: 2.5.0
 Authors@R: c(
       person("Hongyuan", "Jia", email = "hongyuan.jia@bears-berkeley.sg", role = c("aut", "cre"), comment = c(ORCID = "0000-0002-0075-8183")),
       person(family = "The PsychroLib Contributors", role = c("ctb", "cph"),
