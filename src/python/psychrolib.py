@@ -173,7 +173,7 @@ def SetUnitSystem(Units: UnitSystem) -> None:
         PSYCHROLIB_TOLERANCE = 0.001
 
     if has_numba:
-        # Need to recompile functions when the system of units is chnaged as Numba considers these global variables compile-time constants.
+        # Need to recompile functions when the system of units is changed as Numba considers these global variables compile-time constants.
         # See https://numba.pydata.org/numba-doc/dev/user/faq.html#numba-doesn-t-seem-to-care-when-i-modify-a-global-variable
         globals()['isIP'] = njit(isIP.py_func)
         for func in func_list:
@@ -1468,6 +1468,8 @@ def CalcPsychrometricsFromRelHum(TDryBulb: float, RelHum: float, Pressure: float
     return HumRatio, TWetBulb, TDewPoint, VapPres, MoistAirEnthalpy, MoistAirVolume, DegreeOfSaturation
 
 
+# This section provides support for vectorization through the use of the Numba library (http://numba.pydata.org/)
+# If Numba is not installed, the library just works with scalars and vectorization is simply not supported 
 try:
     from inspect import isfunction
     from numba import vectorize, njit
