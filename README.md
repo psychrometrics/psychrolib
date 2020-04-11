@@ -18,14 +18,14 @@ PsychroLib is a software library to enable the calculation of psychrometric prop
 
 ## Documentation
 
-Please see the [Python API documentation](https://psychrometrics.github.io/psychrolib/api_docs.html) for the common API across all the supported language implementations. In Python, for best runtime performance and array support, please install [Numba](https://numba.pydata.org/). In R (1) constants, like `ZERO_FAHRENHEIT_AS_RANKINE` are not exported (i.e. not directly accessible to users), (2) functions accept a vector, not a scalar (3) bulk calculations, like `CalcPsychrometricsFromRelHum` return a list.
+Please see the [Python API documentation](https://psychrometrics.github.io/psychrolib/api_docs.html) for the common API across all the supported language implementations. In Python, array support and improved runtime performance can be optionally enabled by installing [Numba](https://numba.pydata.org/). In R (1) constants, like `ZERO_FAHRENHEIT_AS_RANKINE` are not exported (i.e. not directly accessible to users), (2) functions accept a vector, not a scalar (3) bulk calculations, like `CalcPsychrometricsFromRelHum` return a list.
 
 Examples on how to use PsychroLib in all the supported languages are described in [this guide](docs/examples.md).
 
 
 ## Installation
 
-- Python: from the [Python Package Index (PyPI)](https://pypi.org/project/PsychroLib/). For best runtime performance and array support, install [Numba](https://numba.pydata.org/).
+- Python: from the [Python Package Index (PyPI)](https://pypi.org/project/PsychroLib/). [Numba](https://numba.pydata.org/) can be optionally installed to enable array support and faster runtime performance.
 - C# (.NET): from the [NuGet package](https://www.nuget.org/packages/PsychroLib/) manager or clone the repository, and bundle according to your requirements.
 - C, Fortran and JavaScript: clone the repository, and bundle according to your requirements.
 - VBA/Excel: download the ready-made spreadsheets from the [release tab](https://github.com/psychrometrics/psychrolib/releases).

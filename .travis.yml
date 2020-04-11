@@ -47,6 +47,7 @@ before_install:
       cd "$TRAVIS_BUILD_DIR/src/r" || exit
       Rscript tools/deploy.R
     fi
+
 install:
   - | 
     set -x
@@ -56,6 +57,7 @@ install:
       cd tests/js && npm install
       cd $TRAVIS_BUILD_DIR
     fi
+
 script:
   - | 
     set -x
