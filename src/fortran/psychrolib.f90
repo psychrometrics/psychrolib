@@ -1,4 +1,4 @@
-! PsychroLib (version 2.4.0) (https://github.com/psychrometrics/psychrolib).
+! PsychroLib (version 2.5.0) (https://github.com/psychrometrics/psychrolib).
 ! Copyright (c) 2018-2020 The PsychroLib Contributors for the current library implementation.
 ! Copyright (c) 2017 ASHRAE Handbook — Fundamentals for ASHRAE equations and coefficients.
 ! Licensed under the MIT License.
@@ -860,7 +860,7 @@ module psychrolib
       !+ Humidity ratio in lb_H₂O lb_Dry_Air⁻¹ [IP] or kg_H₂O kg_Dry_Air⁻¹ [SI]
 
     if (SpecificHum < 0.0 .or. SpecificHum >= 1.0) then
-      error stop "Error: specific humidity is outside range [0, 1["
+      error stop "Error: specific humidity is outside range [0, 1)"
     end if
 
     HumRatio = SpecificHum / (1.0 - SpecificHum)

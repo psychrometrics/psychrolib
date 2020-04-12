@@ -1,4 +1,4 @@
-# PsychroLib (version 2.4.0) (https://github.com/psychrometrics/psychrolib).
+# PsychroLib (version 2.5.0) (https://github.com/psychrometrics/psychrolib).
 # Copyright (c) 2018-2020 The PsychroLib Contributors for the current library implementation.
 # Copyright (c) 2017 ASHRAE Handbook — Fundamentals for ASHRAE equations and coefficients.
 # Licensed under the MIT License.
@@ -171,6 +171,13 @@ def SetUnitSystem(Units: UnitSystem) -> None:
         PSYCHROLIB_TOLERANCE = 0.001 * 9. / 5.
     else:
         PSYCHROLIB_TOLERANCE = 0.001
+
+    if has_numba:
+        # Need to recompile functions when the system of units is changed as Numba considers these global variables compile-time constants.
+        # See https://numba.pydata.org/numba-doc/dev/user/faq.html#numba-doesn-t-seem-to-care-when-i-modify-a-global-variable
+        globals()['isIP'] = njit(isIP.py_func)
+        for func in func_list:
+            globals()[func[0]] = vectorize(func[1])
 
 def GetUnitSystem() -> Optional[UnitSystem]:
     """
@@ -853,7 +860,7 @@ def GetHumRatioFromSpecificHum(SpecificHum: float) -> float:
 
     """
     if SpecificHum < 0.0 or SpecificHum >= 1.0:
-        raise ValueError("Specific humidity is outside range [0, 1[")
+        raise ValueError("Specific humidity is outside range [0, 1)")
 
     HumRatio = SpecificHum / (1.0 - SpecificHum)
 
@@ -1459,3 +1466,23 @@ def CalcPsychrometricsFromRelHum(TDryBulb: float, RelHum: float, Pressure: float
     MoistAirVolume = GetMoistAirVolume(TDryBulb, HumRatio, Pressure)
     DegreeOfSaturation = GetDegreeOfSaturation(TDryBulb, HumRatio, Pressure)
     return HumRatio, TWetBulb, TDewPoint, VapPres, MoistAirEnthalpy, MoistAirVolume, DegreeOfSaturation
+
+
+# This section provides support for vectorization through the use of the Numba library (http://numba.pydata.org/)
+# If Numba is not installed, the library just works with scalars and vectorization is simply not supported 
+try:
+    from inspect import isfunction
+    from numba import vectorize, njit
+
+    has_numba = True
+    # Needs to compile as used in vectorized functions below.
+    isIP = njit(isIP)
+    # Vectorise all 'core' functions. 
+    # Utility function are excluded as they are just wrappers.
+    func_list = []
+    for func in list(globals().items()):
+        if isfunction(func[1]) and func[0].startswith(('Get', 'dLnPws_')) and func != 'GetUnitSystem':
+            globals()[func[0]] = vectorize(func[1])
+            func_list.append(func)
+except ImportError:
+    has_numba = False

@@ -1,3 +1,8 @@
+2.5.0
+- Python: Add support for handling Numpy vectors and JIT compilation with Numba (#57).
+- Minor docstring improvements: Use parenthesis instead of brackets to indicate open intervals (#59).
+- CI Improvements (#57, #58, #60).
+
 2.4.0
 - Add R language support (#49, #53, #54).
 - Update licence headers.

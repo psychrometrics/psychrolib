@@ -1,5 +1,5 @@
 ﻿/*
- * PsychroLib (version 2.4.0) (https://github.com/psychrometrics/psychrolib).
+ * PsychroLib (version 2.5.0) (https://github.com/psychrometrics/psychrolib).
  * Copyright (c) 2018-2020 The PsychroLib Contributors for the current library implementation.
  * Copyright (c) 2017 ASHRAE Handbook — Fundamentals for ASHRAE equations and coefficients.
  * Licensed under the MIT License.
@@ -647,7 +647,7 @@ namespace PsychroLib
         public double GetHumRatioFromSpecificHum(double specificHum)
         {
             if (!(specificHum >= 0.0 && specificHum < 1.0))
-                throw new InvalidOperationException("Specific humidity is outside range [0, 1]");
+                throw new InvalidOperationException("Specific humidity is outside range [0, 1)");
 
             var humRatio = specificHum / (1.0 - specificHum);
 

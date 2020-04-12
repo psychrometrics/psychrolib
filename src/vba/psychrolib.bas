@@ -1,4 +1,4 @@
-' PsychroLib (version 2.4.0) (https://github.com/psychrometrics/psychrolib).
+' PsychroLib (version 2.5.0) (https://github.com/psychrometrics/psychrolib).
 ' Copyright (c) 2018-2020 The PsychroLib Contributors for the current library implementation.
 ' Copyright (c) 2017 ASHRAE Handbook — Fundamentals for ASHRAE equations and coefficients.
 ' Licensed under the MIT License.
@@ -1081,7 +1081,7 @@ Function GetHumRatioFromSpecificHum(ByVal SpecificHum As Variant) As Variant
   On Error GoTo ErrHandler
 
   If (SpecificHum < 0 Or SpecificHum >= 1) Then
-    MyMsgBox ("Specific humidity is outside range [0, 1[")
+    MyMsgBox ("Specific humidity is outside range [0, 1)")
     GoTo ErrHandler
   End If
 
