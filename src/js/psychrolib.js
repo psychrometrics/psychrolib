@@ -19,7 +19,7 @@ function Psychrometrics() {
    *
    * Example (e.g. Node.JS)
    *  // Import the PsychroLib
-   *  var psychrolib = require('psychrolib.js')
+   *  var psychrolib = require('./psychrolib.js')
    *  // Set unit system
    *  psychrolib.SetUnitSystem(psychrolib.SI)
    *  // Calculate the dew point temperature for a dry bulb temperature of 25 C and a relative humidity of 80%
