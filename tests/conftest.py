@@ -58,18 +58,35 @@ psyc = psychroc.lib
 # was last set.
 @pytest.fixture(scope = 'module')
 def SetUnitSystem_IP():
+    """
+    Set the unit units.
+
+    Args:
+    """
     psychrolib.SetUnitSystem(psychrolib.IP)
     psyf.setunitsystem(1)
     psyc.SetUnitSystem(1)
 
 @pytest.fixture(scope = 'module')
 def SetUnitSystem_SI():
+    """
+    Sets the units.
+
+    Args:
+    """
     psychrolib.SetUnitSystem(psychrolib.SI)
     psyf.setunitsystem(2)
     psyc.SetUnitSystem(2)
 
 class CaseInsensitiveFortran(object):
     def __getattribute__(self, name: str):
+        """
+        Returns the requested attribute by name.
+
+        Args:
+            self: (todo): write your description
+            name: (str): write your description
+        """
         return getattr(psyf, name.lower())
 
 ffi = cffi.FFI()
@@ -85,6 +102,15 @@ TWetBulb = ffi.new("double *")
 class PythonicC(object):
     # Wrap C functions that use pointers to provide the same Python API.
     def CalcPsychrometricsFromTWetBulb(self, TDryBulb, TWetBulb, Pressure):
+        """
+        Convert from gringoet from a list of gringo.
+
+        Args:
+            self: (todo): write your description
+            TDryBulb: (todo): write your description
+            TWetBulb: (todo): write your description
+            Pressure: (float): write your description
+        """
         out = [HumRatio, TDewPoint, RelHum, VapPres,
                MoistAirEnthalpy, MoistAirVolume, DegreeOfSaturation]
         psyc.CalcPsychrometricsFromTWetBulb(
@@ -92,12 +118,30 @@ class PythonicC(object):
         return tuple(o[0] for o in out)
 
     def CalcPsychrometricsFromTDewPoint(self, TDryBulb, TDewPoint, Pressure):
+        """
+        Returns a list of - tuples of point objects ) tuples.
+
+        Args:
+            self: (todo): write your description
+            TDryBulb: (todo): write your description
+            TDewPoint: (todo): write your description
+            Pressure: (float): write your description
+        """
         out = [HumRatio, TWetBulb, RelHum, VapPres, MoistAirEnthalpy,\
                MoistAirVolume, DegreeOfSaturation]
         psyc.CalcPsychrometricsFromTDewPoint(TDryBulb, TDewPoint, Pressure, *out)
         return tuple(o[0] for o in out)
 
     def CalcPsychrometricsFromRelHum(self, TDryBulb, RelHum, Pressure):
+        """
+        Convert a list of - of - > sha.
+
+        Args:
+            self: (todo): write your description
+            TDryBulb: (todo): write your description
+            RelHum: (int): write your description
+            Pressure: (todo): write your description
+        """
         out = [HumRatio, TWetBulb, TDewPoint, VapPres, MoistAirEnthalpy,\
                MoistAirVolume, DegreeOfSaturation]
         psyc.CalcPsychrometricsFromRelHum(TDryBulb, RelHum, Pressure, *out)
@@ -105,10 +149,23 @@ class PythonicC(object):
 
     # forward all other functions directly to C interface, no pointer-wrapping needed
     def __getattr__(self, name: str):
+        """
+        Return the value from the given attribute.
+
+        Args:
+            self: (todo): write your description
+            name: (str): write your description
+        """
         return getattr(psyc, name)
 
 @pytest.fixture(scope = 'module', params=["C", "Fortran", "Python"])
 def psy(request):
+    """
+    Return the language for the language.
+
+    Args:
+        request: (todo): write your description
+    """
     lang = request.param
     if lang == 'C':
         return PythonicC()
