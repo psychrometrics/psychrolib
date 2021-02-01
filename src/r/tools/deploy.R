@@ -72,6 +72,22 @@ update_links <- function () {
     readme <- gsub("(\\[.+\\])\\(LICENSE.txt\\)", "\\1(LICENSE)", readme)
     readme <- gsub("(\\[.+\\])\\((.+\\.md)\\)", paste0("\\1(", repo, "/blob/master/\\2)"), readme)
     writeLines(readme, "README.md")
+
+    # update all links in packages
+    message("Check URLs and update if necessary")
+    check_install_urlchecker()
+    suppressMessages(urlchecker::url_update(), "cliMessage")
+    NULL
+}
+
+check_install_urlchecker <- function () {
+    check_devtools()
+
+    # check and install urlchecker if necessary
+    if (!require("urlchecker", quietly = TRUE)) {
+        message("'urlchecker' package is needed but not installed. Try to install it via GitHub")
+        devtools::install_github("r-lib/urlchecker")
+    }
 }
 
 check_devtools <- function () {
