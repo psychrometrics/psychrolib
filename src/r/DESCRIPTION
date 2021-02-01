@@ -14,7 +14,7 @@ Description:
     <https://github.com/psychrometrics/psychrolib> library which contains
     functions to enable the calculation properties of moist and dry air in both
     metric (SI) and imperial (IP) systems of units. References: Meyer, D. and
-    Thevenard, D (2019) <doi.org:10.21105/joss.01137>.
+    Thevenard, D (2019) <doi:10.21105/joss.01137>.
 Depends:
     R (>= 3.0.0)
 Imports:
