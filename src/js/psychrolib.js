@@ -93,6 +93,9 @@ function Psychrometrics() {
   // Systems of units (IP or SI)
   var PSYCHROLIB_UNITS = undefined;
 
+  // Floating-point tolerance value
+  var PSYCHROLIB_TOLERANCE = undefined;
+
   this.IP = 1;
   this.SI = 2;
 
@@ -444,7 +447,7 @@ function Psychrometrics() {
     , Pressure                            // (i) Atmospheric pressure in Psi [IP] or Pa [SI]
     ) {
     var Wsstar;
-    HumRatio = INVALID
+    var HumRatio = INVALID
 
     if (!(TWetBulb <= TDryBulb))
       throw new Error("Wet bulb temperature is above dry bulb temperature");
