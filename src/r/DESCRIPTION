@@ -1,14 +1,14 @@
 Package: psychrolib
 Type: Package
 Title: Psychrometric Properties of Moist and Dry Air
-Version: 2.5.1
+Version: 2.5.2
 Authors@R: c(
-      person("Hongyuan", "Jia", email = "hongyuan.jia@bears-berkeley.sg", role = c("aut", "cre"), comment = c(ORCID = "0000-0002-0075-8183")),
+      person("Hongyuan", "Jia", email = "hongyuanjia@outlook.com", role = c("aut", "cre"), comment = c(ORCID = "0000-0002-0075-8183")),
       person(family = "The PsychroLib Contributors", role = c("ctb", "cph"),
              comment = "Authors listed in inst/PSYCHROLIB_AUTHORS.txt"),
       person(family = "ASHRAE", role = c("cph"),
              comment = "Copyright 2017 ASHRAE Handbook Fundamentals (https://www.ashrae.org) for equations and coefficients published ASHRAE Handbook Fundamentals Chapter 1."))
-Maintainer: Hongyuan Jia <hongyuan.jia@bears-berkeley.sg>
+Maintainer: Hongyuan Jia <hongyuanjia@outlook.com>
 Description:
     Implementation of 'PsychroLib'
     <https://github.com/psychrometrics/psychrolib> library which contains
@@ -27,5 +27,4 @@ URL: https://github.com/psychrometrics/psychrolib
 BugReports: https://github.com/psychrometrics/psychrolib/issues
 LinkingTo: Rcpp
 Encoding: UTF-8
-LazyData: true
 RoxygenNote: 7.0.2
