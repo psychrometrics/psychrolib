@@ -74,7 +74,7 @@ script:
     fi
     if [[ "$C_SHARP" ]]; then
       cd $TRAVIS_BUILD_DIR
-      cd src/c_sharp && dotnet-sdk.dotnet test
+      cd src/c_sharp && sudo dotnet test
     fi
 
 deploy:
