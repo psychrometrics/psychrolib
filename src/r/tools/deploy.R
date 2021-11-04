@@ -84,9 +84,9 @@ check_install_urlchecker <- function () {
     check_devtools()
 
     # check and install urlchecker if necessary
-    if (!require("urlchecker", quietly = TRUE)) {
+    if (!require("urlchecker", character.only = TRUE, quietly = TRUE)) {
         message("'urlchecker' package is needed but not installed. Try to install it via GitHub")
-        devtools::install_github("r-lib/urlchecker")
+        install.packages("urlchecker")
     }
 }
 
