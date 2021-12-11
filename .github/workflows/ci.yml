@@ -28,20 +28,20 @@ jobs:
         run: pip install cffi numba
       - name: Install JS dependecies
         run: cd $GITHUB_WORKSPACE/tests/js && npm install
-      - name: Install R dependecies
-        run: |
-          Rscript -e 'install.packages("devtools")'
-          cd $GITHUB_WORKSPACE/src/r || exit
-          Rscript tools/deploy.R
+      # - name: Install R dependecies
+      #   run: |
+      #     Rscript -e 'install.packages("devtools")'
+      #     cd $GITHUB_WORKSPACE/src/r || exit
+      #     Rscript tools/deploy.R
 
       - name: Run tests (Python)
         run: cd $GITHUB_WORKSPACE && python -m pytest -v -s
       - name: Run tests (JavaScript)
         run: cd $GITHUB_WORKSPACE/tests/js && npm test
-      - name: Run tests (R)
-        run: cd $GITHUB_WORKSPACE && R CMD build . && R CMD check --as-cran psychrolib*tar.gz
       - name: Run tests (C#)
         run: cd $GITHUB_WORKSPACE/src/c_sharp && sudo dotnet test
+      # - name: Run tests (R)
+      #   run: cd $GITHUB_WORKSPACE && R CMD build . && R CMD check --as-cran psychrolib*tar.gz
 
   gh-pages:
     runs-on: ubuntu-latest
