@@ -25,7 +25,7 @@ jobs:
           node-version: '16'
 
       - name: Install python dependecies
-        run: pip install cffi numba
+        run: pip install cffi numba pytest
       - name: Install JS dependecies
         run: cd $GITHUB_WORKSPACE/tests/js && npm install
       # - name: Install R dependecies
