@@ -1,0 +1,65 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  main:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
+      - uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '6.0.x'
+      - uses: r-lib/actions/setup-r@v1
+        with:
+          r-version: '4'
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+
+      - name: Install python dependecies
+        run: pip install cffi numba
+      - name: Install JS dependecies
+        run: cd $GITHUB_WORKSPACE/tests/js && npm install
+      - name: Install R dependecies
+        run: |
+          Rscript -e 'install.packages("devtools")'
+          cd $GITHUB_WORKSPACE/src/r || exit
+          Rscript tools/deploy.R
+
+      - name: Run tests (Python)
+        run: cd $GITHUB_WORKSPACE && python -m pytest -v -s
+      - name: Run tests (JavaScript)
+        run: cd $GITHUB_WORKSPACE/tests/js && npm test
+      - name: Run tests (R)
+        run: cd $GITHUB_WORKSPACE && R CMD build . && R CMD check --as-cran psychrolib*tar.gz
+      - name: Run tests (C#)
+        run: cd $GITHUB_WORKSPACE/src/c_sharp && sudo dotnet test
+
+  gh-pages:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-python@v2
+      with:
+        python-version: 3.9
+
+    - name: Install python dependecies
+      run: pip install sphinx sphinx_bootstrap_theme sphinx-autodoc-typehints # m2r
+
+    - name: Build docs
+      run: sphinx-build docs/sphinx build/html
+
+    - name: Publish docs
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: build/html
+        force_orphan: true
