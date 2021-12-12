@@ -35,6 +35,7 @@ jobs:
       - name: Query R package dependencies
         run: |
           install.packages('remotes')
+          if (!dir.exists(".github")) dir.create(".github")
           saveRDS(remotes::dev_package_deps(dependencies = TRUE), ".github/depends.Rds", version = 2)
           writeLines(sprintf("R-%i.%i", getRversion()$major, getRversion()$minor), ".github/R-version")
         working-directory: ./src/r
@@ -45,6 +46,7 @@ jobs:
           path: ${{ env.R_LIBS_USER }}
           key: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-${{ hashFiles('.github/depends.Rds') }}
           restore-keys: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-
+        working-directory: ./src/r
       - name: Install system dependencies for R packages
         if: runner.os == 'Linux'
         run: |
@@ -61,6 +63,7 @@ jobs:
         working-directory: ./src/r
       - name: Generate R package documentation
         run: Rscript tools/deploy.R -p && Rscript -e 'devtools::document()'
+        working-directory: ./src/r
 
       - name: Run tests (Python)
         run: cd $GITHUB_WORKSPACE && python -m pytest -v -s
