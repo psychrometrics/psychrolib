@@ -10,6 +10,7 @@ jobs:
         os: [ubuntu-20.04]
     env:
       RSPM: "https://packagemanager.rstudio.com/cran/__linux__/focal/latest"
+      _R_CHECK_CRAN_INCOMING_REMOTE_: false
 
     steps:
       - uses: actions/checkout@v2
