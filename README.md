@@ -4,7 +4,8 @@
 <!-- omit in toc -->
 # PsychroLib
 
-[![PyPI](https://img.shields.io/pypi/v/psychrolib)](https://pypi.org/project/PsychroLib) [![NuGet](https://img.shields.io/nuget/v/PsychroLib.svg?maxAge=600)](https://www.nuget.org/packages/PsychroLib) [![CRAN](https://www.r-pkg.org/badges/version/psychrolib)](https://cran.r-project.org/package=psychrolib) [![Build Status](https://travis-ci.com/psychrometrics/psychrolib.svg?branch=master)](https://travis-ci.com/psychrometrics/psychrolib) [![DOI](https://joss.theoj.org/papers/10.21105/joss.01137/status.svg)](https://doi.org/10.21105/joss.01137) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.2537945.svg)](https://doi.org/10.5281/zenodo.2537945)
+
+[![CI](https://github.com/psychrometrics/psychrolib/actions/workflows/ci.yml/badge.svg)](https://github.com/psychrometrics/psychrolib/actions/workflows/ci.yml) [![PyPI](https://img.shields.io/pypi/v/psychrolib)](https://pypi.org/project/PsychroLib) [![NuGet](https://img.shields.io/nuget/v/PsychroLib.svg?maxAge=600)](https://www.nuget.org/packages/PsychroLib) [![CRAN](https://www.r-pkg.org/badges/version/psychrolib)](https://cran.r-project.org/package=psychrolib) [![DOI](https://joss.theoj.org/papers/10.21105/joss.01137/status.svg)](https://doi.org/10.21105/joss.01137) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.2537945.svg)](https://doi.org/10.5281/zenodo.2537945)
 
 [Overview](#overview) | [Documentation](#documentation) | [Installation](#installation) | [How to cite](#how-to-cite) | [Contributing](#contributing) | [Development](#development) | [Copyright and license](#copyright-and-license) | [Acknowledgements](#acknowledgements)
 
