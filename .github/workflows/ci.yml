@@ -59,7 +59,7 @@ jobs:
           remotes::install_cran("devtools")
         shell: Rscript {0}
         working-directory: ./src/r
-      - name: Generate documentation
+      - name: Generate R package documentation
         run: Rscript tools/deploy.R -p && Rscript -e 'devtools::document()'
 
       - name: Run tests (Python)
