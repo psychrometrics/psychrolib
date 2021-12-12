@@ -38,13 +38,14 @@ jobs:
           if (!dir.exists(".github")) dir.create(".github")
           saveRDS(remotes::dev_package_deps(dependencies = TRUE), ".github/depends.Rds", version = 2)
           writeLines(sprintf("R-%i.%i", getRversion()$major, getRversion()$minor), ".github/R-version")
+        working-directory: ./src/r
         shell: Rscript {0}
       - name: Cache R packages
         uses: actions/cache@v2
         with:
           path: ${{ env.R_LIBS_USER }}
-          key: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-${{ hashFiles('.github/depends.Rds') }}
-          restore-keys: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-
+          key: ${{ runner.os }}-${{ hashFiles('src/r/.github/R-version') }}-1-${{ hashFiles('src/r/.github/depends.Rds') }}
+          restore-keys: ${{ runner.os }}-${{ hashFiles('src/r/.github/R-version') }}-1-
       - name: Install system dependencies for R packages
         if: runner.os == 'Linux'
         run: |
