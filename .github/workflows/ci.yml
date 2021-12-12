@@ -7,8 +7,10 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest]
-        
+        os: [ubuntu-20.04]
+    env:
+      RSPM: "https://packagemanager.rstudio.com/cran/__linux__/focal/latest"
+
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
@@ -28,11 +30,37 @@ jobs:
         run: pip install cffi numba pytest
       - name: Install JS dependecies
         run: cd $GITHUB_WORKSPACE/tests/js && npm install
-      - name: Install R dependecies
+
+      # setup R environment
+      - name: Query R package dependencies
         run: |
-          Rscript -e 'install.packages("devtools")'
-          cd $GITHUB_WORKSPACE/src/r || exit
-          Rscript tools/deploy.R
+          install.packages('remotes')
+          saveRDS(remotes::dev_package_deps(dependencies = TRUE), ".github/depends.Rds", version = 2)
+          writeLines(sprintf("R-%i.%i", getRversion()$major, getRversion()$minor), ".github/R-version")
+        working-directory: ./src/r
+        shell: Rscript {0}
+      - name: Cache R packages
+        uses: actions/cache@v2
+        with:
+          path: ${{ env.R_LIBS_USER }}
+          key: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-${{ hashFiles('.github/depends.Rds') }}
+          restore-keys: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-
+      - name: Install system dependencies for R packages
+        if: runner.os == 'Linux'
+        run: |
+          while read -r cmd
+          do
+            eval sudo $cmd
+          done < <(Rscript -e 'writeLines(remotes::system_requirements("ubuntu", "20.04"))')
+        working-directory: ./src/r
+      - name: Install R package dependencies
+        run: |
+          remotes::install_deps(dependencies = TRUE)
+          remotes::install_cran("devtools")
+        shell: Rscript {0}
+        working-directory: ./src/r
+      - name: Generate documentation
+        run: Rscript tools/deploy.R -p && Rscript -e 'devtools::document()'
 
       - name: Run tests (Python)
         run: cd $GITHUB_WORKSPACE && python -m pytest -v -s
@@ -41,7 +69,7 @@ jobs:
       - name: Run tests (C#)
         run: cd $GITHUB_WORKSPACE/src/c_sharp && sudo dotnet test
       - name: Run tests (R)
-        run: cd $GITHUB_WORKSPACE && R CMD build . && R CMD check --as-cran psychrolib*tar.gz
+        run: cd $GITHUB_WORKSPACE/src/r && R CMD build . && R CMD check --as-cran psychrolib*tar.gz
 
   gh-pages:
     runs-on: ubuntu-latest
