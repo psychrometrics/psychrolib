@@ -75,7 +75,7 @@ jobs:
       - name: Run tests (C#)
         run: cd $GITHUB_WORKSPACE/src/c_sharp && sudo dotnet test
       - name: Run tests (R)
-        run: cd $GITHUB_WORKSPACE/src/r && R CMD build . && R CMD check --as-cran psychrolib*tar.gz
+        run: cd $GITHUB_WORKSPACE/src/r && R CMD build . && R CMD check --no-manual --as-cran psychrolib*tar.gz
 
   gh-pages:
     runs-on: ubuntu-latest
