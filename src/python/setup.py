@@ -13,4 +13,5 @@ setup(name='PsychroLib',
       platforms = ['Windows', 'Linux', 'Solaris', 'Mac OS-X', 'Unix'],
       python_requires='>=3.6',
       packages=['psychrolib'],
+      package_data={'psychrolib': ['py.typed']},
      )
