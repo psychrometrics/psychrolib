@@ -12,5 +12,6 @@ setup(name='PsychroLib',
       license='MIT',
       platforms = ['Windows', 'Linux', 'Solaris', 'Mac OS-X', 'Unix'],
       python_requires='>=3.6',
-      py_modules=['psychrolib'],
+      packages=['psychrolib'],
+      package_data={'psychrolib': ['py.typed']},
      )
