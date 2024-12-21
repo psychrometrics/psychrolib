@@ -71,7 +71,7 @@ PsychroLib is automatically tested at each commit using continuous integration. 
 There are a number of dependencies required to run the tests that need to be installed first. From you command prompt, navigate to the `psychrolib` folder and type the following (I assume that pip and python are for version 3.6 or greater):
 
 ```
-pip install numpy m2r cffi pytest
+pip install numpy m2r cffi pytest charset-normalizer
 cd tests/js && npm install
 cd ../..
 ```

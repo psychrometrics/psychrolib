@@ -5,7 +5,7 @@ import sys
 from pathlib import Path
 
 import pytest
-import numpy.f2py as f2py
+import subprocess
 import cffi
 
 
@@ -21,9 +21,8 @@ import psychrolib
 # Compile and import Fortran library
 #########################################################
 PATH_TO_LIB = Path(__file__).parents[1] / 'src' / 'fortran' / 'psychrolib.f90'
-with open(str(PATH_TO_LIB), 'rb') as fid:
-    source = fid.read()
-f2py.compile(source , modulename='psychrolib_fortran', extension='.f90')
+subprocess.run(['f2py', '-c', '-m', 'psychrolib_fortran', str(PATH_TO_LIB)], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
 import psychrolib_fortran
 psyf = psychrolib_fortran.psychrolib
 
