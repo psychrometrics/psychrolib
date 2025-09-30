@@ -29,6 +29,7 @@ Examples on how to use PsychroLib in all the supported languages are described i
 - Python: from the [Python Package Index (PyPI)](https://pypi.org/project/PsychroLib/). [Numba](https://numba.pydata.org/) can be optionally installed to enable array support and faster runtime performance.
 - C# (.NET): from the [NuGet package](https://www.nuget.org/packages/PsychroLib/) manager or clone the repository, and bundle according to your requirements.
 - C, Fortran and JavaScript: clone the repository, and bundle according to your requirements.
+- Go: import from Github - "github.com/psychrometrics/psychrolib/src/go"
 - VBA/Excel: download the ready-made spreadsheets from the [release tab](https://github.com/psychrometrics/psychrolib/releases).
 - R: from the [Comprehensive R Archive Network (CRAN)](https://cran.r-project.org/package=psychrolib).
 
