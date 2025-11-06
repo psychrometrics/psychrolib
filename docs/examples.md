@@ -35,6 +35,26 @@ Compile your code and execute the program, the output will be:
 TDewPoint: 21.309397 degree C
 ```
 
+### Go
+
+Create a source file for your program and include the following:
+
+```go
+import (
+	psychrolib "github.com/psychrometrics/psychrolib/src/go"
+)
+
+psychrolib.SetUnitSystem(psychrolib.SI)
+TDewPoint := psychrolib.GetTDewPointFromRelHum(25.0, 0.80)
+fmt.Printf("TDewPoint: %f degree C\n", TDewPoint)
+```
+
+Compile your code and execute the program, the output will be:
+
+```
+TDewPoint: 21.309397 degree C
+```
+
 ### Fortran
 Create a source file for your program and include the following:
 
