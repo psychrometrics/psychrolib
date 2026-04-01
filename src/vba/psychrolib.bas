@@ -1221,7 +1221,7 @@ Function GetTDryBulbFromEnthalpyAndHumRatio(ByVal MoistAirEnthalpy As Variant, B
   If (isIP()) Then
     GetTDryBulbFromEnthalpyAndHumRatio = (MoistAirEnthalpy - 1061.0 * HumRatio) / (0.24 + 0.444 * HumRatio)
   Else:
-    GetTDryBulbFromEnthalpyAndHumRatio = (MoistAirEnthalpy / 1000.0 - 2501.0 * HumRatio) / (1.006 + 1.86 * HumRatio)
+    GetTDryBulbFromEnthalpyAndHumRatio = (MoistAirEnthalpy * 1000.0 - 2501.0 * HumRatio) / (1.006 + 1.86 * HumRatio)
   End If
   Exit Function
 
